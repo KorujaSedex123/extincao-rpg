@@ -1,0 +1,1447 @@
+/* FUNDO E FONTE GERAL */
+.extincao-sheet.window-app .window-content {
+    background: #111;
+    color: #ccc;
+    font-family: "Courier New", monospace;
+    letter-spacing: 0.5px;
+}
+
+/* ================= HEADER ================= */
+.sheet-header {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #8b0000;
+}
+
+.header-grid {
+    display: grid;
+    /* Foto fixa | Centro flexível | Stats fixo */
+    grid-template-columns: 130px 1fr 150px; 
+    gap: 20px; /* Mais espaço entre as colunas */
+    align-items: flex-start; /* Alinha tudo ao topo */
+    width: 100%; /* FORÇA ocupar a largura total */
+}
+
+/* 1. FOTO (Esquerda) */
+.profile-img {
+    width: 130px;
+    height: 130px;
+    border: 2px solid #444;
+    background: #000;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* 2. CENTRO (Nome, Arquétipo, Estresse) */
+.header-main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Espaço vertical entre os elementos centrais */
+    width: 100%;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+.charname input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 26px; /* Um pouco maior */
+    font-weight: 900;
+    text-transform: uppercase;
+    font-family: "Courier New", monospace;
+    letter-spacing: 1px;
+}
+
+.lock-btn {
+    font-size: 20px;
+    color: #555;
+    margin-left: 15px;
+    transition: color 0.2s;
+}
+.lock-btn:hover { color: #fff; text-shadow: 0 0 5px red; }
+
+.header-archetype select {
+    width: 100%;
+    background: #0a0a0a;
+    color: #8b0000;
+    border: 1px solid #333;
+    font-weight: bold;
+    padding: 5px;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+}
+
+/* BARRA DE ESTRESSE (Horizontal Balanceada) */
+.stress-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribui os elementos nas pontas e centro */
+    background: #050505;
+    border: 1px solid #333;
+    padding: 8px 15px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.stress-label {
+    font-weight: bold;
+    color: #666;
+    font-size: 12px;
+    flex-shrink: 0; /* Não deixa encolher */
+}
+
+.stress-track {
+    display: flex;
+    gap: 10px; /* Mais espaço entre as bolas */
+    flex-grow: 1; /* Ocupa o espaço central */
+    justify-content: center; /* Centraliza as bolas */
+    margin: 0 20px; /* Margem de segurança nas laterais */
+}
+
+.stress-box {
+    width: 18px; /* Bolas um pouco maiores */
+    height: 18px;
+    background: #222;
+    border: 1px solid #555;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.stress-box:hover { transform: scale(1.3); border-color: red; background: #300; }
+.stress-box.filled { background: #8b0000; border-color: red; box-shadow: 0 0 8px red; }
+
+.stress-status {
+    text-align: right;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+    min-width: 80px;
+}
+
+/* 3. STATS (Direita - Vertical) */
+.header-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.resource-box {
+    background: #121212;
+    border: 1px solid #333;
+    padding: 6px;
+    text-align: center;
+    border-radius: 2px;
+}
+
+.resource-box label {
+    display: block;
+    color: #8b0000;
+    font-size: 11px;
+    font-weight: 900;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.resource-inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background: #000;
+    border: 1px solid #222;
+    padding: 2px;
+}
+
+.resource-inputs input, .xp-box input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    text-align: center;
+    width: 35px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.xp-box input { background: #000; border: 1px solid #222; width: 100%; }
+.sep { color: #444; font-size: 14px; font-weight: bold; }
+
+/* RECURSOS */
+.resources { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
+.resource-box { background: #181818; border: 1px solid #333; padding: 3px; text-align: center; }
+.resource-box label { font-size: 0.7em; color: #666; display: block; font-weight: bold; }
+.resource-inputs { display: flex; justify-content: center; align-items: center; gap: 2px; }
+.resource-inputs input, .resource-box input {
+    background: transparent; border: none; color: #fff; text-align: center; width: 35px; font-size: 1.1em;
+}
+
+/* ESTRESSE */
+.stress-bar-container {
+    margin-top: 5px; background: transparent; border: none; padding: 5px 0;
+    display: flex; justify-content: flex-end; align-items: center; gap: 10px;
+}
+.stress-label { font-weight: bold; color: #666; font-size: 11px; margin-right: 5px; }
+.stress-track { display: flex; gap: 6px; }
+.stress-box {
+    width: 14px; height: 14px; background: #222; border: 1px solid #555;
+    border-radius: 50%; cursor: pointer; transition: 0.2s;
+}
+.stress-box:hover { transform: scale(1.3); border-color: red; }
+.stress-box.filled { background: #8b0000; box-shadow: 0 0 5px red; border-color: red; }
+.stress-status { width: 80px; text-align: right; font-size: 11px; }
+.colapso.active { color: red; animation: blink 0.5s infinite alternate; }
+
+/* NAVEGAÇÃO */
+.sheet-tabs {
+    display: flex;
+    justify-content: center; /* Centraliza */
+    background: #050505;
+    border-bottom: 2px solid #8b0000;
+    margin: 10px 0;
+    border-radius: 4px 4px 0 0;
+    padding: 0;
+}
+
+.sheet-tabs .item {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #666;
+    background: #111;
+    border: 1px solid #222;
+    border-bottom: none;
+    margin: 0 2px;
+    border-radius: 4px 4px 0 0;
+}
+
+/* ================= ABAS COMPACTAS (SLIM TABS) ================= */
+/* ================= ABAS TÁTICAS (MENU FINO) ================= */
+.sheet-tabs {
+    display: flex;
+    background: #050505;       /* Fundo quase preto */
+    border: 1px solid #333;    /* Borda ao redor do grupo todo */
+    border-radius: 4px;        /* Cantos arredondados no grupo */
+    padding: 3px;              /* Espacinho entre a borda e os botões */
+    margin: 10px 0;            /* Espaço para cima e para baixo */
+    height: 32px;              /* Altura FIXA e FINA */
+    gap: 2px;                  /* Espaço mínimo entre os botões */
+}
+
+.sheet-tabs .item {
+    flex: 1;                   /* Todos com mesmo tamanho */
+    display: flex;
+    align-items: center;       /* Centraliza verticalmente */
+    justify-content: center;   /* Centraliza horizontalmente */
+    
+    background: #111;          /* Cor do botão inativo */
+    color: #555;               /* Texto apagado */
+    
+    font-size: 11px;           /* Fonte pequena e técnica */
+    font-weight: 900;
+    font-family: "Courier New", monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    
+    border-radius: 2px;        /* Leve arredondamento no botão */
+    border: none;              /* Sem bordas individuais */
+    transition: all 0.2s ease;
+}
+
+/* Ícones dentro das abas */
+.sheet-tabs .item i {
+    margin-right: 6px;
+    font-size: 10px;
+}
+
+/* Quando passa o mouse */
+.sheet-tabs .item:hover {
+    background: #222;
+    color: #aaa;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* ABA ATIVA (Selecionada) */
+.sheet-tabs .item.active {
+    background: #8b0000;       /* Fundo Vermelho Sangue */
+    color: #fff;               /* Texto Branco */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra interna para profundidade */
+    text-shadow: 0 0 2px #000;
+}
+
+.sheet-tabs .item:hover {
+    color: #fff;
+    background: #151515;
+}
+
+/* ================= MONITOR DE INFECÇÃO ================= */
+.infection-monitor {
+    background: #080808;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.bio-header {
+    margin: 0 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #444;
+    color: #aaa;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.infection-stages {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+/* Esconde a bolinha padrão do radio button */
+.infection-stage input {
+    display: none;
+}
+
+.stage-card {
+    background: #111;
+    border: 1px solid #333;
+    padding: 10px 5px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.stage-title { font-weight: 900; font-size: 0.9em; display: block; margin-bottom: 5px; }
+.stage-desc { font-size: 0.75em; color: #666; }
+.stage-desc.danger { color: #ff6666; }
+
+/* ESTADOS ATIVOS (CORES) */
+/* Quando selecionado (checked), muda a cor */
+.infection-stage input:checked + .stage-card.safe {
+    background: #004d00; border-color: #00ff00; color: #fff;
+}
+.infection-stage input:checked + .stage-card.incubation {
+    background: #4d4d00; border-color: #ffff00; color: #fff;
+}
+.infection-stage input:checked + .stage-card.fever {
+    background: #663300; border-color: #ff8000; color: #fff;
+}
+.infection-stage input:checked + .stage-card.necrosis {
+    background: #4d0000; border-color: #ff0000; color: #fff; animation: blink-border 2s infinite;
+}
+
+@keyframes blink-border {
+    0% { border-color: #ff0000; box-shadow: 0 0 5px #ff0000; }
+    50% { border-color: #550000; box-shadow: none; }
+    100% { border-color: #ff0000; box-shadow: 0 0 5px #ff0000; }
+}
+
+/* Editores de Texto */
+.editor-box {
+    border: 1px solid #333;
+    background: #111;
+    padding: 5px;
+}
+/* Tabela de Inventário Tática */
+.inventory-header {
+    background: linear-gradient(90deg, #1a0505 0%, #330000 100%);
+    border: 1px solid #8b0000;
+    color: #ffaaaa;
+    padding: 8px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 4px 4px 0 0;
+}
+
+.item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-top: none;
+}
+
+.item-list .item {
+    padding: 5px 8px;
+    border-bottom: 1px solid #222;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.item-list .item:hover {
+    background: #151515;
+}
+
+/* Botão de Dado de Uso */
+.ud-roll {
+    background: #222;
+    border: 1px solid #444;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #4eff8c; /* Verde Matrix */
+    font-weight: bold;
+    font-family: "Courier New", monospace;
+    transition: all 0.2s;
+}
+
+.ud-roll:hover {
+    background: #4eff8c;
+    color: #000;
+    box-shadow: 0 0 8px #4eff8c;
+    cursor: pointer;
+}
+.quality-item .item-name {
+    color: #4eff8c;
+}
+/* Destaque para Defeitos (Vermelho sutil) */
+.defect-item .item-name {
+    color: #ff6666;
+}
+
+/* ================= TABELAS (ATRIBUTOS E PERÍCIAS) ================= */
+.skills-panel {
+    background: #111;
+    border: 1px solid #333;
+}
+.panel-header {
+    background: #0f0f0f;
+    padding: 5px 10px;
+    border-bottom: 2px solid #333;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.panel-header h3 { margin: 0; color: #aaa; font-size: 1em; }
+
+/* Cabeçalho da Tabela de Perícias */
+.skill-header {
+    background: #151515;
+    padding: 4px 5px;
+    border-bottom: 1px solid #333;
+    font-size: 0.75em;
+    color: #666;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.skill-name-head { flex: 1; }
+.skill-level-head { width: 30px; text-align: center; }
+.skill-fail-head { width: 40px; text-align: center; }
+
+/* LINHAS ZEBRADAS E ESTILIZADAS */
+.skill-row {
+    padding: 4px 5px;
+    align-items: center;
+    border-bottom: 1px solid #222;
+}
+
+.skill-input { margin-right: 15px; } /* Espaço entre Nivel e Checkbox */
+
+/* Checkbox */
+.skill-checkbox { width: 40px; display: flex; justify-content: center; }
+.skill-checkbox input { width: 16px; height: 16px; margin: 0; cursor: pointer; }
+
+/* Links Clicáveis */
+.rollable { cursor: pointer; color: #ccc; transition: 0.2s; }
+.rollable:hover { color: #fff; text-shadow: 0 0 5px red; }
+.skill-name { flex: 1; font-size: 0.9em; }
+
+/* CONTADORES */
+.points-counter { font-size: 0.85em; padding: 2px 6px; border-radius: 4px; background: #000; border: 1px solid #444; }
+.points-counter.valid { color: #4eff8c; border-color: #4eff8c; }
+.points-counter.invalid { color: #ffaa00; }
+
+/* ================= MODO TRAVADO (LOCKED) ================= */
+/* Quando travado, inputs parecem texto puro */
+.locked-sheet input[type="number"], 
+.locked-sheet input[type="text"] {
+    background: transparent !important;
+    border: none !important;
+    pointer-events: none; /* Impede clique */
+    color: #aaa !important; /* Cor mais apagada */
+}
+/* Mas o checkbox de falha continua ativo! */
+.locked-sheet .skill-checkbox input {
+    cursor: pointer;
+    /* Não colocamos pointer-events: none aqui */
+}
+.locked-sheet .item-controls, .locked-sheet .item-create { display: none; }
+
+/* INVENTÁRIO */
+.item-group { border: 1px solid #333; margin-bottom: 10px; }
+.inventory-header { background: #1a1a1a; color: #8b0000; padding: 4px; font-size: 0.8em; font-weight: bold; border-bottom: 1px solid #333; }
+.item-list .item { background: #151515; padding: 4px; border-bottom: 1px solid #222; align-items: center; }
+.item-image img { border: 1px solid #444; background: #000; margin-right: 5px; width: 24px; height: 24px; }
+.item-name { color: #ddd; font-weight: bold; font-size: 0.9em; }
+.item-detail { text-align: center; color: #888; font-size: 0.85em; }
+
+.layout-3col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Três colunas iguais */
+    gap: 10px; /* Espaço entre elas */
+    width: 100%;
+    align-items: start; /* Alinha tudo ao topo */
+}
+
+/* Em telas muito pequenas, empilha (Responsivo) */
+@media (max-width: 600px) {
+    .layout-3col {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Ajuste fino para os painéis não ficarem colados */
+.skills-panel {
+    height: 100%; /* Faz todas terem a mesma altura se possível */
+}
+
+
+/* O Container Grid (2 colunas x 3 linhas) */
+.attributes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas caixas lado a lado */
+    gap: 8px;
+    padding: 10px;
+    background: #111;
+}
+
+/* A Caixa Individual */
+.attribute-box {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 4px; /* Cantos levemente arredondados */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 5px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 10px #000;
+}
+
+/* Efeito ao passar o mouse na caixa */
+.attribute-box:hover {
+    border-color: #8b0000;
+    box-shadow: 0 0 10px rgba(139, 0, 0, 0.2);
+}
+
+/* Ícone de Dado (Botão de Rolar) */
+.attr-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #444;
+    font-size: 0.8em;
+    transition: color 0.2s;
+}
+.attribute-box:hover .attr-icon {
+    color: #8b0000; /* Acende o dado quando passa o mouse na caixa */
+}
+.attr-icon:hover {
+    color: #fff !important;
+    text-shadow: 0 0 5px red;
+    cursor: pointer;
+}
+
+/* O NÚMERO GIGANTE */
+.attr-value-big {
+    background: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    font-size: 2.5em !important; /* Bem grande */
+    font-family: "Courier New", monospace;
+    font-weight: 900;
+    text-align: center;
+    width: 100%;
+    height: 50px;
+    z-index: 2;
+}
+
+/* O Nome do Atributo (Botão de Rolar) */
+.attr-name-big {
+    color: #888;
+    font-size: 0.75em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: -5px;
+    border-top: 1px solid #333;
+    padding-top: 4px;
+    width: 90%;
+    text-align: center;
+    cursor: pointer; /* Mostra a mãozinha */
+    transition: all 0.2s;
+    text-decoration: none;
+    display: block; /* Garante área de clique */
+}
+
+/* Efeito ao passar o mouse no NOME */
+.attr-name-big:hover {
+    color: #fff;
+    text-shadow: 0 0 5px #8b0000;
+    border-top-color: #8b0000;
+    background: rgba(139, 0, 0, 0.1);
+}
+/* Destaque Vermelho no Nome ao Hover */
+.attribute-box:hover .attr-name-big {
+    color: #ccc;
+    border-top-color: #8b0000;
+}
+
+/* MODO TRAVADO (Locked) */
+.locked-sheet .attribute-box {
+    border: 1px solid #333;
+    cursor: pointer; /* Mãozinha em toda a caixa */
+    position: relative;
+    transition: all 0.2s;
+}
+
+/* Efeito Hover na Caixa Inteira quando travado */
+.locked-sheet .attribute-box:hover {
+    background-color: #1a0505; /* Fundo levemente avermelhado */
+    border-color: #ff0000;     /* Borda vermelha */
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); /* Brilho */
+    transform: translateY(-2px); /* Leve subida tática */
+}
+
+/* IMPORTANTE: O input não pode bloquear o clique na div pai */
+.locked-sheet .attr-value-big {
+    pointer-events: none; /* O clique "atravessa" o número e pega na caixa */
+}
+
+/* O nome brilha junto com a caixa */
+.locked-sheet .attribute-box:hover .attr-name-big {
+    color: #fff;
+    text-shadow: 0 0 5px red;
+    border-top-color: red;
+}
+
+/* ================= CORREÇÃO DE VISIBILIDADE DOS INPUTS ================= */
+
+/* Input de Perícia (Normal) */
+.skill-row input.skill-input {
+    background-color: #050505 !important; /* Fundo quase preto */
+    color: #ffffff !important;            /* TEXTO BRANCO PURO */
+    border: 1px solid #444 !important;    /* Borda cinza discreta */
+    font-weight: bold;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    
+    /* Garante o tamanho */
+    width: 35px;
+    height: 24px;
+}
+
+/* Quando você clica para digitar (Focus) */
+.skill-row input.skill-input:focus {
+    background-color: #000 !important;
+    color: #ff0000 !important;            /* Texto fica VERMELHO ao editar */
+    border-color: #ff0000 !important;     /* Borda vermelha */
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+/* Garante que o input dos Atributos Grandes também esteja legível */
+.attr-value-big {
+    color: #ffffff !important;
+    text-shadow: 0 0 2px black;
+}
+
+/* Correção para navegadores que tentam colocar fundo azul/amarelo em autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #000 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ================= ITENS (SHEET) ================= */
+.sheet.item .profile-img {
+    max-width: 64px;
+    max-height: 64px;
+    border: 1px solid #444;
+    background: #000;
+}
+
+.item-subtitle {
+    color: #666;
+    font-weight: bold;
+    font-size: 0.8em;
+    letter-spacing: 2px;
+    margin-top: -5px;
+}
+
+/* Garante que o editor de texto tenha fundo escuro na janela de item */
+.sheet.item .editor-content {
+    background: #111;
+    color: #ccc;
+    padding: 10px;
+    border: 1px solid #333;
+    min-height: 150px;
+}
+
+/* O Botão do Select em si */
+select {
+    background-color: #000 !important;
+    color: #4eff8c !important; /* Verde Matrix para destacar que é selecionável */
+    border: 1px solid #333 !important;
+    cursor: pointer;
+}
+
+/* As Opções da Lista (Onde estava o problema) */
+select option {
+    background-color: #111 !important; /* Fundo Escuro */
+    color: #fff !important;            /* Texto Branco */
+    padding: 5px;
+}
+
+/* Se quiser garantir que o texto não suma no hover (alguns navegadores) */
+select option:checked,
+select option:hover {
+    background-color: #8b0000 !important; /* Vermelho quando selecionado */
+    color: #fff !important;
+}
+/* ================= TRAUMAS ================= */
+.trauma-item .item-name {
+    color: #bf80ff; /* Roxo Psicológico */
+    font-weight: bold;
+}
+
+.trauma-item .item-image img {
+    border-color: #bf80ff;
+}
+
+/* ================= BIOGRAFIA ESTILIZADA ================= */
+.bio-container {
+    border: 1px solid #333;
+    background: #080808;
+    padding: 10px;
+}
+
+.bio-editor .editor-content {
+    background: #111;
+    color: #ccc;
+    font-family: "Courier New", monospace; /* Fonte de máquina de escrever/terminal */
+    padding: 15px;
+    border: 1px solid #222;
+    min-height: 300px; /* Garante um tamanho bom */
+    line-height: 1.5;
+}
+
+/* ================= FICHA DE NPC (INIMIGO) ================= */
+.npc-sheet .charname input {
+    color: #ff4444;
+    text-align: center;
+}
+
+.npc-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.stat-box {
+    background: #1a0505;
+    border: 2px solid #550000;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.stat-box label {
+    display: block;
+    font-size: 1.2em;
+    font-weight: 900;
+    color: #ff4444;
+}
+
+.stat-box input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 3em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.sub-label {
+    display: block;
+    font-size: 0.7em;
+    color: #888;
+    text-transform: uppercase;
+}
+
+/* Hover no Ataque */
+.stat-box.rollable:hover {
+    background: #330000;
+    cursor: pointer;
+    box-shadow: 0 0 10px red;
+}
+
+/* ================= FICHA DA HORDA ================= */
+
+/* Fundo e Borda */
+.horda-sheet .window-content {
+    background: #0f0d05; /* Preto levemente amarelado/sujo */
+    border: 2px solid #ffaa00; /* Borda Laranja de Aviso */
+    color: #eebb00;
+}
+
+/* Faixa do Título */
+.hazard-stripe {
+    background: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 10px,
+        #ffaa00 10px,
+        #ffaa00 20px
+    );
+    padding: 5px;
+    text-align: center;
+    border-bottom: 2px solid #ffaa00;
+    margin-bottom: 15px;
+}
+
+.horda-title {
+    background: #000;
+    color: #ffaa00;
+    display: inline-block;
+    padding: 5px 20px;
+    border: 2px solid #ffaa00;
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+/* Medidor de Alerta */
+.alert-section {
+    background: #1a1500;
+    border: 1px solid #ffaa00;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.alert-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffcc00;
+}
+.alert-info { font-size: 0.7em; color: #886600; font-weight: normal; }
+
+.alert-track {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+/* Botões do Medidor */
+.alert-box {
+    width: 45px;
+    height: 45px;
+    background: #111;
+    border: 2px solid #443300;
+    color: #443300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.alert-box:hover { border-color: #ffaa00; color: #ffaa00; }
+
+/* Estado Ativo (Ligado) */
+.alert-box.active {
+    background: #ffaa00;
+    color: #000;
+    box-shadow: 0 0 15px #ffaa00;
+    border-color: #fff;
+}
+
+/* Nível 6 (Piscando) */
+.alert-box[data-index="6"].active {
+    background: #ff0000;
+    box-shadow: 0 0 20px red;
+    animation: blink 0.5s infinite alternate;
+}
+
+/* Mensagens de Status */
+.status-message { font-weight: bold; padding: 5px; margin-top: 5px; }
+.quiet { color: #4eff8c; opacity: 0.5; }
+.breach { 
+    color: #ff0000; 
+    font-size: 1.2em; 
+    text-transform: uppercase; 
+    text-shadow: 0 0 5px red;
+    animation: blink 1s infinite;
+}
+
+/* Seletor de Densidade */
+.density-section {
+    margin-bottom: 20px;
+    text-align: center;
+}
+.density-section select {
+    width: 100%;
+    font-size: 1.1em;
+    background: #221a00 !important;
+    color: #ffaa00 !important;
+    border: 1px solid #ffaa00 !important;
+}
+
+/* Regras */
+.rules-container {
+    background: #111;
+    border-left: 4px solid #ff4444; /* Vermelho Sangue */
+    padding: 10px;
+    margin-bottom: 20px;
+    color: #ccc;
+}
+.rules-container h3 { color: #ff4444; border: none; margin-top: 0; }
+.rules-container ul { padding-left: 20px; margin-bottom: 0; }
+.rules-container li { margin-bottom: 5px; }
+
+/* ================= BOTÕES DA HORDA ================= */
+/* ================= UI DA HORDA (INDUSTRIAL) ================= */
+
+/* Abas Específicas da Horda */
+.horda-tabs {
+    background: #111;
+    border: 1px solid #ffaa00;
+    margin-bottom: 10px;
+}
+
+.horda-tabs .item {
+    color: #886600;
+    background: #000;
+    border-right: 1px solid #332200;
+    font-size: 12px;
+}
+
+.horda-tabs .item.active {
+    background: #ffaa00;
+    color: #000;
+    text-shadow: none;
+    box-shadow: 0 0 10px #ffaa00;
+}
+
+/* Painel de Aviso */
+.panel-warning {
+    border: 2px solid #332200;
+    background: repeating-linear-gradient(
+        45deg,
+        #0a0a00,
+        #0a0a00 10px,
+        #141000 10px,
+        #141000 20px
+    );
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Medidor Estilo LED */
+.alert-display {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0;
+    background: #000;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+.alert-segment {
+    width: 40px;
+    height: 20px;
+    background: #221100; /* Apagado */
+    border: 1px solid #442200;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+/* Aceso (Amarelo) */
+.alert-segment.lit {
+    background: #ffaa00;
+    box-shadow: 0 0 10px #ffaa00, inset 0 0 5px #fff;
+    border-color: #ffcc00;
+}
+
+/* O Último (Crítico) */
+.alert-segment.critical.lit {
+    background: #ff0000;
+    box-shadow: 0 0 15px #ff0000, inset 0 0 5px #fff;
+    animation: blink 0.2s infinite alternate;
+}
+
+.alert-value-text {
+    text-align: center;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    color: #886600;
+    margin-bottom: 10px;
+}
+
+/* Botões de Ação Melhorados */
+.horda-actions-panel {
+    padding: 10px;
+}
+
+.horda-btn {
+    display: flex;
+    align-items: center;
+    background: #1a1a00;
+    border: 1px solid #ffaa00;
+    margin-bottom: 10px;
+    padding: 0;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.horda-btn:hover {
+    background: #332200;
+    box-shadow: 0 0 10px #ffaa00;
+    transform: translateX(2px);
+}
+
+.btn-icon {
+    background: #ffaa00;
+    color: #000;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+}
+
+.btn-content {
+    padding: 0 10px;
+    flex: 1;
+}
+
+.btn-title {
+    display: block;
+    color: #ffaa00;
+    font-weight: 900;
+    font-size: 1.1em;
+}
+
+.btn-desc {
+    display: block;
+    color: #886600;
+    font-size: 0.8em;
+}
+
+/* Imagem e Bio */
+.profile-img-horda {
+    width: 100%;
+    height: auto;
+    border: 2px solid #ffaa00;
+    background: #000;
+}
+
+.bio-editor-horda .editor-content {
+    background: #0f0f0f;
+    color: #ffcc00;
+    border: 1px solid #332200;
+    min-height: 200px;
+    padding: 10px;
+    font-family: "Courier New", monospace;
+}
+
+.btn-sub {
+    font-size: 0.6em;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+/* ================= CABEÇALHO DA HORDA (NOVO) ================= */
+.hazard-stripe {
+    display: flex;
+    align-items: center;
+    background: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 10px,
+        #ffaa00 10px,
+        #ffaa00 20px
+    );
+    padding: 5px;
+    border-bottom: 2px solid #ffaa00;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.horda-profile {
+    flex: 0 0 80px; /* Tamanho fixo da imagem */
+}
+
+.horda-profile .profile-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 2px solid #000;
+    background: #000;
+}
+
+.horda-title-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #000; /* Fundo preto para o texto ficar legível sobre as listras */
+    height: 80px;
+    border: 2px solid #ffaa00;
+    text-align: center;
+}
+
+.horda-title {
+    color: #ffaa00;
+    margin: 0;
+    font-weight: 900;
+    font-size: 1.8em;
+    letter-spacing: 1px;
+    border: none; /* Remove borda antiga se houver */
+}
+
+.horda-subtitle {
+    color: #886600;
+    font-size: 0.8em;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-top: 5px;
+}
+
+/* ================= ABA DOSSIÊ (TEXTO PURO) ================= */
+.bio-editor-horda.full-height {
+    height: 450px; /* Altura generosa para escrever bastante */
+}
+
+.bio-editor-horda .editor-content {
+    background: #0f0f0f;
+    color: #ffcc00; /* Texto Amarelo Terminal */
+    border: 1px solid #332200;
+    height: 100%;
+    padding: 15px;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-y: auto;
+}
+
+/* ================= FICHA DE NPC (REDESIGN) ================= */
+.npc-sheet .window-content {
+    background: #1a0505; /* Fundo Avermelhado Escuro */
+    border: 2px solid #8b0000;
+    color: #ffcccc;
+}
+
+.npc-header-grid {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.npc-profile img {
+    width: 100px;
+    height: 100px;
+    border: 2px solid #ff4444;
+    background: #000;
+    object-fit: cover;
+}
+
+.npc-main-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.npc-top-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #550000;
+    padding-bottom: 5px;
+}
+
+.npc-name {
+    background: transparent;
+    border: none;
+    color: #ff4444;
+    font-size: 1.8em;
+    font-weight: 900;
+    width: 100%;
+    font-family: "Courier New", monospace;
+    text-transform: uppercase;
+}
+
+.threat-badge {
+    background: #550000;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.threat-badge input {
+    width: 20px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+}
+
+.npc-type-select {
+    width: 100%;
+    background: #000 !important;
+    color: #aaa !important;
+    border: 1px solid #330000 !important;
+    margin: 5px 0;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Barra de Vida */
+.npc-hp-container {
+    background: #330000;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #550000;
+}
+
+.npc-hp-container label {
+    font-weight: bold;
+    color: #ffaaaa;
+    font-size: 0.8em;
+}
+
+.hp-bar-wrapper input {
+    width: 40px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* GRID DE COMBATE */
+.combat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.combat-box {
+    background: #2b0a0a;
+    border: 1px solid #8b0000;
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.2s;
+}
+
+/* Ícones de Fundo */
+.combat-box i {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    color: #550000;
+    font-size: 1.5em;
+    z-index: 0;
+}
+
+.combat-box label {
+    position: relative;
+    z-index: 1;
+    display: block;
+    color: #ff4444;
+    font-weight: 900;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+
+.combat-box input, .combat-box .value-display {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 2.2em;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    font-family: "Courier New", monospace;
+}
+
+.combat-box .sub-text {
+    font-size: 0.65em;
+    color: #884444;
+    text-transform: uppercase;
+}
+
+/* Botão de Ataque */
+.combat-box.attack input {
+    font-size: 2.5em; /* Bem grande */
+    color: #ff4444;   /* Vermelho Destaque */
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    border: 1px solid #440000; /* Borda sutil para saber onde clicar */
+    border-radius: 4px;
+}
+
+.combat-box.attack input:focus {
+    background: #220000;
+    box-shadow: 0 0 10px red;
+}
+
+/* Quando vira botão (Travado) */
+.combat-box.attack.rollable {
+    cursor: pointer;
+    border-color: #ff4444; /* Borda mais brilhante quando é botão */
+}
+.combat-box.attack.rollable:hover {
+    background: #330000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
+
+/* Editores */
+.npc-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.box-header {
+    color: #8b0000;
+    border-bottom: 2px solid #550000;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.editor-container .editor-content {
+    background: #110505;
+    border: 1px solid #330000;
+    min-height: 150px;
+    color: #ccc;
+    padding: 5px;
+    font-size: 0.9em;
+}
+
+/* ================= ABAS DO NPC (RED TABS) ================= */
+.npc-tabs {
+    background: #110505;
+    border: 1px solid #8b0000;
+    margin-bottom: 10px;
+}
+
+.npc-tabs .item {
+    color: #ff4444;
+    background: #000;
+    border-right: 1px solid #440000;
+    font-size: 11px;
+}
+
+.npc-tabs .item.active {
+    background: #8b0000;
+    color: #fff;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+.npc-tabs .item:hover {
+    background: #330000;
+}
+
+/* Grid de Atributos do NPC (6 em linha ou 3x2) */
+.npc-attr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Colunas (Fica 3 em cima, 3 embaixo) */
+    gap: 5px;
+}
+
+/* Aviso de Zumbi */
+.instinct-warning {
+    text-align: center;
+    color: #444;
+    background: #050505;
+    border: 1px dashed #333;
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Ajustes de Editor */
+.editor-container.short .editor-content {
+    min-height: 100px;
+}
+.editor-container.full .editor-content {
+    min-height: 350px;
+}
+
+/* ================= MODO TRAVADO NPC ================= */
+.npc-sheet.locked-sheet input,
+.npc-sheet.locked-sheet select {
+    background: transparent !important;
+    border: none !important;
+    pointer-events: none; /* Impede clique */
+    box-shadow: none !important;
+}
+
+/* O Cadeado em si */
+.name-lock-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.npc-sheet .lock-btn {
+    color: #555;
+    font-size: 1.2em;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.npc-sheet .lock-btn:hover { color: #fff; }
+
+/* Quando travado, o ataque vira um botão de ação puro */
+.npc-sheet.locked-sheet button.attack {
+    border-color: #ff0000;
+    animation: none;
+}

@@ -1,0 +1,106 @@
+<form class="{{cssClass}} horda-sheet" autocomplete="off">
+    
+    <header class="sheet-header">
+        <div class="hazard-stripe flexrow">
+            <div class="horda-profile">
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+            </div>
+
+            <div class="horda-title-container">
+                <h1 class="horda-title">
+                    <i class="fas fa-biohazard"></i> AMEAÇA BIOLÓGICA <i class="fas fa-biohazard"></i>
+                </h1>
+                <div class="horda-subtitle">PROTOCOLO DE CONTENÇÃO ATIVO</div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs tabs horda-tabs" data-group="primary">
+        <a class="item" data-tab="monitor">
+            <i class="fas fa-chart-line"></i> MONITOR
+        </a>
+        <a class="item" data-tab="protocols">
+            <i class="fas fa-exclamation-triangle"></i> PROTOCOLOS
+        </a>
+        <a class="item" data-tab="dossier">
+            <i class="fas fa-file-medical-alt"></i> DOSSIÊ
+        </a>
+    </nav>
+
+    <section class="sheet-body">
+        
+        <div class="tab monitor" data-group="primary" data-tab="monitor">
+            <div class="panel-warning">
+                <div class="alert-section">
+                    <div class="alert-header">
+                        NÍVEL DE RUÍDO / ALERTA
+                    </div>
+                    
+                    <div class="alert-display">
+                        {{#each (range 1 6) as |idx|}}
+                        <a class="alert-segment {{#if (lte idx ../system.resources.alerta.value)}}lit{{/if}} {{#if (eq idx 6)}}critical{{/if}}" 
+                           data-index="{{idx}}">
+                        </a>
+                        {{/each}}
+                    </div>
+
+                    <div class="alert-value-text">
+                        NÍVEL ATUAL: <span style="color: #ffaa00; font-size: 1.5em;">{{system.resources.alerta.value}}</span> / 6
+                    </div>
+
+                    <div class="alert-status">
+                        {{#if (gte system.resources.alerta.value 6)}}
+                        <div class="status-message breach">⚠️ VIOLAÇÃO DE PERÍMETRO ⚠️</div>
+                        {{else}}
+                        <div class="status-message quiet">... AGUARDANDO GATILHO ...</div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                <div class="density-box">
+                    <label>DENSIDADE DA HORDAS</label>
+                    <select name="system.details.densidade">
+                        {{selectOptions densidadeOptions selected=system.details.densidade}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab protocols" data-group="primary" data-tab="protocols">
+            <div class="horda-actions-panel">
+                <h3 class="panel-title">AÇÕES TÁTICAS</h3>
+                
+                <p class="instruction-text">Ative quando 3+ infectados cercarem um alvo.</p>
+
+                <button class="horda-btn rollable" data-roll-type="horda-abraco">
+                    <div class="btn-icon"><i class="fas fa-hands"></i></div>
+                    <div class="btn-content">
+                        <span class="btn-title">ABRAÇO DA MORTE</span>
+                        <span class="btn-desc">Imobilizar + 2 Dano Automático</span>
+                    </div>
+                </button>
+
+                <button class="horda-btn rollable" data-roll-type="horda-fuga">
+                    <div class="btn-icon"><i class="fas fa-person-running"></i></div>
+                    <div class="btn-content">
+                        <span class="btn-title">EXIGIR FUGA</span>
+                        <span class="btn-desc">Teste de FORÇA (Dif. 2)</span>
+                    </div>
+                </button>
+
+                <div class="rules-summary">
+                    <strong>GATILHOS DE ALERTA:</strong><br>
+                    🔫 Tiro (+1) | 💥 Explosão (+2) | ⏳ Tempo (+1/rodada)
+                </div>
+            </div>
+        </div>
+
+        <div class="tab dossier" data-group="primary" data-tab="dossier">
+            <div class="bio-editor-horda full-height">
+                <h3 class="bio-header" style="color: #ffaa00; border-bottom: 1px solid #ffaa00;">RELATÓRIO DE INTELIGÊNCIA</h3>
+                {{editor system.details.biography target="system.details.biography" button=true owner=owner editable=editable}}
+            </div>
+        </div>
+
+    </section>
+</form>

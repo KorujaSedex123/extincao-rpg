@@ -1,0 +1,21 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome do Trauma"/></h1>
+            <div class="item-subtitle" style="color: #bf80ff;">CICATRIZ MENTAL / PERMANENTE</div>
+        </div>
+    </header>
+
+    <div class="sheet-body">
+        <div class="form-group">
+            <label style="font-weight:bold; color:#bf80ff;">Gatilho (-2d6):</label>
+        </div>
+        <hr style="border-color:#333;">
+        <div class="description">
+            <div class="editor-box" style="height: 300px;">
+                {{editor system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+            </div>
+        </div>
+    </div>
+</form>

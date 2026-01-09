@@ -1,0 +1,173 @@
+<form class="{{cssClass}} flexcol {{#if isLocked}}locked-sheet{{/if}}" autocomplete="off">
+
+    <header class="sheet-header">
+        <div class="header-grid">
+            <div class="header-profile"><img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/></div>
+            <div class="header-main">
+                <div class="header-title flexrow">
+                    <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="NOME"/></h1>
+                    <a class="lock-btn" title="{{#if isLocked}}Destravar{{else}}Travar{{/if}}"><i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i></a>
+                </div>
+                <div class="header-archetype">
+                    <select name="system.details.archetype" {{#if isLocked}}disabled{{/if}}>{{selectOptions arquetipos selected=system.details.archetype blank="-- Arquétipo --"}}</select>
+                </div>
+                <div class="stress-bar-container">
+                    <span class="stress-label">ESTRESSE</span>
+                    <div class="stress-track">{{#each (range 1 6) as |idx|}}<a class="stress-box {{#if (lte idx ../system.resources.estresse.value)}}filled{{/if}}" data-index="{{idx}}"></a>{{/each}}</div>
+                    <div class="stress-status">{{#if (gte system.resources.estresse.value 6)}}<span class="colapso active">COLAPSO</span>{{else}}<span class="colapso">ESTÁVEL</span>{{/if}}</div>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="resource-box"><label>VIDA</label><div class="resource-inputs"><input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/><span class="sep">/</span><input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/></div></div>
+                <div class="resource-box"><label>RESISTÊNCIA</label><div class="resource-inputs"><input type="number" name="system.resources.pr.value" value="{{system.resources.pr.value}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/><span class="sep">/</span><input type="number" name="system.resources.pr.max" value="{{system.resources.pr.max}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/></div></div>
+                <div class="resource-box xp-box"><label>XP</label><input type="number" name="system.resources.xp.value" value="{{system.resources.xp.value}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/></div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="main"><i class="fas fa-crosshairs"></i> PRINCIPAL</a>
+        <a class="item" data-tab="items"><i class="fas fa-box-open"></i> ITEMS</a>
+        <a class="item" data-tab="features"><i class="fas fa-dna"></i> PERKS</a>
+        <a class="item" data-tab="bio"><i class="fas fa-file-medical"></i> BIO & STATUS</a>
+    </nav>
+
+    <section class="sheet-body">
+        
+        <div class="tab main" data-group="primary" data-tab="main">
+            <div class="layout-3col">
+                <div class="attributes-panel">
+                    <div class="panel-header flexrow"><h3>ATRIBUTOS</h3><span class="points-counter">{{points.attributes}}/15</span></div>
+                    <div class="attributes-grid">
+                        {{#each system.attributes as |attr key|}}
+                        <div class="attribute-box {{#if ../isLocked}}rollable{{/if}}" {{#if ../isLocked}}data-key="{{key}}" data-label="{{attr.label}}"{{/if}}>
+                            {{#unless ../isLocked}}<a class="rollable attr-icon" data-key="{{key}}" data-label="{{attr.label}}"><i class="fas fa-dice-d6"></i></a>{{/unless}}
+                            <input class="attr-value-big" type="number" name="system.attributes.{{key}}.value" value="{{attr.value}}" data-dtype="Number" {{#if ../isLocked}}readonly{{/if}}/>
+                            <span class="attr-name-big">{{attr.label}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="skills-panel">
+                    <div class="panel-header flexrow"><h3>AÇÃO</h3><span class="points-counter">{{points.skills}}/20</span></div>
+                    <div class="skill-header flexrow"><span class="skill-name-head">PERÍCIA</span> <span class="skill-level-head">NV</span> <span class="skill-fail-head">F?</span></div>
+                    <div class="table-body">
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="armas_fogo" label="Armas de Fogo" attr="DES" skill=system.skills.armas_fogo isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="armas_brancas" label="Armas Brancas" attr="FOR" skill=system.skills.armas_brancas isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="briga" label="Briga" attr="FOR" skill=system.skills.briga isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="esquiva" label="Esquiva" attr="DES" skill=system.skills.esquiva isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="atletismo" label="Atletismo" attr="CON" skill=system.skills.atletismo isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="furtividade" label="Furtividade" attr="DES" skill=system.skills.furtividade isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="pilotagem" label="Pilotagem" attr="DES" skill=system.skills.pilotagem isLocked=isLocked}}
+                    </div>
+                </div>
+                <div class="skills-panel">
+                    <div class="panel-header flexrow"><h3>MENTE</h3></div>
+                    <div class="skill-header flexrow"><span class="skill-name-head">PERÍCIA</span> <span class="skill-level-head">NV</span> <span class="skill-fail-head">F?</span></div>
+                    <div class="table-body">
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="atencao" label="Atenção" attr="PER" skill=system.skills.atencao isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="sobrevivencia" label="Sobrevivência" attr="INT" skill=system.skills.sobrevivencia isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="primeiros_socorros" label="Prim. Socorros" attr="INT" skill=system.skills.primeiros_socorros isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="medicina" label="Medicina" attr="INT" skill=system.skills.medicina isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="mecanica" label="Mecânica" attr="INT" skill=system.skills.mecanica isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="eletronica" label="Eletrônica" attr="INT" skill=system.skills.eletronica isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="social" label="Social/Lábia" attr="VON" skill=system.skills.social isLocked=isLocked}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab items" data-group="primary" data-tab="items">
+            <div class="item-group">
+                <div class="inventory-header flexrow"><h3>ARMAS</h3> <div class="header-stat">DANO</div> <div class="header-stat">USO</div>{{#unless isLocked}}<a class="item-create" data-type="arma"><i class="fas fa-plus"></i></a>{{/unless}}</div>
+                <ol class="item-list">
+                    {{#each armas as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <div class="item-image rollable" data-roll-type="item"><img src="{{item.img}}"/></div>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <div class="item-detail">{{item.system.dano}}</div>
+                        <div class="item-detail">{{#if (ne item.system.uso "0")}}<a class="rollable ud-roll" data-roll-type="usage" data-item-id="{{item._id}}"><i class="fas fa-dice"></i> {{item.system.uso}}</a>{{else}}<span style="color:#444;">VAZIO</span>{{/if}}</div>
+                        {{#unless ../isLocked}}<div class="item-controls"><a class="item-edit"><i class="fas fa-edit"></i></a><a class="item-delete"><i class="fas fa-trash"></i></a></div>{{/unless}}
+                    </li>
+                    {{/each}}
+                </ol>
+            </div>
+            <div class="item-group">
+                <div class="inventory-header flexrow"><h3>EQUIPAMENTOS</h3> <div class="header-stat">QTD</div>{{#unless isLocked}}<a class="item-create" data-type="item"><i class="fas fa-plus"></i></a>{{/unless}}</div>
+                <ol class="item-list">
+                    {{#each equipamentos as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <div class="item-image"><img src="{{item.img}}"/></div>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <div class="item-detail">{{item.system.quantity}}</div>
+                        {{#unless ../isLocked}}<div class="item-controls"><a class="item-edit"><i class="fas fa-edit"></i></a><a class="item-delete"><i class="fas fa-trash"></i></a></div>{{/unless}}
+                    </li>
+                    {{/each}}
+                </ol>
+            </div>
+        </div>
+
+        <div class="tab features" data-group="primary" data-tab="features">
+            <div class="grid grid-2col">
+                <div class="item-group">
+                    <div class="inventory-header flexrow"><h3>QUALIDADES (+2d6)</h3>{{#unless isLocked}}<a class="item-create" data-type="qualidade"><i class="fas fa-plus"></i></a>{{/unless}}</div>
+                    <ol class="item-list">
+                        {{#each qualidades as |item id|}}
+                        <li class="item flexrow quality-item" data-item-id="{{item._id}}"><div class="item-image"><img src="{{item.img}}"/></div><h4 class="item-name">{{item.name}}</h4>{{#unless ../isLocked}}<div class="item-controls"><a class="item-edit"><i class="fas fa-edit"></i></a><a class="item-delete"><i class="fas fa-trash"></i></a></div>{{/unless}}</li>
+                        {{/each}}
+                    </ol>
+                </div>
+                <div class="item-group">
+                    <div class="inventory-header flexrow"><h3>DEFEITOS (-2d6)</h3>{{#unless isLocked}}<a class="item-create" data-type="defeito"><i class="fas fa-plus"></i></a>{{/unless}}</div>
+                    <ol class="item-list">
+                        {{#each defeitos as |item id|}}
+                        <li class="item flexrow defect-item" data-item-id="{{item._id}}"><div class="item-image"><img src="{{item.img}}"/></div><h4 class="item-name">{{item.name}}</h4>{{#unless ../isLocked}}<div class="item-controls"><a class="item-edit"><i class="fas fa-edit"></i></a><a class="item-delete"><i class="fas fa-trash"></i></a></div>{{/unless}}</li>
+                        {{/each}}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab bio" data-group="primary" data-tab="bio">
+            
+            <div class="infection-monitor">
+                <h3 class="bio-header"><i class="fas fa-biohazard"></i> ESTÁGIO DA INFECÇÃO</h3>
+                <div class="infection-stages flexrow">
+                    <label class="infection-stage"><input type="radio" name="system.details.infection" value="0" {{checked (eq system.details.infection "0")}}><div class="stage-card safe"><span class="stage-title">SAUDÁVEL</span><span class="stage-desc">Sem Sintomas</span></div></label>
+                    <label class="infection-stage"><input type="radio" name="system.details.infection" value="1" {{checked (eq system.details.infection "1")}}><div class="stage-card incubation"><span class="stage-title">INCUBAÇÃO</span><span class="stage-desc">Suor Frio</span></div></label>
+                    <label class="infection-stage"><input type="radio" name="system.details.infection" value="2" {{checked (eq system.details.infection "2")}}><div class="stage-card fever"><span class="stage-title">FEBRE</span><span class="stage-desc danger">-1d6 (Físico)</span></div></label>
+                    <label class="infection-stage"><input type="radio" name="system.details.infection" value="3" {{checked (eq system.details.infection "3")}}><div class="stage-card necrosis"><span class="stage-title">NECROSE</span><span class="stage-desc danger">-2d6 (Tudo)</span></div></label>
+                </div>
+            </div>
+
+            <div class="item-group" style="margin-top: 20px;">
+                <div class="inventory-header flexrow">
+                    <h3>TRAUMAS MENTAIS (Defeitos Permanentes)</h3>
+                    {{#unless isLocked}}<a class="item-create" data-type="trauma" title="Novo Trauma"><i class="fas fa-plus"></i></a>{{/unless}}
+                </div>
+                <ol class="item-list">
+                    {{#each traumas as |item id|}}
+                    <li class="item flexrow trauma-item" data-item-id="{{item._id}}">
+                        <div class="item-image"><img src="{{item.img}}"/></div>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        {{#unless ../isLocked}}
+                        <div class="item-controls">
+                            <a class="item-edit"><i class="fas fa-edit"></i></a>
+                            <a class="item-delete"><i class="fas fa-trash"></i></a>
+                        </div>
+                        {{/unless}}
+                    </li>
+                    {{/each}}
+                </ol>
+            </div>
+            
+            <div class="bio-container" style="margin-top: 20px;">
+                <h3 class="bio-header"><i class="fas fa-history"></i> DOSSIÊ DO SOBREVIVENTE</h3>
+                <div class="bio-editor">
+                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=editable}}
+                </div>
+            </div>
+        </div>
+
+    </section>
+</form>

@@ -1,0 +1,130 @@
+{
+  "Actor": {
+    "types": ["sobrevivente", "npc", "horda"],
+    "templates": {
+      "base": {
+        "attributes": {},
+        "details": {
+          "biography": ""
+        }
+      }
+    },
+    "sobrevivente": {
+      "templates": ["base"],
+      "attributes": {
+        "for": { "value": 1, "label": "Força" },
+        "des": { "value": 1, "label": "Destreza" },
+        "con": { "value": 1, "label": "Constituição" },
+        "int": { "value": 1, "label": "Inteligência" },
+        "per": { "value": 1, "label": "Percepção" },
+        "von": { "value": 1, "label": "Vontade" }
+      },
+      "resources": {
+        "pv": { "value": 10, "max": 10, "label": "Vida" },
+        "pr": { "value": 10, "max": 10, "label": "Resistência" },
+        "estresse": { "value": 0, "max": 6, "label": "Estresse" },
+        "xp": { "value": 0, "label": "XP" }
+      },
+      "skills": {
+        "armas_fogo": { "value": 0, "label": "Armas de Fogo", "falha": false },
+        "armas_brancas": { "value": 0, "label": "Armas Brancas", "falha": false },
+        "briga": { "value": 0, "label": "Briga", "falha": false },
+        "esquiva": { "value": 0, "label": "Esquiva", "falha": false },
+        "atletismo": { "value": 0, "label": "Atletismo", "falha": false },
+        "furtividade": { "value": 0, "label": "Furtividade", "falha": false },
+        "atencao": { "value": 0, "label": "Atenção", "falha": false },
+        "sobrevivencia": { "value": 0, "label": "Sobrevivência", "falha": false },
+        "pilotagem": { "value": 0, "label": "Pilotagem", "falha": false },
+        "primeiros_socorros": { "value": 0, "label": "Prim. Socorros", "falha": false },
+        "medicina": { "value": 0, "label": "Medicina", "falha": false },
+        "mecanica": { "value": 0, "label": "Mecânica", "falha": false },
+        "eletronica": { "value": 0, "label": "Eletrônica/Hack", "falha": false },
+        "social": { "value": 0, "label": "Social/Lábia", "falha": false }
+      },
+      "details": {
+        "qualidades": "",
+        "defeitos": "",
+        "biography": "",
+        "traumas": "",
+        "archetype": "",
+        "infection": "0"
+      },
+      "sheetLocked": false
+    },
+   "npc": {
+      "templates": ["base"],
+      "resources": {
+        "pv": { "value": 10, "max": 10 }
+      },
+      "attributes": {
+        "defesa": { "value": 1, "label": "Defesa (Sucessos)" },
+        "ataque": { "value": 3, "label": "Dados de Ataque (Genérico)" },
+        "dano": { "value": 2, "label": "Dano Base" },
+        "nivel": { "value": 1 },
+        
+        "for": { "value": 1, "label": "Força" },
+        "des": { "value": 1, "label": "Destreza" },
+        "con": { "value": 1, "label": "Constituição" },
+        "int": { "value": 1, "label": "Inteligência" },
+        "per": { "value": 1, "label": "Percepção" },
+        "von": { "value": 1, "label": "Vontade" }
+      },
+      "skills": {
+        "armas_fogo": { "value": 0, "label": "Armas de Fogo", "falha": false },
+        "armas_brancas": { "value": 0, "label": "Armas Brancas", "falha": false },
+        "briga": { "value": 0, "label": "Briga", "falha": false },
+        "esquiva": { "value": 0, "label": "Esquiva", "falha": false },
+        "atletismo": { "value": 0, "label": "Atletismo", "falha": false },
+        "furtividade": { "value": 0, "label": "Furtividade", "falha": false },
+        "atencao": { "value": 0, "label": "Atenção", "falha": false },
+        "sobrevivencia": { "value": 0, "label": "Sobrevivência", "falha": false },
+        "pilotagem": { "value": 0, "label": "Pilotagem", "falha": false },
+        "primeiros_socorros": { "value": 0, "label": "Prim. Socorros", "falha": false },
+        "medicina": { "value": 0, "label": "Medicina", "falha": false },
+        "mecanica": { "value": 0, "label": "Mecânica", "falha": false },
+        "eletronica": { "value": 0, "label": "Eletrônica/Hack", "falha": false },
+        "social": { "value": 0, "label": "Social/Lábia", "falha": false }
+      },
+      "details": {
+        "biography": "",
+        "notes": "",
+        "tipo": "infectado"
+      }
+    },
+    "horda": {
+      "templates": ["base"],
+      "resources": {
+        "alerta": { "value": 1, "max": 6 }
+      },
+      "details": {
+        "densidade": "bando",
+        "biography": ""
+      }
+    }
+  },
+  "Item": {
+    "types": ["item", "arma", "qualidade", "defeito", "trauma"],
+    "item": {
+      "templates": ["base"],
+      "quantity": 1,
+      "weight": 0
+    },
+    "arma": {
+      "templates": ["base"],
+      "dano": 2,
+      "uso": "d8"
+    },
+    "qualidade": {
+      "templates": ["base"],
+      "description": ""
+    },
+    "defeito": {
+      "templates": ["base"],
+      "description": ""
+    },
+    "trauma": {
+      "templates": ["base"],
+      "description": ""
+    }
+  }
+}

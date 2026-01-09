@@ -1,0 +1,30 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <div class="header-content flexrow">
+            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+            <div class="header-details flexcol">
+                <h1 class="charname">
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Nome do Item"/>
+                </h1>
+                <div class="item-subtitle">RECURSO / FERRAMENTA</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="sheet-body">
+        <div class="resource-box" style="margin-bottom: 15px;">
+            <label>QUANTIDADE</label>
+            <div class="resource-inputs">
+                <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"
+                       style="color: #fff; font-size: 2em; width: 100%; border: none; background: transparent;"/>
+            </div>
+        </div>
+
+        <div class="description">
+            <h3 style="color: #666; font-size: 0.8em; font-weight: bold; border-bottom: 1px solid #333; margin-bottom: 5px;">DESCRIÇÃO</h3>
+            <div class="editor-box" style="height: 250px;">
+                {{editor system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+            </div>
+        </div>
+    </div>
+</form>

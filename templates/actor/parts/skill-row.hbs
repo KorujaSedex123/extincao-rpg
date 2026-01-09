@@ -1,0 +1,11 @@
+<div class="skill-row flexrow">
+    <a class="skill-name rollable" data-roll-type="skill" data-key="{{key}}" data-label="{{label}}">
+        {{label}} <span style="color:#666; font-size:0.8em;">[{{attr}}]</span>
+    </a>
+    
+    <input class="skill-input" type="number" name="system.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/>
+    
+    <div class="skill-checkbox">
+        <input type="checkbox" name="system.skills.{{key}}.falha" {{checked skill.falha}}/>
+    </div>
+</div>

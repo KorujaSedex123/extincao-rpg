@@ -1,0 +1,170 @@
+<form class="{{cssClass}} npc-sheet {{#if isLocked}}locked-sheet{{/if}}" autocomplete="off">
+
+    <header class="sheet-header">
+        <div class="npc-header-grid">
+            <div class="npc-profile">
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+            </div>
+            <div class="npc-main-data">
+                <div class="npc-top-row">
+                    <div class="name-lock-wrapper flexrow">
+                        <input class="npc-name" name="name" type="text" value="{{actor.name}}"
+                            placeholder="NOME DO INIMIGO" />
+                        <a class="lock-btn" title="{{#if isLocked}}Destravar{{else}}Travar{{/if}}">
+                            <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+                        </a>
+                    </div>
+
+                    <div class="threat-badge" title="Classe de Ameaça (1-4)">
+                        CLASSE <input type="number" name="system.attributes.nivel" value="{{system.attributes.nivel}}"
+                            {{#if isLocked}}readonly{{/if}} />
+                    </div>
+                </div>
+
+                <div class="npc-type-row">
+                    <select name="system.details.tipo" class="npc-type-select" {{#if isLocked}}disabled{{/if}}>
+                        {{selectOptions (object infectado="INFECTADO (Instinto)" humano="HUMANO (Tático)" animal="ANIMAL
+                        (Instinto)") selected=system.details.tipo}}
+                    </select>
+                </div>
+
+                <div class="npc-hp-container">
+                    <label>PV / INTEGRIDADE</label>
+                    <div class="hp-bar-wrapper">
+                        <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}"
+                            {{#if isLocked}}readonly{{/if}} />
+                        <span class="sep">/</span>
+                        <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" {{#if
+                            isLocked}}readonly{{/if}} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs tabs npc-tabs" data-group="primary">
+        <a class="item" data-tab="combat"><i class="fas fa-skull"></i> COMBATE</a>
+        <a class="item" data-tab="stats"><i class="fas fa-chart-bar"></i> ESTATÍSTICAS</a>
+        <a class="item" data-tab="bio"><i class="fas fa-file-alt"></i> DOSSIÊ</a>
+    </nav>
+
+    <section class="sheet-body">
+
+        <div class="tab combat" data-group="primary" data-tab="combat">
+            <div class="combat-grid">
+                <div class="combat-box defense">
+                    <i class="fas fa-shield-alt"></i>
+                    <label>DEFESA</label>
+                    <input type="number" name="system.attributes.defesa.value"
+                        value="{{system.attributes.defesa.value}}" {{#if isLocked}}readonly{{/if}} />
+                    <div class="sub-text">Sucessos p/ Acertar</div>
+                </div>
+
+                <div class="combat-box attack {{#if isLocked}}rollable{{/if}}" {{#if isLocked}}data-key="ataque"
+                    data-label="Ataque de {{actor.name}}" {{/if}}>
+
+                    <i class="fas fa-crosshairs"></i>
+                    <label>ATAQUE</label>
+
+                    {{#if isLocked}}
+                    <div class="value-display">{{system.attributes.ataque.value}}d6</div>
+                    <div class="sub-text">Clique p/ Rolar</div>
+                    {{else}}
+                    <input type="number" name="system.attributes.ataque.value"
+                        value="{{system.attributes.ataque.value}}" placeholder="3" />
+                    <div class="sub-text">Qtd. Dados</div>
+                    {{/if}}
+                </div>
+
+                <div class="combat-box damage">
+                    <i class="fas fa-bomb"></i>
+                    <label>DANO</label>
+                    <input type="number" name="system.attributes.dano.value" value="{{system.attributes.dano.value}}"
+                        {{#if isLocked}}readonly{{/if}} />
+                    <div class="sub-text">Fixo (+ Extras)</div>
+                </div>
+            </div>
+
+            <hr style="border-color: #550000; margin: 15px 0;">
+
+            <div class="npc-details-grid">
+                <div class="detail-box full-width">
+                    <h3 class="box-header"><i class="fas fa-sack-dollar"></i> LOOT / ESPÓLIO</h3>
+                    <div class="editor-container short">
+                        {{editor enrichedNotes target="system.details.notes" button=true owner=owner editable=editable}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab stats" data-group="primary" data-tab="stats">
+            <div class="npc-full-stats">
+                <h3 class="box-header">ATRIBUTOS BASE (Pool de Dados)</h3>
+
+                <div class="attributes-grid npc-attr-grid">
+                    <div class="attribute-box rollable" data-key="for" data-label="Força"><input class="attr-value-big"
+                            type="number" name="system.attributes.for.value" value="{{system.attributes.for.value}}"
+                            {{#if isLocked}}readonly{{/if}} /><span class="attr-name-big">FORÇA</span></div>
+                    <div class="attribute-box rollable" data-key="des" data-label="Destreza"><input
+                            class="attr-value-big" type="number" name="system.attributes.des.value"
+                            value="{{system.attributes.des.value}}" {{#if isLocked}}readonly{{/if}} /><span
+                            class="attr-name-big">DESTREZA</span></div>
+                    <div class="attribute-box rollable" data-key="con" data-label="Constituição"><input
+                            class="attr-value-big" type="number" name="system.attributes.con.value"
+                            value="{{system.attributes.con.value}}" {{#if isLocked}}readonly{{/if}} /><span
+                            class="attr-name-big">VIGOR</span></div>
+                    <div class="attribute-box rollable" data-key="int" data-label="Inteligência"><input
+                            class="attr-value-big" type="number" name="system.attributes.int.value"
+                            value="{{system.attributes.int.value}}" {{#if isLocked}}readonly{{/if}} /><span
+                            class="attr-name-big">MENTE</span></div>
+                    <div class="attribute-box rollable" data-key="per" data-label="Percepção"><input
+                            class="attr-value-big" type="number" name="system.attributes.per.value"
+                            value="{{system.attributes.per.value}}" {{#if isLocked}}readonly{{/if}} /><span
+                            class="attr-name-big">SENTIDOS</span></div>
+                    <div class="attribute-box rollable" data-key="von" data-label="Vontade"><input
+                            class="attr-value-big" type="number" name="system.attributes.von.value"
+                            value="{{system.attributes.von.value}}" {{#if isLocked}}readonly{{/if}} /><span
+                            class="attr-name-big">MORAL</span></div>
+                </div>
+
+                {{#if showSkills}}
+                <h3 class="box-header" style="margin-top:15px;">PERÍCIAS TÁTICAS</h3>
+                <div class="grid grid-2col">
+                    <div class="skills-col">
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="armas_fogo" label="Armas de
+                        Fogo" attr="DES" skill=system.skills.armas_fogo isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="armas_brancas" label="Armas
+                        Brancas" attr="FOR" skill=system.skills.armas_brancas isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="furtividade" label="Furtividade"
+                        attr="DES" skill=system.skills.furtividade isLocked=isLocked}}
+                    </div>
+                    <div class="skills-col">
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="atencao" label="Atenção"
+                        attr="PER" skill=system.skills.atencao isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="social" label="Social/Lábia"
+                        attr="VON" skill=system.skills.social isLocked=isLocked}}
+                        {{> "systems/extincao/templates/actor/parts/skill-row.hbs" key="esquiva" label="Esquiva"
+                        attr="DES" skill=system.skills.esquiva isLocked=isLocked}}
+                    </div>
+                </div>
+                {{else}}
+                <div class="instinct-warning">
+                    <i class="fas fa-biohazard"></i> CRIATURA DE INSTINTO <br>
+                    <span style="font-size:0.7em">Infectados não usam perícias. Use os Atributos brutos.</span>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="tab bio" data-group="primary" data-tab="bio">
+            <div class="detail-box full-height">
+                <h3 class="box-header"><i class="fas fa-brain"></i> COMPORTAMENTO</h3>
+                <div class="editor-container full">
+                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner
+                    editable=editable}}
+                </div>
+            </div>
+        </div>
+
+    </section>
+</form>

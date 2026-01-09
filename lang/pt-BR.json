@@ -1,0 +1,24 @@
+{
+    "TYPES.Actor.sobrevivente": "Sobrevivente",
+    "TYPES.Actor.npc": "Inimigo / NPC",
+    "TYPES.Actor.horda": "A Horda",
+    
+    "TYPES.Item.item": "Equipamento",
+    "TYPES.Item.arma": "Arma",
+    "TYPES.Item.qualidade": "Qualidade",
+    "TYPES.Item.defeito": "Defeito",
+    "TYPES.Item.trauma": "Trauma",
+
+    "EXTINCAO.Forca": "Força",
+    "EXTINCAO.Destreza": "Destreza",
+    "EXTINCAO.Constituicao": "Constituição",
+    "EXTINCAO.Inteligencia": "Inteligência",
+    "EXTINCAO.Percepcao": "Percepção",
+    "EXTINCAO.Vontade": "Vontade",
+    
+    "EXTINCAO.Vida": "Vida",
+    "EXTINCAO.Resistencia": "Resistência",
+    "EXTINCAO.Estresse": "Estresse",
+    "EXTINCAO.Armas": "Armas",
+    "EXTINCAO.Equipamentos": "Equipamentos"
+}

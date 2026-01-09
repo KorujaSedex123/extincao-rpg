@@ -1,0 +1,35 @@
+{
+  "id": "extincao",
+  "title": "EXTINÇÃO RPG",
+  "description": "Sistema de Horror de Sobrevivência - O Dado é o Juiz.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "13"
+  },
+  "authors": [
+    {
+      "name": "Mestre Gem",
+      "flags": {}
+    }
+  ],
+  "esmodules": ["module/extincao.mjs"],
+  "styles": ["css/extincao.css"],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR.json"
+    }
+  ],
+  "grid": {
+    "distance": 1.5,
+    "units": "m"
+  },
+  "primaryTokenAttribute": "resources.pv",
+  "secondaryTokenAttribute": "resources.estresse",
+  "url": "",
+  "manifest": "",
+  "download": ""
+}
