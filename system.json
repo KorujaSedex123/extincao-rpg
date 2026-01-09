@@ -29,7 +29,30 @@
   },
   "primaryTokenAttribute": "resources.pv",
   "secondaryTokenAttribute": "resources.estresse",
-  "url": "",
-  "manifest": "",
-  "download": ""
+
+  "url": "https://github.com/KorujaSedex123/extincao-rpg",
+  "manifest": "https://raw.githubusercontent.com/KorujaSedex123/extincao-rpg/main/system.json",
+  "download": "https://github.com/KorujaSedex123/extincao-rpg/archive/refs/heads/main.zip",
+
+  "documentTypes": {
+    "Actor": {
+      "types": ["sobrevivente", "npc", "horda", "base"],
+      "htmlTemplates": {
+        "sobrevivente": "templates/actor/actor-sobrevivente-sheet.hbs",
+        "npc": "templates/actor/actor-npc-sheet.hbs",
+        "horda": "templates/actor/actor-horda-sheet.hbs",
+        "base": "templates/actor/actor-base-sheet.hbs"
+      }
+    },
+    "Item": {
+      "types": ["item", "arma", "qualidade", "defeito", "trauma"],
+      "htmlTemplates": {
+        "item": "templates/item/item-item-sheet.hbs",
+        "arma": "templates/item/item-arma-sheet.hbs",
+        "qualidade": "templates/item/item-qualidade-sheet.hbs",
+        "defeito": "templates/item/item-defeito-sheet.hbs",
+        "trauma": "templates/item/item-trauma-sheet.hbs"
+      }
+    }
+  }
 }
