@@ -1,5 +1,9 @@
 import { onManageActiveEffect, prepareActiveEffectCategories } from '../helpers/effects.mjs';
 
+// --- CORREÇÃO V12: Definir o caminho da classe ActorSheet ---
+// Isso elimina os avisos amarelos de "accessing global ActorSheet"
+const ActorSheet = foundry.appv1.sheets.ActorSheet;
+
 // =============================================================================
 // 1. CONSTANTES E CONFIGURAÇÕES
 // =============================================================================
@@ -20,35 +24,17 @@ const DENSIDADE_OPTIONS = {
     "mare": "MARÉ (30+) - Força da Natureza"
 };
 
-// Banco de Dados de Arquétipos (Apenas Atributos, Perícias são manuais)
+// Banco de Dados de Arquétipos (Apenas Atributos)
 const ARCHETYPE_STATS = {
-    "O Combatente": {
-        attributes: { for: 3, des: 3, con: 3, int: 2, per: 2, von: 2 }
-    },
-    "O Civil (Força Bruta)": {
-        attributes: { for: 4, des: 2, con: 4, int: 2, per: 1, von: 2 }
-    },
-    "A Médica": {
-        attributes: { for: 1, des: 2, con: 2, int: 5, per: 3, von: 2 }
-    },
-    "O Técnico": {
-        attributes: { for: 1, des: 3, con: 2, int: 5, per: 2, von: 2 }
-    },
-    "O Líder Espiritual": {
-        attributes: { for: 2, des: 2, con: 2, int: 3, per: 2, von: 4 }
-    },
-    "O Marginal": {
-        attributes: { for: 2, des: 4, con: 2, int: 2, per: 3, von: 2 }
-    },
-    "A Atleta": {
-        attributes: { for: 3, des: 4, con: 4, int: 1, per: 2, von: 1 }
-    },
-    "O Sniper": {
-        attributes: { for: 2, des: 4, con: 2, int: 2, per: 4, von: 1 }
-    },
-    "O Mascote": {
-        attributes: { for: 1, des: 4, con: 2, int: 2, per: 3, von: 3 }
-    }
+    "O Combatente": { attributes: { for: 3, des: 3, con: 3, int: 2, per: 2, von: 2 } },
+    "O Civil (Força Bruta)": { attributes: { for: 4, des: 2, con: 4, int: 2, per: 1, von: 2 } },
+    "A Médica": { attributes: { for: 1, des: 2, con: 2, int: 5, per: 3, von: 2 } },
+    "O Técnico": { attributes: { for: 1, des: 3, con: 2, int: 5, per: 2, von: 2 } },
+    "O Líder Espiritual": { attributes: { for: 2, des: 2, con: 2, int: 3, per: 2, von: 4 } },
+    "O Marginal": { attributes: { for: 2, des: 4, con: 2, int: 2, per: 3, von: 2 } },
+    "A Atleta": { attributes: { for: 3, des: 4, con: 4, int: 1, per: 2, von: 1 } },
+    "O Sniper": { attributes: { for: 2, des: 4, con: 2, int: 2, per: 4, von: 1 } },
+    "O Mascote": { attributes: { for: 1, des: 4, con: 2, int: 2, per: 3, von: 3 } }
 };
 
 // Mapa de Perícia -> Atributo Base
@@ -71,29 +57,32 @@ export class BoilerplateActorSheet extends ActorSheet {
 
     /** @override */
     static get defaultOptions() {
-
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ['boilerplate', 'sheet', 'actor', 'extincao-sheet'],
             width: 900,
             height: 750,
-            tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'monitor' }],
+            tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'main' }],
         });
     }
 
     /**
      * CONSTRUTOR: Define o tamanho da janela ANTES de renderizar
-     * Evita o erro "Cannot set property options... only a getter"
      */
     constructor(object, options = {}) {
         // Se for NPC, força tamanho menor
         if (object.type === 'npc') {
             options.width = options.width || 600;
-            options.height = options.height || 550;
+            options.height = options.height || 600;
         }
         // Se for Horda, tamanho médio
         else if (object.type === 'horda') {
             options.width = options.width || 700;
             options.height = options.height || 650;
+        }
+        // Se for Base, tamanho customizado
+        else if (object.type === 'base') {
+            options.width = options.width || 600;
+            options.height = options.height || 700;
         }
 
         // Inicia a ficha com as opções ajustadas
@@ -106,46 +95,47 @@ export class BoilerplateActorSheet extends ActorSheet {
     }
 
     /** @override - Prepara os dados para o HTML */
-   async getData() {
-    const context = super.getData();
-    const actorData = this.document.toObject(false);
-    context.system = actorData.system;
-    context.flags = actorData.flags;
-    context.config = CONFIG.BOILERPLATE;
-    
-    // Flag de travamento (Funciona para Sobrevivente e NPC agora)
-    context.isLocked = this.actor.getFlag("extincao", "sheetLocked") || false;
+    async getData() {
+        const context = super.getData();
+        const actorData = this.document.toObject(false);
+        context.system = actorData.system;
+        context.flags = actorData.flags;
+        context.config = CONFIG.BOILERPLATE;
 
-    // Listas para Dropdowns
-    context.arquetipos = ARQUETIPOS_LISTA.reduce((acc, arq) => { acc[arq] = arq; return acc; }, {});
-    context.densidadeOptions = DENSIDADE_OPTIONS; // Horda
+        // Flag de travamento (Funciona para Sobrevivente e NPC agora)
+        context.isLocked = this.actor.getFlag("extincao", "sheetLocked") || false;
 
-    // Lógica para NPCs:
-    // 1. Atributos aparecem para todos.
-    // 2. Perícias só aparecem se for Humano ou Animal.
-    if (this.actor.type === 'npc') {
-        const tipoNPC = actorData.system.details?.tipo;
-        context.showSkills = (tipoNPC === 'humano' || tipoNPC === 'animal');
+        // Listas para Dropdowns
+        context.arquetipos = ARQUETIPOS_LISTA.reduce((acc, arq) => { acc[arq] = arq; return acc; }, {});
+        context.densidadeOptions = DENSIDADE_OPTIONS; // Horda
+
+        // Lógica para NPCs:
+        // 1. Atributos aparecem para todos.
+        // 2. Perícias só aparecem se for Humano ou Animal.
+        if (this.actor.type === 'npc') {
+            const tipoNPC = actorData.system.details?.tipo;
+            context.showSkills = (tipoNPC === 'humano' || tipoNPC === 'animal');
+        }
+
+        // Itens e Pontos (Só para Sobrevivente)
+        if (actorData.type == 'sobrevivente') {
+            this._prepareItems(context);
+            this._calculateSpentPoints(context);
+        }
+
+        // Text Editor (V12 Compatible)
+        const editorClass = foundry.applications?.ux?.TextEditor ?? TextEditor;
+        context.enrichedQualidades = await editorClass.enrichHTML(this.actor.system.details?.qualidades || "", { async: true, relativeTo: this.actor });
+        context.enrichedDefeitos = await editorClass.enrichHTML(this.actor.system.details?.defeitos || "", { async: true, relativeTo: this.actor });
+        context.enrichedTraumas = await editorClass.enrichHTML(this.actor.system.details?.traumas || "", { async: true, relativeTo: this.actor });
+        context.enrichedBiography = await editorClass.enrichHTML(this.actor.system.details?.biography || "", { async: true, relativeTo: this.actor });
+        context.enrichedNotes = await editorClass.enrichHTML(this.actor.system.details?.notes || "", { async: true, relativeTo: this.actor });
+
+        context.effects = prepareActiveEffectCategories(this.actor.allApplicableEffects());
+
+        return context;
     }
 
-    // Itens e Pontos (Só para Sobrevivente)
-    if (actorData.type == 'sobrevivente') {
-      this._prepareItems(context);
-      this._calculateSpentPoints(context);
-    }
-
-    // Text Editor (V12)
-    const editorClass = foundry.applications?.ux?.TextEditor ?? TextEditor;
-    context.enrichedQualidades = await editorClass.enrichHTML(this.actor.system.details?.qualidades || "", {async: true, relativeTo: this.actor});
-    context.enrichedDefeitos = await editorClass.enrichHTML(this.actor.system.details?.defeitos || "", {async: true, relativeTo: this.actor});
-    context.enrichedTraumas = await editorClass.enrichHTML(this.actor.system.details?.traumas || "", {async: true, relativeTo: this.actor});
-    context.enrichedBiography = await editorClass.enrichHTML(this.actor.system.details?.biography || "", {async: true, relativeTo: this.actor});
-    context.enrichedNotes = await editorClass.enrichHTML(this.actor.system.details?.notes || "", {async: true, relativeTo: this.actor}); // Notas do NPC
-    
-    context.effects = prepareActiveEffectCategories(this.actor.allApplicableEffects());
-
-    return context;
-  }
     /** Separa os itens em categorias */
     _prepareItems(context) {
         const armas = [];
@@ -192,15 +182,9 @@ export class BoilerplateActorSheet extends ActorSheet {
         html.find('.alert-segment').click(async (ev) => {
             ev.preventDefault();
             const idx = Number(ev.currentTarget.dataset.index);
-
-            // Pega o valor atual do alerta (garante que seja número)
             const current = Number(this.actor.system.resources.alerta.value) || 0;
-
             let newValue = idx;
-
-            // Se clicar no número que já está ativo, desce um nível (toggle)
             if (current === idx) newValue = idx - 1;
-
             await this.actor.update({ "system.resources.alerta.value": newValue });
         });
 
@@ -291,7 +275,12 @@ export class BoilerplateActorSheet extends ActorSheet {
      */
     async _onRoll(event) {
         event.preventDefault();
+        // ESTA LINHA DEVE SER A PRIMEIRA
         const dataset = event.currentTarget.dataset;
+
+        // =========================================================
+        // 0. AÇÕES ESPECIAIS DA HORDA
+        // =========================================================
         if (dataset.rollType === 'horda-abraco') {
             ChatMessage.create({
                 content: `
@@ -323,7 +312,6 @@ export class BoilerplateActorSheet extends ActorSheet {
             return;
         }
 
-
         // =========================================================
         // 1. ROLAGEM DE DADO DE USO (MUNIÇÃO / RECURSO)
         // =========================================================
@@ -341,7 +329,6 @@ export class BoilerplateActorSheet extends ActorSheet {
             let degraded = false;
             let newUd = currentUd;
 
-            // Regra: 1 ou 2 gasta a munição
             if (result <= 2) {
                 degraded = true;
                 newUd = UD_CHAIN[currentUd] || "0";

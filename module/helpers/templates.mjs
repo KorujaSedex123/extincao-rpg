@@ -1,16 +1,13 @@
 /**
- * Define a set of template paths to pre-load
- * Pre-loaded templates are compiled and cached for fast access when rendering
- * @return {Promise}
+ * Pré-carrega os templates HTML para evitar delay na abertura das fichas
  */
-export const preloadHandlebarsTemplates = async function () {
+export const preloadHandlebarsTemplates = async function() {
+  
+  // Define o caminho completo da função para evitar aviso de depreciação
+  const loadTemplates = foundry.applications.handlebars.loadTemplates;
+
   return loadTemplates([
-    // Actor partials.
-    'systems/boilerplate/templates/actor/parts/actor-features.hbs',
-    'systems/boilerplate/templates/actor/parts/actor-items.hbs',
-    'systems/boilerplate/templates/actor/parts/actor-spells.hbs',
-    'systems/boilerplate/templates/actor/parts/actor-effects.hbs',
-    // Item partials
-    'systems/boilerplate/templates/item/parts/item-effects.hbs',
+    // Lista de Parciais (Parts)
+    "systems/extincao/templates/actor/parts/skill-row.hbs"
   ]);
 };

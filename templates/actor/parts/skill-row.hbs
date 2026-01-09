@@ -1,11 +1,15 @@
-<div class="skill-row flexrow">
-    <a class="skill-name rollable" data-roll-type="skill" data-key="{{key}}" data-label="{{label}}">
-        {{label}} <span style="color:#666; font-size:0.8em;">[{{attr}}]</span>
+<div class="skill-row flexrow {{#if skill.falha}}failure-marked{{/if}}">
+    <a class="rollable skill-name" data-roll-type="skill" data-key="{{key}}" data-label="{{label}}">
+        {{label}} <span class="attr-ref">({{attr}})</span>
     </a>
+
+    <input class="skill-fail-checkbox" type="checkbox" name="system.skills.{{key}}.falha" {{checked skill.falha}} title="Marcar Falha para XP"/>
+
+    <input class="skill-value" type="number" name="system.skills.{{key}}.value" value="{{skill.value}}" min="0" max="5" {{#if isLocked}}readonly{{/if}}/>
     
-    <input class="skill-input" type="number" name="system.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/>
-    
-    <div class="skill-checkbox">
-        <input type="checkbox" name="system.skills.{{key}}.falha" {{checked skill.falha}}/>
+    <div class="skill-pips">
+        {{#each (range 1 5) as |idx|}}
+        <span class="pip {{#if (lte idx ../skill.value)}}filled{{/if}}"></span>
+        {{/each}}
     </div>
 </div>

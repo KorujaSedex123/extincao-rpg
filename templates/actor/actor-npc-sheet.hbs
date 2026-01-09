@@ -16,15 +16,18 @@
                     </div>
 
                     <div class="threat-badge" title="Classe de Ameaça (1-4)">
-                        CLASSE <input type="number" name="system.attributes.nivel" value="{{system.attributes.nivel}}"
-                            {{#if isLocked}}readonly{{/if}} />
+                        <input type="number" name="system.attributes.nivel.value"
+                            value="{{system.attributes.nivel.value}}" ... />
                     </div>
                 </div>
 
                 <div class="npc-type-row">
                     <select name="system.details.tipo" class="npc-type-select" {{#if isLocked}}disabled{{/if}}>
-                        {{selectOptions (object infectado="INFECTADO (Instinto)" humano="HUMANO (Tático)" animal="ANIMAL
-                        (Instinto)") selected=system.details.tipo}}
+                        {{#select system.details.tipo}}
+                        <option value="infectado">INFECTADO (Instinto)</option>
+                        <option value="humano">HUMANO (Tático)</option>
+                        <option value="animal">ANIMAL (Instinto)</option>
+                        {{/select}}
                     </select>
                 </div>
 
