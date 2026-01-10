@@ -80,7 +80,7 @@ export class BoilerplateActorSheet extends ActorSheet {
             options.height = options.height || 650;
         }
         // Se for Base, tamanho customizado
-        else if (object.type === 'base') {
+        else if (object.type === 'refugio') {
             options.width = options.width || 600;
             options.height = options.height || 700;
         }

@@ -1,8 +1,8 @@
 {
   "Actor": {
-    "types": ["sobrevivente", "npc", "horda"],
+    "types": ["sobrevivente", "npc", "horda", "refugio"],
     "templates": {
-      "base": {
+      "refugio": {
         "attributes": {},
         "details": {
           "biography": ""
