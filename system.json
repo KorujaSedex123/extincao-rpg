@@ -36,23 +36,17 @@
 
   "documentTypes": {
     "Actor": {
-      "types": ["sobrevivente", "npc", "horda", "base"],
-      "htmlTemplates": {
-        "sobrevivente": "templates/actor/actor-sobrevivente-sheet.hbs",
-        "npc": "templates/actor/actor-npc-sheet.hbs",
-        "horda": "templates/actor/actor-horda-sheet.hbs",
-        "base": "templates/actor/actor-base-sheet.hbs"
-      }
+      "sobrevivente": {},
+      "npc": {},
+      "horda": {},
+      "base": {}
     },
     "Item": {
-      "types": ["item", "arma", "qualidade", "defeito", "trauma"],
-      "htmlTemplates": {
-        "item": "templates/item/item-item-sheet.hbs",
-        "arma": "templates/item/item-arma-sheet.hbs",
-        "qualidade": "templates/item/item-qualidade-sheet.hbs",
-        "defeito": "templates/item/item-defeito-sheet.hbs",
-        "trauma": "templates/item/item-trauma-sheet.hbs"
-      }
+      "item": {},
+      "arma": {},
+      "qualidade": {},
+      "defeito": {},
+      "trauma": {}
     }
   }
 }
