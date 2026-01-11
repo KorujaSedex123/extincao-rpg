@@ -1,9 +1,9 @@
 <form class="{{cssClass}} horda-sheet" autocomplete="off">
-    
+
     <header class="sheet-header">
         <div class="hazard-stripe flexrow">
             <div class="horda-profile">
-                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
             </div>
 
             <div class="horda-title-container">
@@ -28,24 +28,25 @@
     </nav>
 
     <section class="sheet-body">
-        
+
         <div class="tab monitor" data-group="primary" data-tab="monitor">
             <div class="panel-warning">
                 <div class="alert-section">
                     <div class="alert-header">
                         NÍVEL DE RUÍDO / ALERTA
                     </div>
-                    
+
                     <div class="alert-display">
                         {{#each (range 1 6) as |idx|}}
-                        <a class="alert-segment {{#if (lte idx ../system.resources.alerta.value)}}lit{{/if}} {{#if (eq idx 6)}}critical{{/if}}" 
-                           data-index="{{idx}}">
+                        <a class="alert-segment {{#if (lte idx ../system.resources.alerta.value)}}lit{{/if}} {{#if (eq idx 6)}}critical{{/if}}"
+                            data-index="{{idx}}">
                         </a>
                         {{/each}}
                     </div>
 
                     <div class="alert-value-text">
-                        NÍVEL ATUAL: <span style="color: #ffaa00; font-size: 1.5em;">{{system.resources.alerta.value}}</span> / 6
+                        NÍVEL ATUAL: <span
+                            style="color: #ffaa00; font-size: 1.5em;">{{system.resources.alerta.value}}</span> / 6
                     </div>
 
                     <div class="alert-status">
@@ -69,14 +70,14 @@
         <div class="tab protocols" data-group="primary" data-tab="protocols">
             <div class="horda-actions-panel">
                 <h3 class="panel-title">AÇÕES TÁTICAS</h3>
-                
+
                 <p class="instruction-text">Ative quando 3+ infectados cercarem um alvo.</p>
 
-                <button class="horda-btn rollable" data-roll-type="horda-abraco">
-                    <div class="btn-icon"><i class="fas fa-hands"></i></div>
+                <button class="rollable horda-btn" data-roll-type="instinct" data-label="TESTE DE INSTINTO (HORDA)">
+                    <div class="btn-icon">🎲</div>
                     <div class="btn-content">
-                        <span class="btn-title">ABRAÇO DA MORTE</span>
-                        <span class="btn-desc">Imobilizar + 2 Dano Automático</span>
+                        <span class="btn-title">ROLAR INSTINTO</span>
+                        <span class="btn-desc">1d6 Puro (Glitch 1-3)</span>
                     </div>
                 </button>
 
@@ -97,8 +98,10 @@
 
         <div class="tab dossier" data-group="primary" data-tab="dossier">
             <div class="bio-editor-horda full-height">
-                <h3 class="bio-header" style="color: #ffaa00; border-bottom: 1px solid #ffaa00;">RELATÓRIO DE INTELIGÊNCIA</h3>
-                {{editor system.details.biography target="system.details.biography" button=true owner=owner editable=editable}}
+                <h3 class="bio-header" style="color: #ffaa00; border-bottom: 1px solid #ffaa00;">RELATÓRIO DE
+                    INTELIGÊNCIA</h3>
+                {{editor system.details.biography target="system.details.biography" button=true owner=owner
+                editable=editable}}
             </div>
         </div>
 

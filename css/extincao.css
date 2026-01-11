@@ -1445,3 +1445,154 @@ select option:hover {
     border-color: #ff0000;
     animation: none;
 }
+
+/* =========================================================
+   CORREÇÃO DEFINITIVA DE LEGIBILIDADE (INPUTS)
+   ========================================================= */
+
+/* 1. MODO EDIÇÃO (Destravado): Campos visíveis e digitáveis */
+.extincao-sheet input[type="text"],
+.extincao-sheet input[type="number"] {
+    color: #ffffff !important;             /* FORÇA Texto Branco */
+    background-color: rgba(0, 0, 0, 0.5) !important; /* Fundo Preto 50% */
+    border: 1px solid #444 !important;     /* Borda Cinza */
+    border-radius: 4px;
+    font-family: "Courier New", monospace; /* Fonte do Sistema */
+    transition: all 0.2s ease;
+}
+
+/* Quando clica para digitar (Foco) */
+.extincao-sheet input:focus {
+    background-color: #000 !important;     /* Fundo Preto Total */
+    border-color: #ff4444 !important;      /* Borda Vermelha */
+    box-shadow: 0 0 8px #ff4444 !important; /* Brilho */
+    color: #ffffff !important;
+}
+
+/* 2. MODO LEITURA (Travado): Parece texto puro */
+.extincao-sheet.locked-sheet input[type="text"],
+.extincao-sheet.locked-sheet input[type="number"] {
+    background: transparent !important;    /* Sem fundo */
+    border: none !important;               /* Sem borda */
+    color: #eeeeee !important;             /* Branco quase puro */
+    text-shadow: none !important;
+    box-shadow: none !important;
+    cursor: default;
+}
+
+/* 3. ATRIBUTOS GRANDES (Correção Específica) */
+.attr-value-big {
+    font-size: 2.5em !important;
+    font-weight: 900 !important;
+    color: #ffffff !important;             /* Branco sempre */
+    background: transparent !important;
+    border: none !important;
+    text-shadow: 0 0 5px #000 !important;  /* Sombra para garantir leitura */
+}
+
+/* 4. PERÍCIAS (Correção Específica) */
+.skill-row input.skill-input {
+    background-color: #050505 !important;
+    color: #ffffff !important;
+    border: 1px solid #333 !important;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 5. CORREÇÃO DE AUTOFILL (Quando o navegador pinta de amarelo/azul) */
+.extincao-sheet input:-webkit-autofill,
+.extincao-sheet input:-webkit-autofill:hover, 
+.extincao-sheet input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #000 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* 6. CORREÇÃO DE SELECTS (Dropdowns) */
+.extincao-sheet select {
+    color: #4eff8c !important; /* Verde Matrix */
+    background-color: #000 !important;
+    border: 1px solid #333 !important;
+}
+
+.extincao-sheet select option {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+/* =========================================================
+   CORREÇÃO VISUAL DE RECURSOS (VIDA / RESISTÊNCIA)
+   ========================================================= */
+
+/* 1. Container dos Botões e Números */
+.resource-value-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espaço entre o botão e o número */
+    height: 40px;
+}
+
+/* 2. Estilo dos Inputs em MODO EDIÇÃO (Destravado) */
+.extincao-sheet .resource-inputs input {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+    color: #fff;
+    font-size: 1.4em;
+    font-weight: bold;
+    width: 45px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+/* 3. ESTILO MÁGICO: MODO TRAVADO (Sem cara de "Campo") */
+.extincao-sheet.locked-sheet .resource-inputs input {
+    background: transparent !important; /* Fundo invisível */
+    border: none !important;            /* Sem borda */
+    box-shadow: none !important;        /* Sem sombra */
+    color: #ffffff !important;          /* Branco Brilhante */
+    font-size: 1.6em !important;        /* Um pouco maior para leitura */
+    font-weight: 900 !important;        /* Negrito */
+    cursor: default;
+    width: 40px;                        /* Largura fixa para não dançar */
+    padding: 0;
+}
+
+.extincao-sheet.locked-sheet .resource-inputs input {
+    pointer-events: none; /* O clique atravessa o número travado */
+    z-index: 1;
+}
+/* 4. Botões de Controle (+ e -) */
+.resource-control {
+    position: relative; 
+    z-index: 100;        /* Força bruta: Fica na frente de tudo */
+    cursor: pointer;
+    background: #222;    /* Fundo visível para teste */
+    border: 1px solid #555;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.resource-control:hover {
+    background: #ff4444;
+    color: #fff;
+    border-color: #fff;
+    transform: scale(1.1);
+}
+
+/* O SEGREDO: O ícone não recebe clique, o botão pai recebe */
+.resource-control i {
+    pointer-events: none; 
+    margin: 0;
+}
+
+/* Garante que o input transparente não cubra os botões */
+.extincao-sheet.locked-sheet .resource-inputs input {
+    pointer-events: none; 
+    z-index: 1;
+}
