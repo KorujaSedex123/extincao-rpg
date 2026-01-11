@@ -1,82 +1,125 @@
-# Boilerplate System
+# Sistema EXTINÇÃO RPG
 
-![Foundry v11](https://img.shields.io/badge/foundry-v11-green)
+![Foundry v12](https://img.shields.io/badge/foundry-v12-green)
+![Status](https://img.shields.io/badge/status-playable-orange)
 
-This system is a boilerplate system that you can use as a starting point for building your own custom systems. It's similar to Simple World-building, but has examples of creating attributes in code rather than dynamically through the UI.
+> **"O mundo não acabou com um estrondo. Ele acabou com um grito, e depois silêncio."**
 
-## Usage
+O **EXTINÇÃO** é um sistema de RPG de Horror de Sobrevivência desenvolvido para Foundry VTT. É um hack focado em escassez de recursos, alta letalidade, gerenciamento de estresse e a constante ameaça da Horda.
 
-There are two ways to get started: using the Boilerplate system generator command or manually renaming and updating files.
+O sistema mistura elementos da *Year Zero Engine* (parada de dados d6) com a simplicidade do *The Black Hack* (Dado de Uso), criando uma experiência ágil e brutal.
 
-Regardless of which method you choose, think carefully about your system's name. Your system's package name when submitted to Foundry must be formatted like `alphanumeric-lowercase`, and it must be unique. Check the Foundry systems package list for conflicts before committing to a name!
+### 🌟 Destaques
+* **Atmosfera Sombria:** Interface customizada "Dark Industrial".
+* **Automação:** Criação de personagens rápida com arquétipos.
+* **Tensão:** Mecânicas de Ruído e Munição escassa integradas.
 
-> **Data Models**
->
-> If you would like to use DataModel classes instead of the older template.json configuration, you'll need to use the `npm run generate` command described below and choose to enable them when asked. DataModels are currently an optional feature, and are only availabe in the generator CLI due to that.
+[Ver Repositório no GitHub](https://github.com/KorujaSedex123/extincao-rpg)
 
-### Generator
+# Como Instalar
 
-This system includes a generator CLI in `package.json`. To use it, you must have [node.js](https://nodejs.org) installed, and it's recommended that you install node 20 or later.
+O sistema é compatível com Foundry VTT v11 e v12. Siga os passos abaixo para instalar no seu aplicativo ou servidor dedicado.
 
-> **Python Generator**
-> 
-> If you would rather use Python than node, there’s an excellent Python-based generator created by Cussa at https://github.com/Cussa/fvtt-boilerplate-initializator. Give it a shot!
+### Passo a Passo
 
-Once you have npm installed, you can run the following in your terminal or command prompt:
+1. Abra o Foundry VTT e vá na aba **Game Systems** (Sistemas de Jogo).
+2. Clique no botão **Install System**.
+3. No campo inferior **Manifest URL**, cole o link oficial:
 
-```bash
-npm install
-npm run generate
-```
+{% hint style="info" %}
+**Link do Manifesto:**
+`https://raw.githubusercontent.com/KorujaSedex123/extincao-rpg/main/system.json`
+{% endhint %}
 
-Your terminal should prompt you to name your system. Read the instructions carefully, the letter case and special characters in each question matter for correct system generation.
+4. Clique em **Install**.
+5. Crie um novo Mundo e selecione **EXTINÇÃO RPG** como sistema.
 
-Once the generator completes, it will output your system to `build/<your-system-name>`, where `<your-system-name>` is the package name you supplied during the prompt.
+---
 
-Copy this directory over to your Foundry systems directory and start coding!
+### Atualizando o Sistema
+Sempre que uma nova versão for lançada (novas regras ou correções):
+1. Vá em **Game Systems**.
+2. Clique no botão **Update All** ou no ícone de atualização ao lado do sistema Extinção.
 
-### Manual Replacement
+# Regras do Sistema
 
-Before installing this system, you should rename any files that have `boilerplate` in their filename to use whatever machine-safe name your system needs, such as `adnd2e` if you were building a system for 2nd edition Advanced Dungeons & Dragons. In addition, you should search through the files for `boilerplate` and `Boilerplate` and do the same for those, replacing them with appropriate names for your system.
+O EXTINÇÃO foi desenhado para ser rápido e letal. Aqui estão os pilares do jogo.
 
-The `name` property in your `system.json` file is your system's package name. This need to be formatted `alphanumeric-lowercase`, and it must also match the foldername you use for your system.
+## O Dado é o Juiz (Rolagens)
+O sistema utiliza apenas **d6 (Dados de 6 faces)**.
+* **A Parada:** Soma-se `Atributo + Perícia`.
+* **Sucesso:** Qualquer dado que cair **6** é um sucesso.
+* **Críticos:** Cada 6 adicional aumenta o efeito (Dano extra ou Façanhas).
 
-### Vue 3 Boilerplate
+### A Regra do Instinto (Glitch)
+Se penalidades (como ferimentos ou escuridão) reduzirem sua parada de dados a **0 ou menos**, você rola o **Dado de Instinto** (1d6).
+* **1, 2 ou 3:** <span style="color:red">**GLITCH (Catástrofe).**</span> A arma trava, você cai, ou faz barulho.
+* **6:** Sucesso sujo (com consequência).
 
-**NOTE: The Vue 3 version is currently outdated and considered an advanced usage of Foundry due to it being a custom renderer. Only try it out if you _really_ like Vue and are feeling dangerous!**
+## Sobrevivência e Recursos
 
-Alternatively, there's another build of this system that supports using Vue 3 components (ES module build target) for character sheet templates.
+### ❤️ Vida e Resistência
+* **PV (Pontos de Vida):** Ferimentos físicos. Difícil de recuperar (exige Medicina). Se zerar, o personagem cai morrendo.
+* **PR (Pontos de Resistência):** Fôlego e energia. Recupera com descanso curto (comer/beber). Usado para ativar habilidades.
 
-Head over to the [Vue3Boilerplate System](https://gitlab.com/asacolips-projects/foundry-mods/vue3boilerplate) repo if you're interested in using Vue!
+### 🧠 Estresse
+O horror cobra seu preço.
+* Certas situações (ver a Horda, quase morrer) causam Estresse.
+* Se a barra encher (6 pontos), o personagem entra em **COLAPSO**.
 
-### Getting Help
+### 🔫 O Dado de Uso (Munição)
+Não contamos balas. Usamos uma escala de dados para representar a escassez:
+> **d12 ➞ d10 ➞ d8 ➞ d6 ➞ d4 ➞ VAZIO**
 
-Check out the [Official Foundry VTT Discord](https://discord.gg/foundryvtt)! The #system-development channel has helpful pins and is a good place to ask questions about any part of the foundry application.
+Ao usar um item (atirar, beber água, usar kit médico):
+1. Role o dado atual do item.
+2. Se cair **1 ou 2**, o dado diminui um nível.
+3. Se cair 1 ou 2 no **d4**, o item acaba.
 
-For more static references, the [Knowledge Base](https://foundryvtt.com/kb/) and [API Documentation](https://foundryvtt.com/api/) provide different levels of detail. For the most detail, you can find the client side code in your foundry installation location. Classes are documented in individual files under `resources/app/client` and `resources/app/common`, and the code is collated into a single file at `resources/app/public/scripts/foundry.js`.
+# Atores e Fichas
 
-#### Tutorial
+O sistema possui 4 tipos de fichas especializadas.
 
-For much more information on how to use this system as a starting point for making your own, see the [full tutorial on the Foundry Wiki](https://foundryvtt.wiki/en/development/guides/SD-tutorial)!
+## 1. Sobrevivente (PJ)
+A ficha principal dos jogadores.
+* **Automação:** Selecione um Arquétipo (ex: "O Combatente") e os atributos se preenchem.
+* **Monitor de Infecção:** Acompanhe o avanço do vírus (Saudável ➞ Incubação ➞ Febre ➞ Necrose).
+* **Travamento:** Use o cadeado 🔒 no topo para alternar entre "Modo Edição" e "Modo Jogo".
 
-Note: Tutorial may be out of date, so look out for the Foundry compatibility badge at the top of each page.
+## 2. Inimigo (NPC)
+Ficha simplificada para o Mestre.
+* **Instinto:** Para zumbis e monstros (sem perícias, apenas dados brutos).
+* **Tático:** Para humanos armados (com perícias e estratégia).
 
-## Sheet Layout
+## 3. A Horda
+Uma ficha especial para gerenciar grandes massas de inimigos como uma força da natureza.
+* **Medidor de Alerta:** Controla visualmente o perigo (1 a 6).
+* **Integração com Token:** O nível de alerta aparece automaticamente sobre o token no mapa.
 
-This system includes a handful of helper CSS classes to help you lay out your sheets if you're not comfortable diving into CSS fully. Those are:
+## 4. Refúgio
+Para campanhas longas, gerencie a Base dos jogadores.
+* **Recursos:** Comida, Água e Segurança.
+* **Moral:** A sanidade coletiva do grupo.
 
-- `flexcol`: Included by Foundry itself, this lays out the child elements of whatever element you place this on vertically.
-- `flexrow`: Included by Foundry itself, this lays out the child elements of whatever element you place this on horizontally.
-- `flex-center`: When used on something that's using flexrow or flexcol, this will center the items and text.
-- `flex-between`: When used on something that's using flexrow or flexcol, this will attempt to place space between the items. Similar to "justify" in word processors.
-- `flex-group-center`: Add a border, padding, and center all items.
-- `flex-group-left`: Add a border, padding, and left align all items.
-- `flex-group-right`: Add a border, padding, and right align all items.
-- `grid`: When combined with the `grid-Ncol` classes, this will lay out child elements in a grid.
-- `grid-Ncol`: Replace `N` with any number from 1-12, such as `grid-3col`. When combined with `grid`, this will layout child elements in a grid with a number of columns equal to the number specified.
 
-## Compiling the CSS
+# Ferramentas de Automação
 
-This repo includes both CSS for the theme and SCSS source files. If you're new to CSS, it's probably easier to just work in those files directly and delete the SCSS directory. If you're interested in using a CSS preprocessor to add support for nesting, variables, and more, you can run `npm install` in this directory to install the dependencies for the scss compiler. After that, just run `npm run build` to compile the SCSS and start a process that watches for new changes.
+O sistema inclui macros poderosas para facilitar a vida do Mestre.
 
-![image](http://mattsmith.in/images/boilerplate.png)
+### Importador de Aventura: "O Túnel do Eco"
+Uma One-Shot completa pronta para jogar.
+1. Crie uma Macro do tipo *Script*.
+2. Cole o código do importador (disponível no Discord/GitHub).
+3. Execute para gerar:
+   * 10 Personagens prontos.
+   * Todos os Monstros e Itens.
+   * Diários com a história completa.
+
+### Monitor de Ruído
+Um painel flutuante para controlar a tensão.
+* Abre uma janela com o Nível de Ruído atual.
+* Botões para aumentar/diminuir o perigo.
+* Avisa no chat quando o nível sobe.
+
+### Gerador de Regras
+Cria um Compêndio de Diários com todas as regras resumidas para consulta rápida durante o jogo (HTML formatado).
