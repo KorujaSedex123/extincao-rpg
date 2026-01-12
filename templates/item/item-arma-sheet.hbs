@@ -1,54 +1,50 @@
 <form class="{{cssClass}}" autocomplete="off">
-    
     <header class="sheet-header">
-        <div class="header-content flexrow">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-            <div class="header-details flexcol">
-                <h1 class="charname">
-                    <input name="name" type="text" value="{{item.name}}" placeholder="Nome da Arma"/>
-                </h1>
-                <div class="item-subtitle">EQUIPAMENTO TÁTICO / COMBATE</div>
-            </div>
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-details" style="flex:1;">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Nome da Arma" {{#if isLocked}}readonly{{/if}}/>
+            </h1>
         </div>
     </header>
 
-    <div class="sheet-body">
-        
-        <div class="grid grid-2col" style="margin-bottom: 20px;">
-            
-            <div class="resource-box">
-                <label style="color: #ff0000;">DANO BASE</label>
-                <div class="resource-inputs">
-                    <input type="number" name="system.dano" value="{{system.dano}}" data-dtype="Number" 
-                           style="color: #fff; font-size: 2em; width: 100%; border: none; background: transparent;"/>
-                </div>
-            </div>
-            
-            <div class="resource-box">
-                <label style="color: #4eff8c;">DADO DE USO (UD)</label>
-                <div class="resource-inputs">
-                    <select name="system.uso" data-dtype="String" style="color: #fff; font-size: 1.5em; width: 100%; border: none; background: #000; text-align-last:center;">
-                        {{selectOptions (
-                            object 
-                            d12="d12 (Cheio)" 
-                            d10="d10 (Alto)" 
-                            d8="d8 (Médio)" 
-                            d6="d6 (Baixo)" 
-                            d4="d4 (Crítico)" 
-                            0="— (Vazio)"
-                        ) selected=system.uso}}
-                    </select>
-                </div>
-            </div>
+    {{#if isLocked}}
+    <div style="background:#330000; color:#ff4444; text-align:center; padding:5px; font-weight:bold; font-size:0.8em; margin-bottom:10px; border:1px solid #ff4444;">
+        <i class="fas fa-lock"></i> MODO VISUALIZAÇÃO (Refúgio Travado)
+    </div>
+    {{/if}}
+
+    <div class="item-stats-grid">
+        <div class="stat-box">
+            <label>DANO</label>
+            <input type="number" name="system.dano" value="{{system.dano}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/>
         </div>
-
-        <hr style="border-color: #333;">
-
-        <div class="description">
-            <h3 style="color: #666; font-size: 0.8em; font-weight: bold; border-bottom: 1px solid #333; margin-bottom: 5px;">NOTAS / MODIFICAÇÕES</h3>
-            <div class="editor-box" style="height: 200px;">
-                {{editor system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
-            </div>
+        <div class="stat-box">
+            <label>USO</label>
+            <input type="text" name="system.uso" value="{{system.uso}}" placeholder="d8" {{#if isLocked}}readonly{{/if}}/>
+        </div>
+        <div class="stat-box">
+            <label>QTD</label>
+            <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/>
         </div>
     </div>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">DESCRIÇÃO</a>
+        <a class="item" data-tab="attributes">DETALHES</a>
+    </nav>
+
+    <section class="sheet-body">
+        <div class="tab description" data-group="primary" data-tab="description">
+            <div class="bio-editor">
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
+            </div>
+        </div>
+        <div class="tab attributes" data-group="primary" data-tab="attributes">
+            <div class="form-group">
+                <label>Tags:</label>
+                <input type="text" name="system.tags" value="{{system.tags}}" {{#if isLocked}}readonly{{/if}}/>
+            </div>
+        </div>
+    </section>
 </form>

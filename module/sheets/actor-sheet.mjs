@@ -84,8 +84,9 @@ export class BoilerplateActorSheet extends ActorSheet {
             context.showSkills = (tipoNPC === 'humano' || tipoNPC === 'animal');
         }
 
-        this._prepareItems(context);
-
+        if (actorData.type === 'sobrevivente' || actorData.type === 'refugio') {
+            this._prepareItems(context);
+        }
         if (actorData.type == 'sobrevivente') {
             this._calculateSpentPoints(context);
         }
@@ -188,6 +189,12 @@ export class BoilerplateActorSheet extends ActorSheet {
                 notas: ""
             });
             await this.actor.update({ "system.habitantes": habitantes });
+        });
+
+        html.find('.item-open').click(ev => {
+            const li = $(ev.currentTarget).parents(".item");
+            const item = this.actor.items.get(li.data("itemId"));
+            if (item) item.sheet.render(true);
         });
 
         // 2. Deletar Habitante (Botão da Lixeira na lista)

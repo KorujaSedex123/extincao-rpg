@@ -1714,3 +1714,118 @@ select option:hover {
     color: #666666;
     text-decoration: line-through; /* Risco no nome/status */
 }
+
+/* --- ESTILOS DA FICHA DE REFÚGIO --- */
+
+/* Faz o label parecer clicável */
+.refuge-stat-box label.rollable {
+    cursor: pointer;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+/* Brilho ao passar o mouse (Hover) */
+.refuge-stat-box label.hover-glow:hover {
+    color: #4eff8c; /* Verde Neon */
+    text-shadow: 0 0 8px rgba(78, 255, 140, 0.6);
+}
+
+/* O ícone do dado fica discreto e acende no hover */
+.die-icon {
+    font-size: 0.8em;
+    opacity: 0.5;
+    margin-left: 5px;
+    transition: opacity 0.2s;
+}
+
+.refuge-stat-box label.hover-glow:hover .die-icon {
+    opacity: 1;
+    transform: rotate(20deg); /* Um charminho girando o dado */
+}
+
+/* ==========================================
+   ESTILIZAÇÃO DAS FICHAS DE ITEM (ARSENAL)
+   ========================================== */
+
+/* Remove o fundo branco padrão e coloca o tema escuro */
+.extincao.sheet.item .window-content {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* O Cabeçalho (Imagem + Nome) */
+.extincao.sheet.item .sheet-header {
+    background: #111;
+    border-bottom: 2px solid #444;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.extincao.sheet.item .profile-img {
+    border: 1px solid #555;
+    background: #000;
+    max-width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+/* O Nome do Item (Input) */
+.extincao.sheet.item input[name="name"] {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #4eff8c; /* Verde Neon */
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+    width: 100%;
+}
+
+/* GRID DE ESTATÍSTICAS (Dano, Uso, Peso) */
+.item-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+    padding: 10px;
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-box label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 3px;
+}
+
+.stat-box input {
+    background: #000;
+    border: 1px solid #444;
+    color: #4eff8c; /* Texto Verde Neon */
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.2em;
+    width: 100%;
+    padding: 5px;
+}
+
+/* Áreas de Texto (Descrição) */
+.extincao.sheet.item .editor-content {
+    background: #e0e0e0; /* Papel claro para leitura fácil */
+    color: #111;
+    padding: 10px;
+    min-height: 200px;
+    border: 1px solid #000;
+}

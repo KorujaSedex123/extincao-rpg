@@ -48,11 +48,19 @@ export class BoilerplateItemSheet extends ItemSheet {
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = itemData.system;
     context.flags = itemData.flags;
+    const parentLocked = this.item.actor?.getFlag("extincao", "sheetLocked");
+    if (parentLocked) {
+      context.isLocked = true;
+      context.editable = false; // Isso desabilita o salvamento padrão do formulário em alguns casos
+      // Mas para nossos inputs manuais, usaremos a flag `isLocked` nos templates
+    } else {
+      context.isLocked = false;
+    }
 
     // Enrich description info for display
     // Text Editor (V12)
     const editorClass = foundry.applications?.ux?.TextEditor ?? TextEditor;
-    context.system.enrichedDescription = await editorClass.enrichHTML(context.system.description, {async: true});
+    context.system.enrichedDescription = await editorClass.enrichHTML(context.system.description, { async: true });
 
     return context;
   }

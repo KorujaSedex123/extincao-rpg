@@ -1,6 +1,12 @@
 {
   "Actor": {
-    "types": ["sobrevivente", "npc", "horda", "refugio","habitante"],
+    "types": [
+      "sobrevivente",
+      "npc",
+      "horda",
+      "refugio",
+      "habitante"
+    ],
     "templates": {
       "base": {
         "attributes": {},
@@ -10,36 +16,127 @@
       }
     },
     "sobrevivente": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "attributes": {
-        "for": { "value": 1, "label": "Força" },
-        "des": { "value": 1, "label": "Destreza" },
-        "con": { "value": 1, "label": "Constituição" },
-        "int": { "value": 1, "label": "Inteligência" },
-        "per": { "value": 1, "label": "Percepção" },
-        "von": { "value": 1, "label": "Vontade" }
+        "for": {
+          "value": 1,
+          "label": "Força"
+        },
+        "des": {
+          "value": 1,
+          "label": "Destreza"
+        },
+        "con": {
+          "value": 1,
+          "label": "Constituição"
+        },
+        "int": {
+          "value": 1,
+          "label": "Inteligência"
+        },
+        "per": {
+          "value": 1,
+          "label": "Percepção"
+        },
+        "von": {
+          "value": 1,
+          "label": "Vontade"
+        }
       },
       "resources": {
-        "pv": { "value": 10, "max": 10, "label": "Vida" },
-        "pr": { "value": 10, "max": 10, "label": "Resistência" },
-        "estresse": { "value": 0, "max": 6, "label": "Estresse" },
-        "xp": { "value": 0, "label": "XP" }
+        "pv": {
+          "value": 10,
+          "max": 10,
+          "label": "Vida"
+        },
+        "pr": {
+          "value": 10,
+          "max": 10,
+          "label": "Resistência"
+        },
+        "estresse": {
+          "value": 0,
+          "max": 6,
+          "label": "Estresse"
+        },
+        "xp": {
+          "value": 0,
+          "label": "XP"
+        }
       },
       "skills": {
-        "armas_fogo": { "value": 0, "label": "Armas de Fogo", "falha": false },
-        "armas_brancas": { "value": 0, "label": "Armas Brancas", "falha": false },
-        "briga": { "value": 0, "label": "Briga", "falha": false },
-        "esquiva": { "value": 0, "label": "Esquiva", "falha": false },
-        "atletismo": { "value": 0, "label": "Atletismo", "falha": false },
-        "furtividade": { "value": 0, "label": "Furtividade", "falha": false },
-        "atencao": { "value": 0, "label": "Atenção", "falha": false },
-        "sobrevivencia": { "value": 0, "label": "Sobrevivência", "falha": false },
-        "pilotagem": { "value": 0, "label": "Pilotagem", "falha": false },
-        "primeiros_socorros": { "value": 0, "label": "Prim. Socorros", "falha": false },
-        "medicina": { "value": 0, "label": "Medicina", "falha": false },
-        "mecanica": { "value": 0, "label": "Mecânica", "falha": false },
-        "eletronica": { "value": 0, "label": "Eletrônica/Hack", "falha": false },
-        "social": { "value": 0, "label": "Social/Lábia", "falha": false }
+        "armas_fogo": {
+          "value": 0,
+          "label": "Armas de Fogo",
+          "falha": false
+        },
+        "armas_brancas": {
+          "value": 0,
+          "label": "Armas Brancas",
+          "falha": false
+        },
+        "briga": {
+          "value": 0,
+          "label": "Briga",
+          "falha": false
+        },
+        "esquiva": {
+          "value": 0,
+          "label": "Esquiva",
+          "falha": false
+        },
+        "atletismo": {
+          "value": 0,
+          "label": "Atletismo",
+          "falha": false
+        },
+        "furtividade": {
+          "value": 0,
+          "label": "Furtividade",
+          "falha": false
+        },
+        "atencao": {
+          "value": 0,
+          "label": "Atenção",
+          "falha": false
+        },
+        "sobrevivencia": {
+          "value": 0,
+          "label": "Sobrevivência",
+          "falha": false
+        },
+        "pilotagem": {
+          "value": 0,
+          "label": "Pilotagem",
+          "falha": false
+        },
+        "primeiros_socorros": {
+          "value": 0,
+          "label": "Prim. Socorros",
+          "falha": false
+        },
+        "medicina": {
+          "value": 0,
+          "label": "Medicina",
+          "falha": false
+        },
+        "mecanica": {
+          "value": 0,
+          "label": "Mecânica",
+          "falha": false
+        },
+        "eletronica": {
+          "value": 0,
+          "label": "Eletrônica/Hack",
+          "falha": false
+        },
+        "social": {
+          "value": 0,
+          "label": "Social/Lábia",
+          "falha": false
+        }
       },
       "details": {
         "qualidades": "",
@@ -52,37 +149,127 @@
       "sheetLocked": false
     },
     "npc": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "resources": {
-        "pv": { "value": 10, "max": 10 }
+        "pv": {
+          "value": 10,
+          "max": 10
+        }
       },
       "attributes": {
-        "defesa": { "value": 1, "label": "Defesa (Sucessos)" },
-        "ataque": { "value": 3, "label": "Dados de Ataque (Genérico)" },
-        "dano": { "value": 2, "label": "Dano Base" },
-        "nivel": { "value": 1 },
-        "for": { "value": 1, "label": "Força" },
-        "des": { "value": 1, "label": "Destreza" },
-        "con": { "value": 1, "label": "Constituição" },
-        "int": { "value": 1, "label": "Inteligência" },
-        "per": { "value": 1, "label": "Percepção" },
-        "von": { "value": 1, "label": "Vontade" }
+        "defesa": {
+          "value": 1,
+          "label": "Defesa (Sucessos)"
+        },
+        "ataque": {
+          "value": 3,
+          "label": "Dados de Ataque (Genérico)"
+        },
+        "dano": {
+          "value": 2,
+          "label": "Dano Base"
+        },
+        "nivel": {
+          "value": 1
+        },
+        "for": {
+          "value": 1,
+          "label": "Força"
+        },
+        "des": {
+          "value": 1,
+          "label": "Destreza"
+        },
+        "con": {
+          "value": 1,
+          "label": "Constituição"
+        },
+        "int": {
+          "value": 1,
+          "label": "Inteligência"
+        },
+        "per": {
+          "value": 1,
+          "label": "Percepção"
+        },
+        "von": {
+          "value": 1,
+          "label": "Vontade"
+        }
       },
       "skills": {
-        "armas_fogo": { "value": 0, "label": "Armas de Fogo", "falha": false },
-        "armas_brancas": { "value": 0, "label": "Armas Brancas", "falha": false },
-        "briga": { "value": 0, "label": "Briga", "falha": false },
-        "esquiva": { "value": 0, "label": "Esquiva", "falha": false },
-        "atletismo": { "value": 0, "label": "Atletismo", "falha": false },
-        "furtividade": { "value": 0, "label": "Furtividade", "falha": false },
-        "atencao": { "value": 0, "label": "Atenção", "falha": false },
-        "sobrevivencia": { "value": 0, "label": "Sobrevivência", "falha": false },
-        "pilotagem": { "value": 0, "label": "Pilotagem", "falha": false },
-        "primeiros_socorros": { "value": 0, "label": "Prim. Socorros", "falha": false },
-        "medicina": { "value": 0, "label": "Medicina", "falha": false },
-        "mecanica": { "value": 0, "label": "Mecânica", "falha": false },
-        "eletronica": { "value": 0, "label": "Eletrônica/Hack", "falha": false },
-        "social": { "value": 0, "label": "Social/Lábia", "falha": false }
+        "armas_fogo": {
+          "value": 0,
+          "label": "Armas de Fogo",
+          "falha": false
+        },
+        "armas_brancas": {
+          "value": 0,
+          "label": "Armas Brancas",
+          "falha": false
+        },
+        "briga": {
+          "value": 0,
+          "label": "Briga",
+          "falha": false
+        },
+        "esquiva": {
+          "value": 0,
+          "label": "Esquiva",
+          "falha": false
+        },
+        "atletismo": {
+          "value": 0,
+          "label": "Atletismo",
+          "falha": false
+        },
+        "furtividade": {
+          "value": 0,
+          "label": "Furtividade",
+          "falha": false
+        },
+        "atencao": {
+          "value": 0,
+          "label": "Atenção",
+          "falha": false
+        },
+        "sobrevivencia": {
+          "value": 0,
+          "label": "Sobrevivência",
+          "falha": false
+        },
+        "pilotagem": {
+          "value": 0,
+          "label": "Pilotagem",
+          "falha": false
+        },
+        "primeiros_socorros": {
+          "value": 0,
+          "label": "Prim. Socorros",
+          "falha": false
+        },
+        "medicina": {
+          "value": 0,
+          "label": "Medicina",
+          "falha": false
+        },
+        "mecanica": {
+          "value": 0,
+          "label": "Mecânica",
+          "falha": false
+        },
+        "eletronica": {
+          "value": 0,
+          "label": "Eletrônica/Hack",
+          "falha": false
+        },
+        "social": {
+          "value": 0,
+          "label": "Social/Lábia",
+          "falha": false
+        }
       },
       "details": {
         "biography": "",
@@ -91,9 +278,14 @@
       }
     },
     "horda": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "resources": {
-        "alerta": { "value": 1, "max": 6 }
+        "alerta": {
+          "value": 1,
+          "max": 6
+        }
       },
       "details": {
         "densidade": "bando",
@@ -101,11 +293,22 @@
       }
     },
     "refugio": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "attributes": {
-        "defesa": { "value": 1, "label": "Defesa" },
-        "recursos": { "value": 1, "label": "Recursos" },
-        "moral": { "value": 3, "label": "Moral" }
+        "defesa": {
+          "value": 1,
+          "label": "Defesa"
+        },
+        "recursos": {
+          "value": 1,
+          "label": "Recursos"
+        },
+        "moral": {
+          "value": 3,
+          "label": "Moral"
+        }
       },
       "details": {
         "projetos": "",
@@ -115,27 +318,45 @@
     }
   },
   "Item": {
-    "types": ["item", "arma", "qualidade", "defeito", "trauma"],
+    "types": [
+      "item",
+      "arma",
+      "qualidade",
+      "defeito",
+      "trauma"
+    ],
     "item": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "quantity": 1,
-      "weight": 0
+      "weight": 0,
+      "price": 0
     },
     "arma": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "dano": 2,
-      "uso": "d8"
+      "uso": "d8",
+      "quantity": 1
     },
     "qualidade": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "description": ""
     },
     "defeito": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "description": ""
     },
     "trauma": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "description": ""
     }
   }
