@@ -118,7 +118,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     }
 
     _prepareItems(context) {
-        const armas = [], equipamentos = [], qualidades = [], defeitos = [], traumas = [], habitantes = [];
+        const armas = [], equipamentos = [], qualidades = [], defeitos = [], traumas = [], habitantes = [], projetos = [];
 
         for (let i of context.items) {
             i.img = i.img || Item.DEFAULT_ICON;
@@ -127,6 +127,9 @@ export class BoilerplateActorSheet extends ActorSheet {
             else if (i.type === 'defeito') defeitos.push(i);
             else if (i.type === 'trauma') traumas.push(i);
             else if (i.type === 'habitante') habitantes.push(i);
+            else if (i.type === 'projeto') {
+                projetos.push(i);
+            }
             else equipamentos.push(i);
         }
 
@@ -136,6 +139,7 @@ export class BoilerplateActorSheet extends ActorSheet {
         context.defeitos = defeitos;
         context.traumas = traumas;
         context.habitantes = habitantes;
+        context.projetos = projetos;
     }
 
     _calculateSpentPoints(context) {

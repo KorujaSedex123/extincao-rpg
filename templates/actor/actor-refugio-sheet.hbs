@@ -224,12 +224,60 @@
         </div>
 
         <div class="tab main" data-group="primary" data-tab="main">
-            <div class="bio-container full-height" style="border-color:#446688;">
-                <h3 class="bio-header" style="color:#4488cc;">PROJETOS & MELHORIAS</h3>
-                <div class="bio-editor">
-                    {{editor enrichedProjetos target="system.details.projetos" button=true owner=owner
-                    editable=editable}}
+            <div class="item-group">
+                <div class="inventory-header flexrow">
+                    <h3>ESTRUTURAS & MELHORIAS</h3>
+                    <div class="header-stat" style="flex:0 0 100px;">STATUS</div>
+                    {{#unless isLocked}}<a class="item-create" data-type="projeto" title="Novo Projeto"><i
+                            class="fas fa-hammer"></i></a>{{/unless}}
                 </div>
+
+                <ol class="item-list">
+                    {{#each projetos as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <div class="item-image item-open" title="Ver Planta" style="cursor:pointer;">
+                            <img src="{{item.img}}" />
+                        </div>
+
+                        <div class="item-name-col flexcol item-open" title="Ver Detalhes"
+                            style="cursor:pointer; flex:1; padding-left:10px;">
+                            <h4 class="item-name"
+                                style="margin:0; color:#aaddff; text-decoration:underline dashed #446688;">{{item.name}}
+                            </h4>
+                            <span style="font-size:0.8em; color:#bbb;"><i class="fas fa-coins"></i> Custo:
+                                {{item.system.custo}}</span>
+                        </div>
+
+                        <div class="item-detail" style="flex:0 0 100px; text-align:center;">
+                            {{#if (eq item.system.estado "pronto")}}
+                            <span
+                                style="color:#4eff8c; font-weight:bold; border:1px solid #4eff8c; padding:2px 5px; border-radius:4px; font-size:0.7em;">PRONTO</span>
+                            {{else if (eq item.system.estado "construindo")}}
+                            <span
+                                style="color:#ffb347; font-weight:bold; border:1px solid #ffb347; padding:2px 5px; border-radius:4px; font-size:0.7em;">EM
+                                OBRAS</span>
+                            {{else}}
+                            <span
+                                style="color:#888; border:1px solid #666; padding:2px 5px; border-radius:4px; font-size:0.7em; border-style:dashed;">PLANEJADO</span>
+                            {{/if}}
+                        </div>
+
+                        {{#unless ../isLocked}}
+                        <div class="item-controls">
+                            <a class="item-edit"><i class="fas fa-edit"></i></a>
+                            <a class="item-delete"><i class="fas fa-trash"></i></a>
+                        </div>
+                        {{/unless}}
+                    </li>
+                    {{/each}}
+
+                    {{#unless projetos}}
+                    <li class="item flexrow"
+                        style="padding:10px; color:#666; font-style:italic; justify-content:center;">
+                        <p>Nenhuma estrutura construída. Inicie um novo projeto.</p>
+                    </li>
+                    {{/unless}}
+                </ol>
             </div>
         </div>
 

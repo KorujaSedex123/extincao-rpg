@@ -1,0 +1,51 @@
+<form class="{{cssClass}}" autocomplete="off" style="background-color: #0a1525; color: #aaddff;">
+    
+    <header class="sheet-header" style="border-bottom: 2px solid #aaddff;">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="border: 2px solid #aaddff; background:#001133;"/>
+        <div class="header-details" style="flex:1;">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Nome do Projeto" style="color:#aaddff; text-transform:uppercase; letter-spacing:2px;"/>
+            </h1>
+            <div class="item-subtitle" style="text-align:center; font-family:monospace;">
+                <i class="fas fa-ruler-combined"></i> PLANTA ARQUITETÔNICA
+            </div>
+        </div>
+    </header>
+
+    {{#if isLocked}}
+    <div style="background:#002244; color:#aaddff; text-align:center; padding:5px; font-size:0.8em; margin:5px 0;">
+        <i class="fas fa-lock"></i> ARQUIVO TRAVADO
+    </div>
+    {{/if}}
+
+    <div class="item-stats-grid" style="background:#001133; border:1px solid #004488;">
+        <div class="stat-box" style="flex:2;">
+            <label style="color:#4488cc;">STATUS DA OBRA</label>
+            <select name="system.estado" style="background:#000; color:#fff; width:100%;" {{#if isLocked}}disabled{{/if}}>
+                {{#select system.estado}}
+                <option value="planejado">Planejado (Rascunho)</option>
+                <option value="construindo">Em Construção</option>
+                <option value="pronto">Operacional / Pronto</option>
+                <option value="destruido">Destruído / Ruína</option>
+                {{/select}}
+            </select>
+        </div>
+
+        <div class="stat-box" style="flex:1;">
+            <label style="color:#4488cc;">CUSTO</label>
+            <input type="text" name="system.custo" value="{{system.custo}}" placeholder="Ex: 5 Rec." style="color:#ffcc00;" {{#if isLocked}}readonly{{/if}}/>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top:10px; padding:0 5px;">
+        <label style="color:#4488cc; font-size:0.8em; font-weight:bold;">BÔNUS OPERACIONAL:</label>
+        <input type="text" name="system.efeito" value="{{system.efeito}}" placeholder="Ex: Defesa +1, Moral Diária +1" style="background:#000; color:#4eff8c; border:1px solid #004488; width:100%; padding:5px;" {{#if isLocked}}readonly{{/if}}/>
+    </div>
+
+    <section class="sheet-body" style="padding:10px;">
+        <label style="color:#4488cc; font-weight:bold; display:block; margin-bottom:5px;">DETALHES TÉCNICOS:</label>
+        <div class="bio-editor" style="border:1px dashed #004488; min-height:150px; background:#000810;">
+            {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
+        </div>
+    </section>
+</form>

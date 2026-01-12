@@ -326,7 +326,8 @@
       "arma",
       "qualidade",
       "defeito",
-      "trauma"
+      "trauma",
+      "projeto"
     ],
     "item": {
       "templates": [
@@ -343,6 +344,12 @@
       "dano": 2,
       "uso": "d8",
       "quantity": 1
+    },
+    "projeto": {
+      "templates": ["base"],
+      "custo": "10 Recursos",
+      "estado": "planejado",
+      "efeito": "Recuperação +1"
     },
     "qualidade": {
       "templates": [
