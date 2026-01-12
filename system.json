@@ -2,7 +2,7 @@
   "id": "extincao",
   "title": "EXTINÇÃO RPG",
   "description": "Sistema de Horror de Sobrevivência - O Dado é o Juiz.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": {
     "minimum": "12",
     "verified": "13"
@@ -13,8 +13,12 @@
       "flags": {}
     }
   ],
-  "esmodules": ["module/extincao.mjs"],
-  "styles": ["css/extincao.css"],
+  "esmodules": [
+    "module/extincao.mjs"
+  ],
+  "styles": [
+    "css/extincao.css"
+  ],
   "packs": [],
   "languages": [
     {
@@ -29,11 +33,9 @@
   },
   "primaryTokenAttribute": "resources.pv",
   "secondaryTokenAttribute": "resources.estresse",
-
   "url": "https://github.com/KorujaSedex123/extincao-rpg",
   "manifest": "https://raw.githubusercontent.com/KorujaSedex123/extincao-rpg/main/system.json",
   "download": "https://github.com/KorujaSedex123/extincao-rpg/archive/refs/heads/main.zip",
-
   "documentTypes": {
     "Actor": {
       "sobrevivente": {},
@@ -46,7 +48,8 @@
       "arma": {},
       "qualidade": {},
       "defeito": {},
-      "trauma": {}
+      "trauma": {},
+      "habitante": {}
     }
   }
 }

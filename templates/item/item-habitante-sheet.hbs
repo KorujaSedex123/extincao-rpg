@@ -1,0 +1,30 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header" style="background:#0f151a; border-bottom:2px solid #446688;">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="border-color:#446688;"/>
+        <div class="header-details">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome do Habitante" style="color:#aaddff;"/></h1>
+            <div class="item-subtitle" style="color:#6688aa;">
+                FICHA DE POPULAÇÃO
+            </div>
+        </div>
+    </header>
+
+    <div class="sheet-body" style="padding:10px; background:#0a0a0a; color:#ccc;">
+        <div class="grid grid-2col" style="gap:10px; margin-bottom:10px;">
+            <div class="form-group">
+                <label style="color:#4488cc; font-weight:bold;">Função / Cargo</label>
+                <input type="text" name="system.funcao" value="{{system.funcao}}" placeholder="Ex: Médico, Guarda" style="background:#111; color:#fff; border:1px solid #333;"/>
+            </div>
+
+            <div class="form-group">
+                <label style="color:#4488cc; font-weight:bold;">Estado de Saúde</label>
+                <input type="text" name="system.estado" value="{{system.estado}}" placeholder="Ex: Saudável, Ferido" style="background:#111; color:#fff; border:1px solid #333;"/>
+            </div>
+        </div>
+
+        <div class="bio-box">
+            <label style="color:#4488cc; font-weight:bold; border-bottom:1px solid #333; display:block; margin-bottom:5px;">HISTÓRICO & NOTAS</label>
+            {{editor system.description target="system.description" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</form>

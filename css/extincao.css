@@ -1596,3 +1596,121 @@ select option:hover {
     pointer-events: none; 
     z-index: 1;
 }
+
+
+/* =========================================================
+   ESTILO DA FICHA DE REFÚGIO (BUNKER STYLE)
+   ========================================================= */
+
+.refuge-header {
+    border-bottom: 2px solid #446688; /* Azul Aço */
+}
+
+.refuge-subtitle {
+    background: #112233;
+    color: #4488cc;
+    padding: 5px;
+    border: 1px solid #446688;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+/* STATUS GRID (3 Caixas Grandes) */
+.refuge-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+    background: #0a0a0a;
+    padding: 10px;
+    border: 1px solid #333;
+}
+
+.refuge-stat-box {
+    background: #0f151a; /* Azul muito escuro */
+    border: 1px solid #224466;
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.refuge-stat-box label {
+    color: #4488cc; /* Azul Claro */
+    font-weight: 900;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.refuge-stat-box input {
+    font-size: 2.5em !important;
+    color: #fff !important;
+    border: none !important;
+    background: transparent !important;
+    width: 100%;
+    text-align: center;
+}
+
+.stat-desc {
+    color: #557799;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+/* Quando travado, números gigantes */
+.locked-sheet .refuge-stat-box input {
+    font-size: 3em !important;
+    text-shadow: 0 0 10px #00aaff;
+}
+
+/* Ajustes de Editor */
+.full-height .editor-content {
+    min-height: 400px;
+}
+.short .editor-content {
+    min-height: 150px;
+}
+
+.item-status {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+/* 1. Saudável (Verde Neon - Padrão do Sistema) */
+.item-status.status-saudavel {
+    color: #4eff8c;
+    text-shadow: 0 0 5px rgba(78, 255, 140, 0.3);
+}
+
+/* 2. Ferido (Amarelo de Alerta) */
+.item-status.status-ferido {
+    color: #ffeb3b;
+}
+
+/* 3. Doente/Infectado (Roxo ou Laranja Tóxico) */
+.item-status.status-doente, 
+.item-status.status-infectado {
+    color: #d64eff; /* Roxo Neon */
+    font-style: italic;
+}
+
+/* 4. Incapacitado (Vermelho Sangue) */
+.item-status.status-incapacitado,
+.item-status.status-grave {
+    color: #ff4444;
+    text-shadow: 0 0 3px #8b0000;
+}
+
+/* 5. Morto (Cinza Apagado) */
+.item-status.status-morto {
+    color: #666666;
+    text-decoration: line-through; /* Risco no nome/status */
+}

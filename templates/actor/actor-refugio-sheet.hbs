@@ -1,0 +1,160 @@
+<form class="{{cssClass}} flexcol {{#if isLocked}}locked-sheet{{/if}}" autocomplete="off">
+
+    <header class="sheet-header refuge-header">
+        <div class="header-grid">
+            <div class="header-profile">
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+            </div>
+            <div class="header-main">
+                <div class="header-title flexrow">
+                    <h1 class="charname"><input name="name" type="text" value="{{actor.name}}"
+                            placeholder="NOME DO REFÚGIO" /></h1>
+                    <a class="lock-btn" title="{{#if isLocked}}Destravar{{else}}Travar{{/if}}">
+                        <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+                    </a>
+                </div>
+                <div class="refuge-subtitle">
+                    <i class="fas fa-shield-alt"></i> ZONA SEGURA CONFIRMADA
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="refuge-stats">
+        <div class="refuge-stat-box">
+            <label><i class="fas fa-shield-virus"></i> DEFESA</label>
+            <div class="resource-value-container">
+                {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="defesa"><i
+                        class="fas fa-minus"></i></a>{{/if}}
+                <div class="resource-inputs">
+                    <input type="number" name="system.attributes.defesa.value"
+                        value="{{system.attributes.defesa.value}}" {{#if isLocked}}readonly{{/if}} />
+                </div>
+                {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="defesa"><i
+                        class="fas fa-plus"></i></a>{{/if}}
+            </div>
+            <div class="stat-desc">Segurança</div>
+        </div>
+
+        <div class="refuge-stat-box">
+            <label><i class="fas fa-boxes"></i> RECURSOS</label>
+            <div class="resource-value-container">
+                {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="recursos"><i
+                        class="fas fa-minus"></i></a>{{/if}}
+                <div class="resource-inputs">
+                    <input type="number" name="system.attributes.recursos.value"
+                        value="{{system.attributes.recursos.value}}" {{#if isLocked}}readonly{{/if}} />
+                </div>
+                {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="recursos"><i
+                        class="fas fa-plus"></i></a>{{/if}}
+            </div>
+            <div class="stat-desc">Suprimentos</div>
+        </div>
+
+        <div class="refuge-stat-box">
+            <label><i class="fas fa-users"></i> MORAL</label>
+            <div class="resource-value-container">
+                {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="moral"><i
+                        class="fas fa-minus"></i></a>{{/if}}
+                <div class="resource-inputs">
+                    <input type="number" name="system.attributes.moral.value" value="{{system.attributes.moral.value}}"
+                        {{#if isLocked}}readonly{{/if}} />
+                </div>
+                {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="moral"><i
+                        class="fas fa-plus"></i></a>{{/if}}
+            </div>
+            <div class="stat-desc">Sanidade</div>
+        </div>
+    </section>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="population"><i class="fas fa-user-friends"></i> POPULAÇÃO</a>
+        <a class="item" data-tab="stock"><i class="fas fa-box-open"></i> ESTOQUE</a>
+        <a class="item" data-tab="main"><i class="fas fa-warehouse"></i> PROJETOS</a>
+    </nav>
+
+    <section class="sheet-body">
+
+        <div class="tab population" data-group="primary" data-tab="population">
+            <div class="item-group">
+                <div class="inventory-header flexrow">
+                    <h3>HABITANTES / SOBREVIVENTES</h3>
+                    {{#unless isLocked}}<a class="habitante-create" title="Adicionar Habitante"><i
+                            class="fas fa-plus"></i></a>{{/unless}}
+                </div>
+                <ol class="item-list">
+                    {{#each system.habitantes as |habitante idx|}}
+                    <li class="item flexrow habitante-control" data-index="{{idx}}">
+                        <div class="item-image" title="Ver Detalhes" style="cursor:pointer;">
+                            <img src="{{#if habitante.img}}{{habitante.img}}{{else}}icons/svg/mystery-man.svg{{/if}}" />
+                        </div>
+
+                        <div class="item-name-col flexcol" style="flex:1; padding-left:10px;">
+                            <h4 class="item-name" style="color:#aaddff; cursor:pointer; margin:0;">
+                                {{habitante.nome}}
+                            </h4>
+                            <span class="item-func" style="color:#6688aa; font-size:0.8em;">{{habitante.funcao}}</span>
+                        </div>
+
+                        <div class="item-status status-{{habitante.saude}}"
+                            style="font-size:0.8em; margin-right:10px; font-weight:bold;">
+                            {{habitante.saude}}
+                        </div>
+
+                        {{#unless ../isLocked}}
+                        <div class="item-controls" style="flex:0 0 30px;">
+                            <a class="habitante-delete" data-index="{{idx}}"><i class="fas fa-trash"></i></a>
+                        </div>
+                        {{/unless}}
+                    </li>
+                    {{/each}}
+                </ol>
+            </div>
+
+            <div class="bio-container" style="margin-top:10px; border-color:#446688;">
+                <h3 class="bio-header" style="color:#4488cc;">DIÁRIO DE BORDO</h3>
+                <div class="bio-editor short">
+                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner
+                    editable=editable}}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab stock" data-group="primary" data-tab="stock">
+            <div class="item-group">
+                <div class="inventory-header flexrow">
+                    <h3>ARSENAL E SUPRIMENTOS</h3>
+                    <div class="header-stat">QTD</div>
+                    {{#unless isLocked}}<a class="item-create" data-type="item"><i
+                            class="fas fa-plus"></i></a>{{/unless}}
+                </div>
+                <ol class="item-list">
+                    {{#each equipamentos as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <div class="item-image"><img src="{{item.img}}" /></div>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <div class="item-detail">{{item.system.quantity}}</div>
+                        {{#unless ../isLocked}}
+                        <div class="item-controls">
+                            <a class="item-edit"><i class="fas fa-edit"></i></a>
+                            <a class="item-delete"><i class="fas fa-trash"></i></a>
+                        </div>
+                        {{/unless}}
+                    </li>
+                    {{/each}}
+                </ol>
+            </div>
+        </div>
+
+        <div class="tab main" data-group="primary" data-tab="main">
+            <div class="bio-container full-height" style="border-color:#446688;">
+                <h3 class="bio-header" style="color:#4488cc;">PROJETOS & MELHORIAS</h3>
+                <div class="bio-editor">
+                    {{editor enrichedProjetos target="system.details.projetos" button=true owner=owner
+                    editable=editable}}
+                </div>
+            </div>
+        </div>
+
+    </section>
+</form>

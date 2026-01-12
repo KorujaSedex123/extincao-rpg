@@ -35,7 +35,7 @@ Hooks.once('init', async function() {
 
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("extincao", BoilerplateActorSheet, { 
-      types: ["sobrevivente", "npc", "horda", "base"],
+      types: ["sobrevivente", "npc", "horda", "refugio"],
       makeDefault: true,
       label: "Ficha Padrão Extinção"
   });
@@ -64,7 +64,7 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
         if (data.type === "npc") baseName = "Inimigo";
         else if (data.type === "horda") baseName = "A Horda";
         else if (data.type === "sobrevivente") baseName = "Sobrevivente";
-        else if (data.type === "base") baseName = "Refúgio";
+        else if (data.type === "refugio") baseName = "Refúgio";
 
         // Conta quantos existem
         const count = game.actors.filter(a => a.type === data.type).length + 1;

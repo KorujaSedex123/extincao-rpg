@@ -1,8 +1,8 @@
 {
   "Actor": {
-    "types": ["sobrevivente", "npc", "horda", "refugio"],
+    "types": ["sobrevivente", "npc", "horda", "refugio","habitante"],
     "templates": {
-      "refugio": {
+      "base": {
         "attributes": {},
         "details": {
           "biography": ""
@@ -51,7 +51,7 @@
       },
       "sheetLocked": false
     },
-   "npc": {
+    "npc": {
       "templates": ["base"],
       "resources": {
         "pv": { "value": 10, "max": 10 }
@@ -61,7 +61,6 @@
         "ataque": { "value": 3, "label": "Dados de Ataque (Genérico)" },
         "dano": { "value": 2, "label": "Dano Base" },
         "nivel": { "value": 1 },
-        
         "for": { "value": 1, "label": "Força" },
         "des": { "value": 1, "label": "Destreza" },
         "con": { "value": 1, "label": "Constituição" },
@@ -98,6 +97,19 @@
       },
       "details": {
         "densidade": "bando",
+        "biography": ""
+      }
+    },
+    "refugio": {
+      "templates": ["base"],
+      "attributes": {
+        "defesa": { "value": 1, "label": "Defesa" },
+        "recursos": { "value": 1, "label": "Recursos" },
+        "moral": { "value": 3, "label": "Moral" }
+      },
+      "details": {
+        "projetos": "",
+        "estoque": "",
         "biography": ""
       }
     }

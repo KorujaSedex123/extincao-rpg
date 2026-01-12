@@ -1,6 +1,6 @@
 # Sistema EXTINÇÃO RPG
 
-![Foundry v12](https://img.shields.io/badge/foundry-v12-green)
+![Foundry v13](https://img.shields.io/badge/foundry-v13-green)
 ![Status](https://img.shields.io/badge/status-playable-orange)
 
 > **"O mundo não acabou com um estrondo. Ele acabou com um grito, e depois silêncio."**
@@ -18,7 +18,7 @@ O sistema mistura elementos da *Year Zero Engine* (parada de dados d6) com a sim
 
 # Como Instalar
 
-O sistema é compatível com Foundry VTT v11 e v12. Siga os passos abaixo para instalar no seu aplicativo ou servidor dedicado.
+O sistema é compatível com Foundry VTT v12 e v13. Siga os passos abaixo para instalar no seu aplicativo ou servidor dedicado.
 
 ### Passo a Passo
 
