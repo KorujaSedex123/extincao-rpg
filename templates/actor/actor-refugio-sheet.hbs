@@ -21,61 +21,82 @@
     </header>
 
     <section class="refuge-stats">
-        <div class="refuge-stat-box">
-            <label class="rollable hover-glow" data-key="defesa" data-label="DEFESA DO REFÚGIO" title="Rolar Defesa">
-                <i class="fas fa-shield-virus"></i> DEFESA <i class="fas fa-dice-d6 die-icon"></i>
-            </label>
-            <div class="resource-value-container">
-                {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="defesa"><i
-                        class="fas fa-minus"></i></a>{{/if}}
-                <div class="resource-inputs">
-                    <input type="number" name="system.attributes.defesa.value"
-                        value="{{system.attributes.defesa.value}}" {{#if isLocked}}readonly{{/if}} />
+
+        <div class="refuge-stat-box bar-container">
+            <div class="bar-fill defesa" style="width: {{barDefesa}}%;"></div>
+            <div class="bar-content">
+                <label class="rollable hover-glow" data-key="defesa" data-label="DEFESA DO REFÚGIO"
+                    title="Rolar Defesa">
+                    <i class="fas fa-shield-virus"></i> DEFESA <i class="fas fa-dice-d6 die-icon"></i>
+                </label>
+                <div class="resource-value-container">
+                    {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="defesa"><i
+                            class="fas fa-minus"></i></a>{{/if}}
+                    <div class="resource-inputs">
+                        <input type="number" name="system.attributes.defesa.value"
+                            value="{{system.attributes.defesa.value}}" {{#if isLocked}}readonly{{/if}} />
+                        <span class="sep">/</span>
+                        <input type="number" name="system.attributes.defesa.max"
+                            value="{{system.attributes.defesa.max}}" {{#if isLocked}}readonly{{/if}}
+                            class="max-input" />
+                    </div>
+                    {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="defesa"><i
+                            class="fas fa-plus"></i></a>{{/if}}
                 </div>
-                {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="defesa"><i
-                        class="fas fa-plus"></i></a>{{/if}}
+                <div class="stat-desc">Segurança</div>
             </div>
-            <div class="stat-desc">Segurança</div>
         </div>
 
-        <div class="refuge-stat-box">
-            <label>
-                <i class="fas fa-boxes"></i> RECURSOS
-                <a class="daily-consumption" title="Passar o Dia (Calcular Consumo)">
-                    <i class="fas fa-history" style="font-size: 0.8em; color: #aaddff; cursor: pointer;"></i>
-                </a>
-            </label>
-            <div class="resource-value-container">
-                {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="recursos"><i
-                        class="fas fa-minus"></i></a>{{/if}}
-                <div class="resource-inputs">
-                    <input type="number" name="system.attributes.recursos.value"
-                        value="{{system.attributes.recursos.value}}" {{#if isLocked}}readonly{{/if}} />
+        <div class="refuge-stat-box bar-container">
+            <div class="bar-fill recursos" style="width: {{barRecursos}}%;"></div>
+            <div class="bar-content">
+                <label>
+                    <i class="fas fa-boxes"></i> RECURSOS
+                    <a class="daily-consumption" title="Passar o Dia"><i class="fas fa-history"
+                            style="font-size: 0.8em; color: #fff; cursor: pointer;"></i></a>
+                </label>
+                <div class="resource-value-container">
+                    {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="recursos"><i
+                            class="fas fa-minus"></i></a>{{/if}}
+                    <div class="resource-inputs">
+                        <input type="number" name="system.attributes.recursos.value"
+                            value="{{system.attributes.recursos.value}}" {{#if isLocked}}readonly{{/if}} />
+                        <span class="sep">/</span>
+                        <input type="number" name="system.attributes.recursos.max"
+                            value="{{system.attributes.recursos.max}}" {{#if isLocked}}readonly{{/if}}
+                            class="max-input" />
+                    </div>
+                    {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="recursos"><i
+                            class="fas fa-plus"></i></a>{{/if}}
                 </div>
-                {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="recursos"><i
-                        class="fas fa-plus"></i></a>{{/if}}
+                <div class="stat-desc">Suprimentos</div>
             </div>
-            <div class="stat-desc">Suprimentos</div>
         </div>
 
-        <div class="refuge-stat-box">
-            <label class="rollable hover-glow" data-key="moral" data-label="TESTE DE MORAL" title="Rolar Moral">
-                <i class="fas fa-users"></i> MORAL <i class="fas fa-dice-d6 die-icon"></i>
-            </label>
-            <div class="resource-value-container">
-                {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="moral"><i
-                        class="fas fa-minus"></i></a>{{/if}}
-                <div class="resource-inputs">
-                    <input type="number" name="system.attributes.moral.value" value="{{system.attributes.moral.value}}"
-                        {{#if isLocked}}readonly{{/if}} />
+        <div class="refuge-stat-box bar-container">
+            <div class="bar-fill moral" style="width: {{barMoral}}%;"></div>
+            <div class="bar-content">
+                <label class="rollable hover-glow" data-key="moral" data-label="TESTE DE MORAL" title="Rolar Moral">
+                    <i class="fas fa-users"></i> MORAL <i class="fas fa-dice-d6 die-icon"></i>
+                </label>
+                <div class="resource-value-container">
+                    {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="moral"><i
+                            class="fas fa-minus"></i></a>{{/if}}
+                    <div class="resource-inputs">
+                        <input type="number" name="system.attributes.moral.value"
+                            value="{{system.attributes.moral.value}}" {{#if isLocked}}readonly{{/if}} />
+                        <span class="sep">/</span>
+                        <input type="number" name="system.attributes.moral.max" value="{{system.attributes.moral.max}}"
+                            {{#if isLocked}}readonly{{/if}} class="max-input" />
+                    </div>
+                    {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="moral"><i
+                            class="fas fa-plus"></i></a>{{/if}}
                 </div>
-                {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="moral"><i
-                        class="fas fa-plus"></i></a>{{/if}}
+                <div class="stat-desc">Sanidade</div>
             </div>
-            <div class="stat-desc">Sanidade</div>
         </div>
+
     </section>
-
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="population"><i class="fas fa-user-friends"></i> POPULAÇÃO</a>
         <a class="item" data-tab="stock"><i class="fas fa-box-open"></i> ESTOQUE</a>

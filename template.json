@@ -298,23 +298,26 @@
       ],
       "attributes": {
         "defesa": {
-          "value": 1,
+          "value": 0,
+          "max": 10,
           "label": "Defesa"
         },
         "recursos": {
-          "value": 1,
+          "value": 10,
+          "max": 20,
           "label": "Recursos"
         },
         "moral": {
-          "value": 3,
+          "value": 5,
+          "max": 10,
           "label": "Moral"
         }
       },
       "details": {
-        "projetos": "",
-        "estoque": "",
-        "biography": ""
-      }
+        "biography": "",
+        "projetos": ""
+      },
+      "habitantes": []
     }
   },
   "Item": {

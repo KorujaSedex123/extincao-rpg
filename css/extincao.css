@@ -1829,3 +1829,104 @@ select option:hover {
     min-height: 200px;
     border: 1px solid #000;
 }
+
+/* --- BARRAS DE PROGRESSO DO REFÚGIO --- */
+
+.refuge-stat-box.bar-container {
+    position: relative;
+    overflow: hidden; /* Garante que a barra não vaze */
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    border: 1px solid #444;
+}
+
+/* O preenchimento colorido */
+.bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%; /* Preenche a caixa inteira no fundo */
+    z-index: -1; /* Fica atrás do texto */
+    opacity: 0.3; /* Transparente para ler o texto */
+    transition: width 0.5s ease-in-out;
+    border-right: 2px solid rgba(255,255,255,0.2);
+}
+
+/* Cores específicas */
+.bar-fill.defesa {
+    background: linear-gradient(90deg, #004e92, #000428); /* Azul Tático */
+    background-color: #004e92;
+}
+
+.bar-fill.recursos {
+    background: linear-gradient(90deg, #ffb347, #ffcc33); /* Amarelo Recurso */
+    background-color: #ffb347;
+}
+
+.bar-fill.moral {
+    background: linear-gradient(90deg, #cb2d3e, #ef473a); /* Vermelho Sangue/Paixão */
+    background-color: #cb2d3e;
+}
+
+/* Conteúdo flutuando acima da barra */
+.bar-content {
+    position: relative;
+    z-index: 2;
+    text-shadow: 1px 1px 2px #000; /* Garante leitura sobre a cor */
+}
+
+/* Ajuste fino para os inputs de Max */
+.max-input {
+    color: #888 !important;
+    font-size: 0.8em !important;
+}
+
+/* --- AJUSTE DOS INPUTS DO REFÚGIO (ATUAL / MÁXIMO) --- */
+
+/* O Container dos números */
+.refuge-stat-box .resource-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px; /* Espaço entre os números */
+    width: 120px; /* Largura fixa para não "dançar" na tela */
+    margin: 0 auto; /* Centraliza no box */
+}
+
+/* Input do Valor ATUAL (Esquerda) */
+.refuge-stat-box .resource-inputs input {
+    background: transparent;
+    border: none;
+    box-shadow: none; /* Remove brilho padrão do Foundry */
+    color: #fff;
+    font-family: 'Courier New', monospace; /* Fonte estilo terminal */
+    font-size: 1.8em; /* Grande, mas controlado */
+    font-weight: bold;
+    text-align: right;
+    width: 50%; /* Ocupa metade do container */
+    height: 40px;
+    padding: 0 5px;
+}
+
+/* Input do Valor MÁXIMO (Direita) */
+.refuge-stat-box .resource-inputs input.max-input {
+    color: #666; /* Cinza para dar menos destaque */
+    text-align: left;
+    font-size: 1.2em; /* Menor que o atual */
+    margin-top: 5px; /* Leve ajuste vertical */
+}
+
+/* A Barra Separadora (/) */
+.refuge-stat-box .resource-inputs .sep {
+    color: #444;
+    font-size: 1.5em;
+    font-weight: 100;
+    margin: 0 2px;
+}
+
+/* Remove as setinhas de número (spinners) dos navegadores */
+.refuge-stat-box input[type=number]::-webkit-inner-spin-button, 
+.refuge-stat-box input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}

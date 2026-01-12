@@ -91,6 +91,19 @@ export class BoilerplateActorSheet extends ActorSheet {
             this._calculateSpentPoints(context);
         }
 
+        if (actorData.type === 'refugio') {
+            const calcPct = (val, max) => {
+                const v = Number(val) || 0;
+                const m = Number(max) || 1; // Evita divisão por zero
+                let pct = (v / m) * 100;
+                return Math.min(100, Math.max(0, pct)); // Trava entre 0% e 100%
+            };
+
+            context.barDefesa = calcPct(context.system.attributes.defesa.value, context.system.attributes.defesa.max);
+            context.barRecursos = calcPct(context.system.attributes.recursos.value, context.system.attributes.recursos.max);
+            context.barMoral = calcPct(context.system.attributes.moral.value, context.system.attributes.moral.max);
+        }
+
         const editorClass = foundry.applications?.ux?.TextEditor ?? TextEditor;
         context.enrichedBiography = await editorClass.enrichHTML(this.actor.system.details?.biography || "", { async: true, relativeTo: this.actor });
         context.enrichedNotes = await editorClass.enrichHTML(this.actor.system.details?.notes || "", { async: true, relativeTo: this.actor });
