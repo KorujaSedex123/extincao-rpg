@@ -134,6 +134,7 @@ export class BoilerplateActorSheet extends ActorSheet {
         super.activateListeners(html);
 
         html.find('.resource-control').click(this._onResourceControl.bind(this));
+        html.find('.daily-consumption').click(this._onDailyConsumption.bind(this));
 
         html.find('.alert-segment').click(async (ev) => {
             const idx = Number(ev.currentTarget.dataset.index);
@@ -202,90 +203,210 @@ export class BoilerplateActorSheet extends ActorSheet {
             }
         });
     }
+    async _onDailyConsumption(event) {
+        event.preventDefault();
+
+        // 1. Dados Iniciais
+        const habitantes = this.actor.system.habitantes || [];
+        const recursosAtuais = Number(this.actor.system.attributes.recursos.value) || 0;
+
+        // 2. Contagem Inteligente (Ignora Mortos)
+        // Se quiser que feridos consumam o dobro ou algo assim, ajustamos aqui.
+        const bocasParaAlimentar = habitantes.filter(h => h.saude !== "morto").length;
+
+        if (bocasParaAlimentar === 0) {
+            ui.notifications.warn("O Refúgio está vazio (ou todos estão mortos). Sem consumo.");
+            return;
+        }
+
+        // 3. Confirmação do Mestre
+        const confirm = await Dialog.confirm({
+            title: "Encerrar o Dia?",
+            content: `<p>Existem <strong>${bocasParaAlimentar} sobreviventes</strong> vivos.</p>
+                      <p>Isso consumirá <strong>${bocasParaAlimentar} unidades</strong> de Recursos.</p>
+                      <p>Continuar?</p>`
+        });
+
+        if (!confirm) return;
+
+        // 4. Cálculo e Atualização
+        const novoEstoque = Math.max(0, recursosAtuais - bocasParaAlimentar);
+        await this.actor.update({ "system.attributes.recursos.value": novoEstoque });
+
+        // 5. Relatório no Chat (Flavor Text)
+        let mensagem = "";
+        let tipoMensagem = "normal";
+
+        if (novoEstoque === 0 && recursosAtuais < bocasParaAlimentar) {
+            // Caso Crítico: Faltou comida!
+            const deficit = bocasParaAlimentar - recursosAtuais;
+            mensagem = `<div class="extincao-roll failure">
+                            <h3><i class="fas fa-exclamation-triangle"></i>CRISE DE RECURSOS</h3>
+                            <p>O Refúgio consumiu tudo o que restava.</p>
+                            <p><strong>Faltou comida para ${deficit} pessoas.</strong></p>
+                            <hr>
+                            <p>A Moral deve ser testada. A fome começa amanhã.</p>
+                        </div>`;
+        } else {
+            // Caso Normal
+            mensagem = `<div class="extincao-roll">
+                            <h3><i class="fas fa-moon"></i> Relatório Diário</h3>
+                            <p>O dia termina no Refúgio.</p>
+                            <ul>
+                                <li><strong>Sobreviventes:</strong> ${bocasParaAlimentar}</li>
+                                <li><strong>Consumo:</strong> -${bocasParaAlimentar} Recursos</li>
+                                <li><strong>Estoque Restante:</strong> ${novoEstoque}</li>
+                            </ul>
+                        </div>`;
+        }
+
+        // Envia para o chat
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: mensagem
+        });
+    }
+    /** * @override 
+     * Controla o que acontece quando algo é solto na ficha.
+     * Permite arrastar Sobreviventes/NPCs para dentro do Refúgio.
+     */
+    async _onDrop(event) {
+        const data = TextEditor.getDragEventData(event);
+        const actor = this.actor;
+
+        // --- LÓGICA: Arrastar Ator -> Refúgio (Cria Habitante) ---
+        if (actor.type === 'refugio' && data.type === 'Actor') {
+            const sourceActor = await fromUuid(data.uuid); // Pega o ator original
+            if (!sourceActor) return;
+
+            // 1. Determina a Função (Baseado no Arquétipo ou Tipo)
+            let funcao = "Sobrevivente";
+            if (sourceActor.type === 'npc') {
+                funcao = sourceActor.system.details?.tipo || "NPC";
+            } else if (sourceActor.type === 'sobrevivente') {
+                funcao = sourceActor.system.details?.archetype || "Civil";
+            }
+
+            // 2. Calcula a Saúde Inicial (Baseado no PV atual)
+            let saude = "saudavel";
+            const pv = sourceActor.system.resources?.pv;
+            if (pv) {
+                if (pv.value <= 0) saude = "incapacitado";      // 0 PV
+                else if (pv.value <= (pv.max / 2)) saude = "ferido"; // Menos da metade
+                // Caso contrário mantém "saudavel"
+            }
+            const bioOriginal = sourceActor.system.details?.biography || "";
+            const notasLimpas = bioOriginal.replace(/<[^>]*>?/gm, ' ').trim();
+
+            // 3. Monta o Objeto do Habitante
+            const novoHabitante = {
+                nome: sourceActor.name,
+                img: sourceActor.img || "icons/svg/mystery-man.svg",
+                funcao: funcao.toUpperCase(),
+                saude: saude, // Já calculado anteriormente
+                notas: notasLimpas || "Sem registros anteriores."
+            };
+
+            // 4. Salva no Array do Refúgio
+            const habitantes = actor.system.habitantes || []; // Pega existentes ou cria array novo
+            habitantes.push(novoHabitante);
+
+            // Feedback visual opcional
+            ui.notifications.info(`${sourceActor.name} foi adicionado ao Refúgio.`);
+
+            return actor.update({ "system.habitantes": habitantes });
+        }
+
+        // --- Comportamento Padrão ---
+        // Se não for Ator->Refúgio, deixa o Foundry lidar (ex: soltar Itens no inventário)
+        return super._onDrop(event);
+    }
     async _onManageHabitante(event) {
         event.preventDefault();
 
-        // 1. Identificar o Habitante e o Estado da Ficha
-        const index = event.currentTarget.dataset.index; // O índice no array
-        const habitantes = this.actor.system.habitantes || []; // O array de dados
+        const index = event.currentTarget.dataset.index;
+        const habitantes = this.actor.system.habitantes || [];
         const habitante = habitantes[index];
 
-        // VERIFICAÇÃO DE SEGURANÇA: A Ficha está travada?
+        // Verificação de Trava
         const isLocked = this.actor.getFlag("extincao", "sheetLocked");
-        const disabledAttr = isLocked ? "disabled" : ""; // String mágica para o HTML
+        const disabledAttr = isLocked ? "disabled" : "";
 
         if (!habitante) return;
 
-        // 2. Construir o HTML do Modal (Formulário)
-        // Note que injetamos a variável ${disabledAttr} em cada input/select
-
-        // Gerar as opções do Dropdown de Saúde dinamicamente
+        // Gerar Dropdown de Saúde
         let optionsHtml = "";
-        for (const [key, label] of Object.entries(SAUDE_HABITANTE)) {
+        for (const [key, label] of Object.entries(SAUDE_HABITANTE)) { // Certifique-se que SAUDE_HABITANTE está definido no topo do arquivo
             const selected = (habitante.saude === key) ? "selected" : "";
             optionsHtml += `<option value="${key}" ${selected}>${label}</option>`;
         }
 
+        // --- HTML MELHORADO DO MODAL ---
         const content = `
-        <form class="habitante-modal">
-            <div class="form-group">
-                <label>Nome do Habitante:</label>
-                <input type="text" name="nome" value="${habitante.nome}" ${disabledAttr}/>
-            </div>
+        <form class="habitante-modal" style="display:flex; flex-direction:column; gap:10px;">
             
-            <div class="form-group">
-                <label>Função / Papel:</label>
-                <input type="text" name="funcao" value="${habitante.funcao}" ${disabledAttr}/>
-            </div>
+            <div class="modal-top" style="display:flex; gap:15px; align-items:flex-start;">
+                <div class="portrait-col">
+                    <img src="${habitante.img}" style="border:1px solid #444; border-radius:4px; max-width:80px; height:auto; background:#000;" />
+                </div>
 
-            <div class="form-group">
-                <label>Estado de Saúde:</label>
-                <select name="saude" ${disabledAttr}>
-                    ${optionsHtml}
-                </select>
+                <div class="data-col" style="flex:1; display:flex; flex-direction:column; gap:5px;">
+                    <div class="form-group">
+                        <label style="font-weight:bold; color:#aaddff;">Nome:</label>
+                        <input type="text" name="nome" value="${habitante.nome}" ${disabledAttr} style="width:100%; box-sizing:border-box;"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="font-weight:bold; color:#ccc;">Função:</label>
+                        <input type="text" name="funcao" value="${habitante.funcao}" ${disabledAttr} style="width:100%; box-sizing:border-box;"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="font-weight:bold; color:#4eff8c;">Estado:</label>
+                        <select name="saude" ${disabledAttr} style="width:100%; box-sizing:border-box; background:#111; color:#fff;">
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label>Notas:</label>
-                <textarea name="notas" ${disabledAttr}>${habitante.notas || ""}</textarea>
+            <hr style="border: 0; border-top: 1px solid #333; width: 100%; margin: 5px 0;">
+
+            <div class="form-group" style="display:flex; flex-direction:column;">
+                <label style="font-weight:bold; margin-bottom:5px;"><i class="fas fa-file-alt"></i> Notas / Biografia:</label>
+                <textarea name="notas" ${disabledAttr} style="min-height:150px; background:#000; color:#ccc; padding:10px; border:1px solid #333; font-family:monospace; line-height:1.4;">${habitante.notas || ""}</textarea>
             </div>
             
-            ${isLocked ? `<p style="color:darkred; font-style:italic; margin-top:10px;"><i class="fas fa-lock"></i> Ficha Travada: Modo Leitura</p>` : ''}
+            ${isLocked ? `<p style="color:#ff4444; font-style:italic; text-align:center; margin-top:5px; font-size:0.9em;"><i class="fas fa-lock"></i> MODO LEITURA (Ficha Travada)</p>` : ''}
         </form>
         `;
 
-        // 3. Criar os Botões do Dialog
-        // Se estiver travado, mostramos apenas "Fechar". Se não, "Salvar" e "Excluir".
+        // Botões do Dialog (Mantém a lógica de segurança)
         let buttons = {};
 
         if (isLocked) {
-            buttons = {
-                close: { label: "Fechar", icon: "<i class='fas fa-times'></i>" }
-            };
+            buttons = { close: { label: "Fechar", icon: "<i class='fas fa-times'></i>" } };
         } else {
             buttons = {
                 save: {
-                    label: "Salvar",
+                    label: "Salvar Alterações",
                     icon: "<i class='fas fa-save'></i>",
                     callback: async (html) => {
-                        // Captura os dados do formulário
                         const nome = html.find('input[name="nome"]').val();
                         const funcao = html.find('input[name="funcao"]').val();
                         const saude = html.find('select[name="saude"]').val();
                         const notas = html.find('textarea[name="notas"]').val();
 
-                        // Atualiza o array localmente
+                        // Atualiza mantendo a imagem original (ou adicionando lógica para editar img depois se quiser)
                         habitantes[index] = { ...habitante, nome, funcao, saude, notas };
-
-                        // Envia para o servidor
                         await this.actor.update({ "system.habitantes": habitantes });
                     }
                 },
                 delete: {
-                    label: "Excluir",
+                    label: "Expulsar/Excluir",
                     icon: "<i class='fas fa-trash'></i>",
                     callback: async () => {
-                        const confirm = await Dialog.confirm({ title: "Excluir Habitante?", content: "Tem certeza?" });
+                        const confirm = await Dialog.confirm({ title: "Excluir Habitante?", content: "Essa ação removerá o registro permanentemente." });
                         if (confirm) {
                             habitantes.splice(index, 1);
                             await this.actor.update({ "system.habitantes": habitantes });
@@ -295,54 +416,103 @@ export class BoilerplateActorSheet extends ActorSheet {
             };
         }
 
-        // 4. Renderizar o Dialog
         new Dialog({
-            title: `Detalhes: ${habitante.nome}`,
+            title: `Arquivo: ${habitante.nome}`,
             content: content,
             buttons: buttons,
-            default: isLocked ? "close" : "save"
+            default: isLocked ? "close" : "save",
+            width: 400 // Alarga um pouco o modal para ficar mais confortável
         }).render(true);
     }
 
     /** @override */
+    /** * @override */
+    /** * @override */
     async _onDrop(event) {
-        const data = TextEditor.getDragEventData(event);
-
-        // LÓGICA: Arrastar um Ator (NPC/Player) para dentro do Refúgio
-        if (this.actor.type === 'refugio' && data.type === 'Actor') {
-            const sourceActor = await fromUuid(data.uuid);
-
-            if (sourceActor) {
-                // Define a "Função" baseado no tipo de ator original
-                let funcao = "Civil";
-                if (sourceActor.type === "sobrevivente") {
-                    funcao = sourceActor.system.details?.archetype || "Sobrevivente";
-                } else if (sourceActor.type === "npc") {
-                    funcao = "NPC / Aliado";
-                }
-
-                // PEGA A BIO ORIGINAL
-                const bioOriginal = sourceActor.system.details?.biography || "";
-
-                // Cria o objeto do novo item
-                const itemData = {
-                    name: sourceActor.name,
-                    type: "habitante", // Transforma em Item
-                    img: sourceActor.img,
-                    system: {
-                        funcao: funcao,
-                        estado: "Saudável",
-                        quantity: 1,
-                        description: bioOriginal // <--- AQUI COPIA A BIO
-                    }
-                };
-
-                // Cria o item dentro do Refúgio
-                return await this.actor.createEmbeddedDocuments("Item", [itemData]);
-            }
+        // 1. Captura Segura dos Dados (Compatível V12/V13)
+        let data;
+        try {
+            data = JSON.parse(event.dataTransfer.getData("text/plain"));
+        } catch (err) {
+            return super._onDrop(event);
         }
 
-        // Se não for um ator caindo em refúgio, segue o comportamento padrão
+        const actor = this.actor;
+
+        // 2. Lógica Apenas para Refúgio recebendo Ator
+        if (actor.type === 'refugio' && data.type === 'Actor') {
+            const sourceActor = await fromUuid(data.uuid);
+            if (!sourceActor) return;
+
+            // --- A. DEFINIR FUNÇÃO ---
+            let funcao = "Sobrevivente";
+            if (sourceActor.type === 'npc') {
+                // Tenta pegar o tipo do NPC ou usa genérico
+                funcao = sourceActor.system.details?.tipo || "NPC";
+            } else if (sourceActor.type === 'sobrevivente') {
+                // Pega o Arquétipo (ex: "A Médica")
+                funcao = sourceActor.system.details?.archetype || "Civil";
+            }
+
+            // --- B. CÁLCULO DE SAÚDE (PV + INFECÇÃO) ---
+            let saude = "saudavel";
+            const pv = sourceActor.system.resources?.pv;
+            const infectionStage = sourceActor.system.details?.infection || "0"; // "0","1","2","3"
+
+            // B1. Prioridade: Infecção (Apenas Sobreviventes)
+            if (sourceActor.type === 'sobrevivente') {
+                switch (infectionStage) {
+                    case "1": saude = "ferido"; break;       // Incubação (Alerta)
+                    case "2": saude = "doente"; break;       // Febre
+                    case "3": saude = "incapacitado"; break; // Necrose
+                    default: saude = "saudavel";
+                }
+            }
+
+            // B2. Verificação de PV (Dano Físico)
+            // Se o PV estiver crítico, piora o estado (exceto se já for grave pela infecção)
+            if (pv) {
+                const atual = Number(pv.value) || 0;
+                const max = Number(pv.max) || 1;
+
+                if (atual <= 0) {
+                    saude = "incapacitado"; // Ou "morto"
+                } else if (atual <= (max / 2) && saude === "saudavel") {
+                    saude = "ferido";
+                }
+            }
+
+            // --- C. PUXAR DOSSIÊ (BIOGRAFIA) ---
+            // Pega o HTML da bio e remove as tags para ficar texto puro nas Notas
+            const rawBio = sourceActor.system.details?.biography || "";
+            // Regex: Remove tudo entre < e > e decodifica espaços
+            const cleanBio = rawBio.replace(/<[^>]*>?/gm, ' ')
+                .replace(/&nbsp;/g, ' ')
+                .trim();
+
+            const dossieFinal = cleanBio.length > 0 ? cleanBio : "Sem registros no dossiê original.";
+
+            // --- D. CRIAÇÃO E SALVAMENTO ---
+            const novoHabitante = {
+                nome: sourceActor.name,
+                img: sourceActor.img || "icons/svg/mystery-man.svg",
+                funcao: funcao.toUpperCase(), // Estética
+                saude: saude,
+                notas: dossieFinal
+            };
+
+            // Adiciona ao array existente
+            const habitantes = (actor.system.habitantes || []).slice();
+            habitantes.push(novoHabitante);
+
+            // Atualiza a ficha
+            await actor.update({ "system.habitantes": habitantes });
+
+            ui.notifications.info(`Refúgio: ${sourceActor.name} registrado(a). Estado: ${saude.toUpperCase()}.`);
+
+            return; // Impede comportamento padrão
+        }
+
         return super._onDrop(event);
     }
 

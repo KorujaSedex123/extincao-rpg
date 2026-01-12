@@ -37,7 +37,12 @@
         </div>
 
         <div class="refuge-stat-box">
-            <label><i class="fas fa-boxes"></i> RECURSOS</label>
+            <label>
+                <i class="fas fa-boxes"></i> RECURSOS
+                {{#unless isLocked}}<a class="daily-consumption" title="Passar o Dia (Calcular Consumo)"><i
+                        class="fas fa-history" style="font-size: 0.8em; color: #aaddff;"></i></a>{{/unless}}
+            </label>
+
             <div class="resource-value-container">
                 {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="recursos"><i
                         class="fas fa-minus"></i></a>{{/if}}
