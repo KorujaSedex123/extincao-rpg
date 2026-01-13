@@ -2,7 +2,7 @@
   "id": "extincao",
   "title": "EXTINÇÃO RPG",
   "description": "Sistema de Horror de Sobrevivência - O Dado é o Juiz.",
-  "version": "1.2.5",
+  "version": "1.2.5.1",
   "compatibility": {
     "minimum": "12",
     "verified": "13"
@@ -19,7 +19,22 @@
   "styles": [
     "css/extincao.css"
   ],
-  "packs": [],
+  "packs": [
+    {
+      "name": "arsenal",
+      "label": "Arsenal & Equipamentos",
+      "path": "packs/arsenal",
+      "type": "Item",
+      "system": "extincao"
+    },
+    {
+      "name": "regras",
+      "label": "Manual de Sobrevivência",
+      "path": "packs/regras",
+      "type": "JournalEntry",
+      "system": "extincao"
+    }
+  ],
   "languages": [
     {
       "lang": "pt-BR",
