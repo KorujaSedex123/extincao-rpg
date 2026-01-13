@@ -277,18 +277,16 @@
         "tipo": "infectado"
       }
     },
-    "horda": {
-      "templates": [
-        "base"
-      ],
-      "resources": {
-        "alerta": {
-          "value": 1,
-          "max": 6
-        }
+"horda": {
+      "templates": ["base"],
+      "attributes": {
+        "forca": { "value": 1, "label": "Força da Horda" },
+        "tamanho": { "value": 10, "max": 10, "label": "Tamanho (PV)" },
+        "dano": { "value": 1, "label": "Dano de Cerco" },
+        "densidade": { "value": "bando", "label": "Classificação" }
       },
       "details": {
-        "densidade": "bando",
+        "tipo": "Caminhantes",
         "biography": ""
       }
     },
@@ -346,7 +344,9 @@
       "quantity": 1
     },
     "projeto": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "custo": "10 Recursos",
       "estado": "planejado",
       "efeito": "Recuperação +1"

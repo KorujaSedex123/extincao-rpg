@@ -83,6 +83,11 @@ export class BoilerplateActorSheet extends ActorSheet {
             const tipoNPC = actorData.system.details?.tipo;
             context.showSkills = (tipoNPC === 'humano' || tipoNPC === 'animal');
         }
+        if (actorData.type === 'horda') {
+            const tam = Number(context.system.attributes.tamanho.value) || 0;
+            const max = Number(context.system.attributes.tamanho.max) || 1;
+            context.barTamanho = Math.min(100, Math.max(0, (tam / max) * 100));
+        }
 
         if (actorData.type === 'sobrevivente' || actorData.type === 'refugio') {
             this._prepareItems(context);
@@ -147,7 +152,75 @@ export class BoilerplateActorSheet extends ActorSheet {
         let skillTotal = 0; for (const k in context.system.skills) skillTotal += Number(context.system.skills[k].value) || 0;
         context.points = { attributes: attrTotal, skills: skillTotal };
     }
+    /**
+     * Realiza o ataque da Horda usando o sistema de d6 (Dice Pool).
+     * Regra: Rola Força em d6. Sucessos (6) causam dano.
+     */
+ /**
+     * Ataque da Horda (Sistema D6)
+     * Rola [Força]d6. Todo 6 é sucesso.
+     */
+    async _onHordaAttack(event) {
+        event.preventDefault();
+        
+        const forca = Number(this.actor.system.attributes.forca.value) || 0;
+        const danoBase = Number(this.actor.system.attributes.dano.value) || 0;
+        const nome = this.actor.name;
 
+        if (forca < 1) {
+            ui.notifications.warn("A Horda não tem Força suficiente para atacar.");
+            return;
+        }
+
+        // Rolar Pool de d6
+        let roll = new Roll(`${forca}d6`);
+        await roll.evaluate();
+
+        // Contar Sucessos (Resultados 6)
+        const diceResults = roll.terms[0].results.map(d => d.result);
+        const successCount = diceResults.filter(r => r === 6).length;
+
+        // Calcular Dano
+        let danoFinal = 0;
+        let resultadoTexto = "FALHA";
+        let classeResultado = "failure";
+
+        if (successCount > 0) {
+            // Regra: Dano Base + Sucessos Extras (sucessos - 1)
+            // Se tiver 1 sucesso, causa o Dano Base.
+            // Se tiver 2 sucessos, causa Dano Base + 1.
+            danoFinal = danoBase + (successCount - 1);
+            resultadoTexto = `${successCount} SUCESSO(S)`;
+            classeResultado = "success";
+        }
+
+        // Chat
+        const content = `
+            <div class="extincao-roll horda-attack" style="border: 2px solid #880000; background: #220000; color: #ffaaaa; padding: 10px; font-family: 'Roboto Condensed', sans-serif;">
+                <div style="border-bottom:1px solid #660000; margin-bottom:5px; display:flex; align-items:center;">
+                    <img src="${this.actor.img}" style="width:30px; height:30px; border:1px solid #f00; margin-right:10px;">
+                    <h3 style="margin:0; color:#ff4444;">${nome}</h3>
+                </div>
+                <div style="text-align:center; margin: 10px 0;">
+                    <div style="font-size: 0.9em; color:#ccc;">ATAQUE (${forca}d6)</div>
+                    <div class="roll-result ${classeResultado}" style="font-size:1.5em; font-weight:bold; margin:5px 0; color:${successCount > 0 ? '#4eff8c' : '#888'};">
+                        ${resultadoTexto}
+                    </div>
+                    <div style="font-size:0.8em; color:#884444;">[ ${diceResults.join(", ")} ]</div>
+                </div>
+                ${successCount > 0 ? `
+                <div style="text-align: center; background: #440000; border: 1px solid #ff0000; padding: 5px;">
+                    <div style="font-size:0.8em; color:#ffaaaa;">DANO ESTRUTURAL</div>
+                    <div style="font-size:2em; font-weight:bold; color:#fff;">${danoFinal}</div>
+                </div>` : ''}
+            </div>
+        `;
+
+        roll.toMessage({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: content
+        });
+    }
     activateListeners(html) {
         super.activateListeners(html);
 
@@ -160,6 +233,8 @@ export class BoilerplateActorSheet extends ActorSheet {
             let newValue = idx === current ? idx - 1 : idx;
             await this.actor.update({ "system.resources.alerta.value": newValue });
         });
+
+       html.find('.roll-horda-attack').click(this._onHordaAttack.bind(this));
 
         html.find('.header-archetype select').change(async (ev) => {
             const stats = ARCHETYPE_STATS[ev.target.value];

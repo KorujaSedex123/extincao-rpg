@@ -1930,3 +1930,119 @@ select option:hover {
   -webkit-appearance: none; 
   margin: 0; 
 }
+/* ========================
+   ESTILO DA HORDA (INIMIGO)
+   ======================== */
+
+.horda-sheet .window-content {
+    background: #1a0505; /* Vermelho Quase Preto */
+    color: #ffaaaa;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+/* Cabeçalho */
+.horda-header {
+    background: #330000;
+    border-bottom: 2px solid #880000;
+    padding: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.horda-header input {
+    color: #ff4444 !important;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.horda-type input {
+    font-size: 1em;
+    color: #cc6666 !important;
+    border-bottom: 1px dashed #660000;
+}
+
+/* Grid de Stats */
+.horda-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.stat-box.danger input {
+    color: #ff0000;
+    font-size: 2.5em;
+    background: #000;
+    border: 1px solid #880000;
+}
+
+.stat-box.warning input {
+    color: #ff8800;
+    font-size: 2.5em;
+    background: #000;
+    border: 1px solid #884400;
+}
+
+/* Barra de Tamanho */
+.horda-size-box {
+    background: #220000;
+    padding: 10px;
+    border: 1px solid #550000;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.horda-bar {
+    height: 10px;
+    background: #440000;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.horda-bar .bar-fill {
+    background: #ff0000;
+    height: 100%;
+    transition: width 0.5s;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+/* Botão de Ataque */
+.horda-actions button {
+    background: #550000;
+    color: #fff;
+    border: 1px solid #ff0000;
+    font-size: 1.5em;
+    padding: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.horda-actions button:hover {
+    background: #880000;
+    box-shadow: 0 0 15px #ff0000;
+    text-shadow: 0 0 5px #fff;
+}
+
+/* AJUSTES DO CABEÇALHO DA HORDA */
+
+/* Inputs de Tamanho no Topo */
+.horda-integrity-box input[type="number"]::-webkit-inner-spin-button, 
+.horda-integrity-box input[type="number"]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* Trava Visual */
+.horda-sheet.locked input,
+.horda-sheet.locked select {
+    cursor: default;
+    opacity: 0.8;
+}
+
+.horda-sheet.locked .stat-box input {
+    border-color: #330000; /* Borda mais escura quando travado */
+    background: #110000;
+}
