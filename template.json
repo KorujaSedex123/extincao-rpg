@@ -54,16 +54,15 @@
         "pr": {
           "value": 10,
           "max": 10,
-          "label": "Resistência"
+          "label": "Determinação"
+        },
+        "alerta": {
+          "value": 0,
+          "max": 5
         },
         "estresse": {
           "value": 0,
-          "max": 6,
-          "label": "Estresse"
-        },
-        "xp": {
-          "value": 0,
-          "label": "XP"
+          "max": 5
         }
       },
       "skills": {
@@ -275,15 +274,36 @@
         "biography": "",
         "notes": "",
         "tipo": "infectado"
+      },
+      "conditions": {
+        "fome": false,
+        "sede": false,
+        "frio": false,
+        "exausto": false
       }
     },
-"horda": {
-      "templates": ["base"],
+    "horda": {
+      "templates": [
+        "base"
+      ],
       "attributes": {
-        "forca": { "value": 1, "label": "Força da Horda" },
-        "tamanho": { "value": 10, "max": 10, "label": "Tamanho (PV)" },
-        "dano": { "value": 1, "label": "Dano de Cerco" },
-        "densidade": { "value": "bando", "label": "Classificação" }
+        "forca": {
+          "value": 1,
+          "label": "Força da Horda"
+        },
+        "tamanho": {
+          "value": 10,
+          "max": 10,
+          "label": "Tamanho (PV)"
+        },
+        "dano": {
+          "value": 1,
+          "label": "Dano de Cerco"
+        },
+        "densidade": {
+          "value": "bando",
+          "label": "Classificação"
+        }
       },
       "details": {
         "tipo": "Caminhantes",

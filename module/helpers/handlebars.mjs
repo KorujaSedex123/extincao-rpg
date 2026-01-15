@@ -7,6 +7,9 @@ export const registerHandlebarsHelpers = function () {
         return a === b;
     });
 
+    Handlebars.registerHelper('eq', function (a, b) { return a == b; });
+    Handlebars.registerHelper('gte', function (a, b) { return Number(a) >= Number(b); });
+
     // Diferença (ne)
     Handlebars.registerHelper('ne', function (a, b) {
         return a !== b;

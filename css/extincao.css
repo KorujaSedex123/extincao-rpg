@@ -2046,3 +2046,148 @@ select option:hover {
     border-color: #330000; /* Borda mais escura quando travado */
     background: #110000;
 }
+/* --- FICHA DE SOBREVIVENTE 2.0 --- */
+
+.sobrevivente-sheet .sheet-header {
+    background: #0a0a0a;
+    border-bottom: 2px solid #333;
+    padding: 10px;
+}
+
+.resources-grid {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.resource-box {
+    flex: 1;
+    background: #111;
+    border: 1px solid #333;
+    padding: 5px;
+    text-align: center;
+}
+
+.resource-box.health input { color: #ff4444; }
+.resource-box.willpower input { color: #4eff8c; }
+
+/* --- PAINEL DE SOBREVIVÊNCIA --- */
+.survival-panel {
+    display: flex;
+    gap: 15px;
+    background: #000;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.panel-label {
+    display: block;
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* MONITOR DE INFECÇÃO */
+.infection-monitor {
+    flex: 0 0 160px;
+    text-align: center;
+}
+
+.infection-stages {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.stage-dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #222;
+    border: 2px solid #444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.8em;
+    transition: all 0.3s ease;
+}
+
+.stage-dot input { display: none; } /* Esconde o radio button real */
+
+/* Estágios Ativos (Brilho Neon) */
+.stage-dot.stage-1.active {
+    background: #ffeb3b; /* Amarelo */
+    border-color: #fff;
+    box-shadow: 0 0 10px #ffeb3b;
+    color: #000;
+}
+.stage-dot.stage-2.active {
+    background: #ff9800; /* Laranja */
+    border-color: #fff;
+    box-shadow: 0 0 10px #ff9800;
+    color: #000;
+}
+.stage-dot.stage-3.active {
+    background: #ff0000; /* Vermelho */
+    border-color: #fff;
+    box-shadow: 0 0 15px #ff0000;
+    color: #fff;
+    animation: pulse-red 1.5s infinite;
+}
+
+.infection-text {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #aaddff;
+    height: 20px;
+}
+
+/* CONDIÇÕES (Fome, Sede, etc) */
+.conditions-panel {
+    flex: 1;
+}
+
+.conditions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.condition-btn {
+    background: #111;
+    border: 1px solid #333;
+    padding: 5px;
+    text-align: center;
+    font-size: 0.8em;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.condition-btn input { display: none; }
+
+.condition-btn:hover { background: #222; }
+
+/* Condição Ativa */
+.condition-btn.active {
+    background: #330000;
+    border-color: #ff4444;
+    color: #ff4444;
+    text-shadow: 0 0 3px #ff0000;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 5px #ff0000; }
+    50% { box-shadow: 0 0 20px #ff0000; }
+    100% { box-shadow: 0 0 5px #ff0000; }
+}
