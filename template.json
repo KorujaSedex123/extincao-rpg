@@ -138,14 +138,19 @@
         }
       },
       "details": {
-        "qualidades": "",
-        "defeitos": "",
         "biography": "",
-        "traumas": "",
-        "archetype": "",
-        "infection": "0"
+        "archetype": "civil",
+        "infection": "0",
+        "age": "",
+        "height": "",
+        "weight": "",
+        "blood": "",
+        "vinculo": "",
+        "vinculo_target": "",
+        "atrito": "",
+        "atrito_target": ""
       },
-      "sheetLocked": false
+      "sheetLocked": true
     },
     "npc": {
       "templates": [

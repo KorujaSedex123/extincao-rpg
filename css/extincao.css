@@ -1,5 +1,5 @@
 /* ==========================================================================
-   EXTINÇÃO RPG - ESTILO TÁTICO FINAL (V3.0)
+   EXTINÇÃO RPG - ESTILO TÁTICO FINAL (V3.1)
    ========================================================================== */
 
 /* 1. GERAL (Janela e Fundo) */
@@ -73,17 +73,53 @@
 .extincao-sheet .lock-btn { color: #555; cursor: pointer; font-size: 1em; }
 .extincao-sheet .lock-btn:hover { color: #fff; text-shadow: 0 0 5px red; }
 
-/* Linha B: Estresse */
-.extincao-sheet .header-row-middle { display: flex; align-items: center; }
-.extincao-sheet .stress-bar-compact { display: flex; align-items: center; gap: 8px; width: 100%; }
-.extincao-sheet .label-mini { font-size: 0.6em; color: #666; font-weight: bold; min-width: 45px; text-transform: uppercase; }
-.extincao-sheet .stress-track { display: flex; gap: 4px; flex: 1; }
-.extincao-sheet .stress-box {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #222; border: 1px solid #444; cursor: pointer;
+/* Linha B: Estresse (VISUAL CORRIGIDO) */
+.extincao-sheet .header-row-middle { 
+    display: flex; 
+    align-items: center; 
+    margin-top: 5px; /* Um pouco de respiro */
 }
-.extincao-sheet .stress-box.active { background: #fc0; box-shadow: 0 0 5px #fc0; border-color: #fff; }
+.stress-bar-compact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Espalha os elementos */
+    gap: 10px;
+    width: 100%;
+    background: rgba(0,0,0,0.3); /* Fundo sutil para destacar a barra */
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #222;
+}
 
+.extincao-sheet .stress-track { 
+    display: flex; 
+    gap: 6px; 
+    flex: 1; /* Ocupa todo o espaço disponível no meio */
+    justify-content: center; /* Centraliza as bolinhas */
+}
+
+.stress-track {
+    display: flex;
+    gap: 4px;
+}
+
+/* Bolinha de Estresse (Vazia) */
+.extincao-sheet .stress-box {
+    width: 14px; height: 14px; /* Um pouco maior */
+    border-radius: 50%;
+    background: #1a1a1a; 
+    border: 2px solid #444; /* Borda mais grossa para ver bem */
+    cursor: pointer;
+    box-shadow: inset 0 0 4px #000;
+}
+.extincao-sheet .stress-box:hover { border-color: #888; background: #333; }
+
+/* Bolinha Cheia */
+.extincao-sheet .stress-box.active {
+    background: #ffcc00; 
+    border-color: #fff;
+    box-shadow: 0 0 6px #fc0;
+}
 /* Linha C: Infecção e Condições */
 .extincao-sheet .header-row-bottom {
     display: flex; align-items: center; justify-content: space-between;
@@ -114,18 +150,33 @@
 }
 .extincao-sheet .condition-btn.active { background: #310; color: #f44; border-color: #f44; box-shadow: 0 0 4px #f00; }
 
-/* DIREITA: STATS VITAIS */
-.extincao-sheet .header-stats { display: flex; flex-direction: column; gap: 4px; width: 90px; }
-.extincao-sheet .resource-box { background: #111; border: 1px solid #333; padding: 2px; text-align: center; }
-.extincao-sheet .resource-box label { font-size: 0.6em; color: #888; display: block; font-weight: bold; }
-.extincao-sheet .resource-inputs { display: flex; justify-content: center; align-items: center; gap: 2px; }
-.extincao-sheet .resource-box input {
-    width: 30px; height: 20px; text-align: center; background: transparent;
-    border: none; border-bottom: 1px solid #444; font-size: 1.1em; font-weight: bold; color: #fff;
+/* DIREITA: STATS VITAIS (HUD) */
+.extincao-sheet .header-stats { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px; 
+    flex: 0 0 130px; /* AUMENTADO DE 90px PARA 130px */
 }
-.extincao-sheet .resource-box.health input { color: #f44; }
-.extincao-sheet .resource-box.stamina input { color: #4f8; }
+.extincao-sheet .resource-box { 
+    background: #080808; 
+    border: 1px solid #333; 
+    padding: 3px; 
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.extincao-sheet .resource-box label { 
+    font-size: 0.65em; 
+    color: #888; 
+    margin-bottom: 2px; 
+    font-weight: bold; 
+    letter-spacing: 1px;
+}
+
+.extincao-sheet .resource-box.health input { color: #ff5555; }
+.extincao-sheet .resource-box.stamina input { color: #55ff55; }
 /* ==========================================================================
    3. MENU DE NAVEGAÇÃO (SLIM)
    ========================================================================== */
@@ -214,6 +265,7 @@
     text-align: center;
     font-weight: bold;
 }
+
 /* ==========================================================================
    5. INPUTS GERAIS E DADOS (CHAT)
    ========================================================================== */
@@ -238,24 +290,21 @@
 
 .extincao-sheet select {
     background-color: #000 !important;
-    color: #4eff8c !important; /* Verde Matrix no texto selecionado */
+    color: #4eff8c !important;
     border: 1px solid #444 !important;
     cursor: pointer;
 }
-
-/* As opções dentro da lista */
 .extincao-sheet select option {
-    background-color: #111 !important; /* Fundo escuro */
-    color: #fff !important;            /* Texto branco */
+    background-color: #111 !important;
+    color: #fff !important;
     padding: 5px;
 }
-
-/* Quando passa o mouse ou seleciona (depende do navegador, mas ajuda) */
 .extincao-sheet select option:checked,
 .extincao-sheet select option:hover {
     background-color: #333 !important;
     color: #4eff8c !important;
 }
+
 /* ========================
    INVENTÁRIO TÁTICO
    ======================== */
@@ -294,243 +343,277 @@
    FICHA DE ITEM (TÁTICO / MINIMALISTA)
    ========================================================================== */
 
-/* Remove o fundo branco padrão */
-.extincao-sheet.item .window-content {
-    background: #0f0f0f !important;
-    color: #ccc;
-    padding: 0;
-}
-
-/* Cabeçalho do Item */
-.extincao-sheet.item .item-header {
-    background: #1a1a1a;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 2px solid #444;
-}
-
-.extincao-sheet.item .profile-img {
-    width: 64px; height: 64px;
-    border: 1px solid #444;
-    background: #000;
-}
-
-.extincao-sheet.item .header-details {
-    flex: 1;
-}
-
-.extincao-sheet.item .charname input {
-    font-size: 1.5em;
-    color: #fff;
-    border-bottom: 1px solid #333;
-}
-
-.extincao-sheet.item .type-tag {
-    font-size: 0.7em;
-    text-transform: uppercase;
-    background: #222;
-    color: #666;
-    padding: 2px 5px;
-    border-radius: 2px;
-}
-
-/* Grid de Status */
-.extincao-sheet.item .stats-grid {
-    padding: 15px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.extincao-sheet.item .form-group {
-    background: #151515;
-    padding: 5px;
-    border: 1px solid #333;
-    display: flex;
-    flex-direction: column;
-}
-
-.extincao-sheet.item .form-group.full-width {
-    grid-column: span 2;
-}
-
-.extincao-sheet.item label {
-    font-size: 0.7em;
-    color: #666;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-}
-
-.extincao-sheet.item input[type="text"],
-.extincao-sheet.item input[type="number"] {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-family: "Courier New", monospace;
-    font-size: 1.1em;
-    font-weight: bold;
-}
-
-.extincao-sheet.item input:focus {
-    box-shadow: none;
-    border-bottom: 1px solid #4eff8c;
-}
-
-/* Checkbox (Letal) */
-.extincao-sheet.item .checkbox-group {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-}
-.extincao-sheet.item .checkbox-group input {
-    width: 20px; height: 20px;
-}
-
-/* Editor de Texto Escuro */
-.extincao-sheet.item .editor {
-    height: 100%;
-    background: #111;
-    color: #ccc;
-    padding: 10px;
-    border: none;
-}
-.extincao-sheet.item .tox-edit-area__iframe {
-    background: #111 !important;
-}
-
-/* ==========================================================================
-   FICHA DE ITEM MINIMALISTA (V4.0)
-   ========================================================================== */
-
 /* Fundo Geral */
 .extincao-sheet.item .window-content {
     background: #050505 !important;
+    color: #ccc;
+    padding: 0;
     border: 1px solid #333;
 }
 
 /* Header Slim */
-.item-header-slim {
-    display: flex;
-    gap: 15px;
-    padding: 10px;
-    background: #0a0a0a;
-    border-bottom: 1px solid #222;
-    align-items: center;
+.extincao-sheet.item .item-header-slim {
+    display: flex; gap: 15px; padding: 10px;
+    background: #0a0a0a; border-bottom: 1px solid #222; align-items: center;
 }
 
-.profile-img-slim {
-    width: 48px; height: 48px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    background: #000;
+.extincao-sheet.item .profile-img-slim {
+    width: 48px; height: 48px; border: 1px solid #333;
+    border-radius: 4px; background: #000;
 }
 
-.charname-slim {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #fff;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid transparent;
-    width: 100%;
-    font-family: "Courier New", monospace;
-    transition: border 0.2s;
+.extincao-sheet.item .charname-slim {
+    font-size: 1.4em; font-weight: bold; color: #fff;
+    background: transparent; border: none; border-bottom: 1px solid transparent;
+    width: 100%; font-family: "Courier New", monospace; transition: border 0.2s;
 }
-.charname-slim:focus { border-bottom-color: #4eff8c; box-shadow: none; }
+.extincao-sheet.item .charname-slim:focus { border-bottom-color: #4eff8c; box-shadow: none; }
 
-.item-meta { display: flex; gap: 10px; margin-top: 5px; }
+.extincao-sheet.item .item-meta { display: flex; gap: 10px; margin-top: 5px; }
 
-.type-badge {
+.extincao-sheet.item .type-badge {
     font-size: 0.6em; text-transform: uppercase;
     background: #222; color: #888;
     padding: 2px 6px; border-radius: 2px; letter-spacing: 1px;
 }
 
-.lock-badge {
+.extincao-sheet.item .lock-badge {
     font-size: 0.6em; text-transform: uppercase;
     color: #f44; padding: 2px 0; letter-spacing: 1px;
 }
 
 /* Abas */
-.tabs-slim {
-    border-bottom: 1px solid #222;
-    background: #080808;
-    margin: 0;
+.extincao-sheet.item .tabs-slim {
+    border-bottom: 1px solid #222; background: #080808; margin: 0;
 }
-.tabs-slim .item {
-    font-size: 0.8em;
-    color: #555;
-    text-transform: uppercase;
-    padding: 8px;
+.extincao-sheet.item .tabs-slim .item {
+    font-size: 0.8em; color: #555; text-transform: uppercase; padding: 8px;
 }
-.tabs-slim .item.active {
-    color: #4eff8c;
-    border-bottom: 2px solid #4eff8c;
+.extincao-sheet.item .tabs-slim .item.active {
+    color: #4eff8c; border-bottom: 2px solid #4eff8c;
     text-shadow: 0 0 5px rgba(78,255,140,0.3);
 }
 
 /* Grid Limpo */
-.clean-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
+.extincao-sheet.item .clean-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px;
 }
 
-.clean-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+.extincao-sheet.item .clean-field {
+    display: flex; flex-direction: column; gap: 4px;
+}
+.extincao-sheet.item .clean-field.full { grid-column: span 2; }
+
+.extincao-sheet.item .clean-field label {
+    font-size: 0.65em; color: #666; text-transform: uppercase; letter-spacing: 1px;
 }
 
-.clean-field.full { grid-column: span 2; }
-
-.clean-field label {
-    font-size: 0.65em;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.extincao-sheet.item .clean-field input[type="text"],
+.extincao-sheet.item .clean-field input[type="number"],
+.extincao-sheet.item .clean-field select {
+    background: transparent; border: none; border-bottom: 1px solid #333;
+    color: #ddd; font-family: "Courier New", monospace; font-size: 1.1em;
+    padding: 4px 0; border-radius: 0;
 }
-
-.clean-field input[type="text"],
-.clean-field input[type="number"],
-.clean-field select {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #333;
-    color: #ddd;
-    font-family: "Courier New", monospace;
-    font-size: 1.1em;
-    padding: 4px 0;
-    border-radius: 0;
-}
-
-.clean-field input:focus, .clean-field select:focus {
-    border-bottom-color: #4eff8c;
-    box-shadow: none;
-}
-
-/* Estilo Travado (Locked) */
-.extincao-sheet.item.locked input,
-.extincao-sheet.item.locked select {
-    border-bottom: 1px dashed #333;
-    color: #888;
-    cursor: not-allowed;
-    background: transparent !important;
+.extincao-sheet.item .clean-field input:focus, .extincao-sheet.item .clean-field select:focus {
+    border-bottom-color: #4eff8c; box-shadow: none;
 }
 
 /* Checkbox estilizado */
-.clean-field.checkbox {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    border-bottom: 1px solid #222;
+.extincao-sheet.item .clean-field.checkbox {
+    flex-direction: row; align-items: center; justify-content: space-between;
+    height: 100%; border-bottom: 1px solid #222;
 }
-.clean-field.checkbox input { width: 16px; height: 16px; margin: 0; }
+.extincao-sheet.item .clean-field.checkbox input { width: 16px; height: 16px; margin: 0; }
+.extincao-sheet.item .clean-field.highlight input { color: #4eff8c; }
 
-.clean-field.highlight input { color: #4eff8c; }
+.extincao-sheet.item .editor { height: 100%; background: #111; color: #ccc; padding: 10px; border: none; }
+
+/* ==========================================================================
+   ABA DOSSIÊ (ARQUIVO PESSOAL)
+   ========================================================================== */
+
+/* Layout Geral */
+.extincao-sheet .tab.bio.active {
+    display: flex !important; /* Só aplica flex quando ativa */
+    flex-direction: column;
+}
+.extincao-sheet .tab.bio { gap: 20px; height: 100%; }
+
+/* Títulos das Seções */
+.dossier-title {
+    font-size: 0.8em; font-weight: bold; color: #444;
+    border-bottom: 1px solid #222; margin-bottom: 10px;
+    padding-bottom: 2px; letter-spacing: 2px; text-transform: uppercase;
+}
+
+/* Grid de Dados Vitais */
+.dossier-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
+    padding: 10px; background: #0a0a0a; border: 1px solid #333; border-radius: 4px;
+}
+
+.clean-field { display: flex; flex-direction: column; gap: 4px; }
+.clean-field label { font-size: 0.65em; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.clean-field input {
+    background: transparent; border: none; border-bottom: 1px solid #333;
+    color: #ddd; font-family: "Courier New", monospace; font-size: 1.1em; padding: 2px 0;
+}
+
+/* Área do Editor */
+.dossier-body {
+    flex: 1; display: flex; flex-direction: column; overflow: hidden;
+}
+.extincao-sheet .bio-paper {
+    flex: 1; background: #080808; border: 1px solid #333; padding: 5px; overflow-y: hidden;
+}
+.extincao-sheet .editor { height: 100%; }
+.extincao-sheet .tox-edit-area__iframe { background: #080808 !important; }
+
+/* ========================
+   ZONAS DE DROP (DRAG & DROP)
+   ======================== */
+
+.drop-zone {
+    background: rgba(0,0,0,0.3); border: 1px dashed #444; border-radius: 4px;
+    margin-bottom: 5px; min-height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+}
+.drop-zone:hover { border-color: #888; background: rgba(255,255,255,0.05); }
+.empty-drop { color: #555; font-size: 0.8em; font-style: italic; pointer-events: none; }
+
+.linked-actor {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 4px; background: #111; border-radius: 3px; border: 1px solid #333;
+}
+.linked-img {
+    width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+    border: 1px solid #444; flex: 0 0 32px;
+}
+.linked-name {
+    flex: 1; font-weight: bold; font-size: 0.9em; color: #eee;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.clear-link { color: #666; cursor: pointer; padding: 0 5px; }
+.clear-link:hover { color: #f44; }
+
+.relation-box.bond .linked-name { color: #4eff8c; }
+.relation-box.friction .linked-name { color: #f44; }
+
+/* ========================
+   CONTROLES MINIMALISTAS (+ e -)
+   ======================== */
+
+.extincao-sheet .resource-inputs { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 2px; 
+    width: 100%;
+}
+/* O Botão em si */
+.stat-control, .stress-control {
+    color: #444; /* Cor escura discreta */
+    cursor: pointer;
+    font-size: 0.7em;
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+/* Hover (Quando passa o mouse) */
+.stat-control:hover, .stress-control:hover {
+    background: rgba(255, 255, 255, 0.1); color: #fff; border-color: #555;
+}
+
+.stat-control.minus:hover, .stress-control.minus:hover { color: #ff6666; border-color: #ff6666; }
+.stat-control.plus:hover, .stress-control.plus:hover { color: #66ff66; border-color: #66ff66; }
+
+.stat-control {
+    width: 16px; height: 16px;
+    font-size: 0.8em;
+    border: 1px solid #333;
+    background: #111;
+    color: #666;
+    border-radius: 3px; /* Quadrado arredondado fica melhor aqui */
+    display: flex; align-items: center; justify-content: center;
+}
+.stat-control:hover { border-color: #777; color: #fff; }
+
+/* Input Ajustado */
+.extincao-sheet .resource-box input {
+    width: 32px !important; /* Largura fixa */
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #333;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 0;
+    height: 20px;
+}
+.extincao-sheet .sep { 
+    font-size: 0.9em; 
+    color: #444; 
+    margin: 0 1px; 
+}
+
+/* ========================
+   CORREÇÃO DE LAYOUT (Vínculos)
+   ======================== */
+
+.relations-section {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+    width: 100%; margin-bottom: 10px; box-sizing: border-box;
+}
+.relation-box {
+    min-height: 150px; height: 100%;
+    display: flex; flex-direction: column;
+}
+.relation-box textarea { flex: 1; min-height: 60px; background: transparent; border: none; color: #ccc; resize: none; }
+.relation-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #222; padding-bottom: 4px; margin-bottom: 2px;
+}
+.relation-header label { font-size: 0.7em; font-weight: bold; text-transform: uppercase; }
+
+/* Estilo Vínculo (Verde) */
+.relation-box.bond { border-left: 3px solid #4eff8c; background: #0a0a0a; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; padding: 8px; }
+.relation-box.bond label { color: #4eff8c; }
+
+/* Estilo Atrito (Vermelho) */
+.relation-box.friction { border-left: 3px solid #f44; background: #0a0a0a; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; padding: 8px; }
+.relation-box.friction label { color: #f44; }
+
+.recover-stress-btn {
+    font-size: 0.65em; background: #002200; color: #4eff8c;
+    border: 1px solid #4eff8c; padding: 1px 6px; border-radius: 2px; cursor: pointer; text-transform: uppercase;
+}
+.recover-stress-btn:hover { background: #4eff8c; color: #000; box-shadow: 0 0 5px #4eff8c; }
+
+/* ==========================================================================
+   CORREÇÃO CRÍTICA DAS ABAS (FIX TABS)
+   ========================================================================== */
+
+/* 1. Regra de Ouro: Se não for a aba ativa, ESCONDA IMEDIATAMENTE */
+.extincao-sheet .tab {
+    display: none !important;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* 2. Se tiver a classe .active, MOSTRE */
+.extincao-sheet .tab.active {
+    display: block !important;
+}
+
+/* 3. Correção específica para o Dossiê */
+.extincao-sheet .tab.bio.active {
+    display: flex !important;
+    flex-direction: column;
+}
