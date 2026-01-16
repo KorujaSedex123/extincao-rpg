@@ -332,25 +332,120 @@ export class BoilerplateActorSheet extends ActorSheet {
 
   async _processRoll(dataset) {
     let diceCount = 1;
+    let checkValue = 0;
     let label = dataset.label || "Rolagem";
 
+    const SKILL_MAP = {
+      "briga": "for", "armas_brancas": "for", "atletismo": "for",
+      "armas_fogo": "des", "furtividade": "des", "pilotagem": "des", "ladinagem": "des", "esquiva": "des",
+      "vigor": "con",
+      "medicina": "int", "tecnologia": "int", "investigacao": "int", "sobrevivencia": "int", "ciencias": "int",
+      "percepcao": "per", "atencao": "per", "intuicao": "per",
+      "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
+    };
+
+    // Montar Pool
     if (dataset.rollType === 'skill') {
-      const skillVal = this.actor.system.skills[dataset.key].value;
-      diceCount = skillVal + 1;
+      const skillKey = dataset.key;
+      const skill = this.actor.system.skills[skillKey];
+      checkValue = skill.value;
+      diceCount = skill.value + 1;
     } else if (dataset.key) {
-      diceCount = this.actor.system.attributes[dataset.key]?.value || 1;
+      checkValue = this.actor.system.attributes[dataset.key]?.value || 1;
+      diceCount = checkValue;
     }
+
+    // Regra de Especialista
+    const isSpecialist = checkValue >= 4;
+    const targetNumber = isSpecialist ? 5 : 6;
 
     let roll = new Roll(`${diceCount}d6`);
     await roll.evaluate();
 
+    const diceResults = roll.terms[0].results;
+    let successCount = 0;
+    let onesCount = 0;
+    let hasCrit = false; // Flag para saber se houve crítico (6)
+    let diceHTML = "";
+
+    for (let die of diceResults) {
+      const val = die.result;
+      let cssClass = "";
+
+      if (val === 6) {
+        successCount++;
+        hasCrit = true; // Só o 6 ativa crítico
+        cssClass = "crit";
+      } else if (val >= targetNumber) {
+        successCount++;
+        cssClass = "success"; // 5 é sucesso, mas não crítico
+      } else if (val === 1) {
+        onesCount++;
+        cssClass = "glitch";
+      }
+
+      diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
+    }
+
+    // Definir Resultado
+    let outcomeHTML = "";
+    let borderSideColor = "#666";
+    let pushButton = "";
+
+    if (successCount > 0) {
+      borderSideColor = "#4eff8c";
+
+      // SEPARADO: O texto CRÍTICO só aparece se houver um 6
+      const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">CRÍTICO!</div>` : "";
+
+      outcomeHTML = `
+                <div class="roll-result success">
+                    ${successCount} SUCESSO(S)
+                    ${critText}
+                </div>`;
+    } else {
+      if (onesCount > 0) {
+        borderSideColor = "#f44";
+        outcomeHTML = `
+                    <div class="roll-result failure" style="color:#f44; border-color:#f44;">GLITCH!</div>
+                    <div class="roll-summary glitch-text">Algo deu muito errado...</div>`;
+      } else {
+        outcomeHTML = `<div class="roll-result failure">FALHA</div>`;
+      }
+
+      // Botão de Forçar
+      const rollData = {
+        actorId: this.actor.id,
+        diceCount: diceCount,
+        targetNumber: targetNumber,
+        label: label
+      };
+      const dataString = JSON.stringify(rollData).replace(/"/g, '&quot;');
+
+      pushButton = `
+                <div style="margin-top: 10px; text-align: center;">
+                    <button class="force-roll-btn" data-roll="${dataString}">
+                        <i class="fas fa-bolt"></i> FORÇAR (+1 Estresse)
+                    </button>
+                </div>
+            `;
+    }
+
+    let specialistHint = isSpecialist ? `<div style="font-size:0.7em; color:#4eff8c; margin-bottom:5px;">[ESPECIALISTA: 5+ É SUCESSO]</div>` : "";
+
     roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
       content: `
-            <div class="extincao-roll">
+            <div class="extincao-roll" style="border-left-color: ${borderSideColor}">
                 <h3>${label}</h3>
-                <div class="roll-result ${roll.total >= 6 ? 'success' : 'failure'}">${roll.total}</div>
-                <div class="dice-tray">${roll.result}</div>
+                ${specialistHint}
+                
+                <div class="dice-pool">
+                    ${diceHTML}
+                </div>
+
+                ${outcomeHTML}
+                ${pushButton}
             </div>`
     });
   }

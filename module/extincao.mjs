@@ -73,69 +73,107 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
     }
 });
 
-/* -------------------------------------------- */
-/* HOOK: ATIVAR BOTÕES NO CHAT (Padrão V13+)   */
-/* -------------------------------------------- */
+/* ==========================================================================
+   LÓGICA DE FORÇAR ROLAGEM (COM DICE SO NICE + V13 READY)
+   ========================================================================== */
 Hooks.on("renderChatMessageHTML", (message, html) => {
-    // Na V13+, 'html' já é o elemento HTML nativo.
-    // Procuramos o botão dentro dele.
-    const btn = html.querySelector(".force-roll-btn");
     
-    // Se não tiver botão nesta mensagem, ignora.
+    const btn = html.querySelector(".force-roll-btn");
     if (!btn) return;
 
-    // Adiciona o ouvinte de clique
     btn.addEventListener("click", async (ev) => {
         ev.preventDefault();
+        ev.stopPropagation();
+
+        let rollData;
+        try { rollData = JSON.parse(btn.dataset.roll); } 
+        catch (err) { return ui.notifications.error("Erro ao ler dados."); }
+
+        const actor = game.actors.get(rollData.actorId);
+        if (!actor) return ui.notifications.error("Ator não encontrado.");
+
+        // 1. Aplica Custo
+        const currentStress = Number(actor.system.resources.estresse.value);
+        if (currentStress >= 6) return ui.notifications.warn("Estresse máximo!");
+
+        await actor.update({ "system.resources.estresse.value": currentStress + 1 });
         
-        // Pega o ID do ator
-        const actorId = btn.dataset.actorId;
-        const actor = game.actors.get(actorId);
-
-        if (!actor) return ui.notifications.warn("Ator original não encontrado.");
-
-        // Verifica Estresse
-        const estresseAtual = actor.system.resources.estresse.value;
-        if (estresseAtual >= 6) {
-            return ui.notifications.error("COLAPSO! O personagem não pode forçar mais nada.");
-        }
-
-        // 1. Atualiza Estresse
-        await actor.update({ "system.resources.estresse.value": estresseAtual + 1 });
-        
-        // 2. Trava o botão para evitar cliques duplos
+        // 2. UI do Botão
         btn.disabled = true;
-        btn.innerHTML = "Forçado!";
-        btn.classList.add("used"); // Classe extra para o CSS
+        btn.innerHTML = '<i class="fas fa-check"></i> FORÇADO!';
+        btn.style.opacity = "0.5";
+        btn.style.cursor = "not-allowed";
 
-        // 3. Rola o Dado de Esforço (+1d6)
-        let r = new Roll("1d6");
-        await r.evaluate();
-        
-        // 4. Define o visual do resultado
-        let resultadoClass = "failure";
-        let textoResultado = "FALHA";
-        
-        if (r.total === 6) {
-            resultadoClass = "success";
-            textoResultado = "SUCESSO!";
-        } else if (r.total === 1) {
-            resultadoClass = "glitch";
-            textoResultado = "GLITCH!";
+        // 3. Rola os dados
+        let roll = new Roll(`${rollData.diceCount}d6`);
+        await roll.evaluate();
+
+        // ---------------------------------------------------------
+        // CORREÇÃO: FORÇAR DICE SO NICE A APARECER
+        // ---------------------------------------------------------
+        if (game.dice3d) {
+            // (rolagem, usuário, sincronizar_com_outros)
+            game.dice3d.showForRoll(roll, game.user, true);
+        }
+        // ---------------------------------------------------------
+
+        const diceResults = roll.terms[0].results;
+        let successCount = 0;
+        let hasCrit = false;
+        let diceHTML = "";
+
+        for (let die of diceResults) {
+            const val = die.result;
+            let cssClass = "";
+            
+            if (val === 6) { 
+                successCount++; 
+                hasCrit = true; 
+                cssClass = "crit"; 
+            }
+            else if (val >= rollData.targetNumber) { 
+                successCount++; 
+                cssClass = "success"; 
+            }
+            else if (val === 1) { cssClass = "glitch"; }
+            
+            diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
         }
 
-        // 5. Envia a mensagem do resultado
+        // 4. Resultado Final
+        let outcomeHTML = "";
+        let borderSideColor = "#666";
+        
+        if (successCount > 0) {
+            borderSideColor = "#4eff8c";
+            const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">CRÍTICO!</div>` : "";
+
+            outcomeHTML = `
+                <div class="roll-result success">
+                    SALVO! (${successCount} Sucessos)
+                    ${critText}
+                </div>`;
+        } else {
+            borderSideColor = "#f44";
+            outcomeHTML = `
+                <div class="roll-result failure" style="color:#f44; border-color:#f44;">GLITCH!</div>
+                <div class="roll-summary glitch-text">O limite foi quebrado...</div>`;
+        }
+
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: actor }),
             content: `
-            <div class="extincao-roll">
-                <h3>FORÇAR AÇÃO</h3>
-                <div class="roll-result ${resultadoClass}">
-                    ${r.total} <span style="font-size:0.5em; display:block;">${textoResultado}</span>
+            <div class="extincao-roll" style="border-left-color: ${borderSideColor}">
+                <h3>${rollData.label} (FORÇADO)</h3>
+                <div style="font-size:0.8em; color:#f44; margin-bottom:5px; text-align:center;">
+                    <i class="fas fa-bolt"></i> +1 ESTRESSE APLICADO
                 </div>
-                <div style="text-align:center; font-size:0.8em; margin-top:5px; color:#ff8800;">
-                    ⚠️ +1 Estresse Aplicado
+                
+                <div class="dice-pool">
+                    ${diceHTML}
                 </div>
+
+                ${outcomeHTML}
             </div>`
         });
     });
