@@ -31,3 +31,12 @@ EXTINCAO.ARQUETIPOS = {
     "criminoso": "Criminoso/Fugitivo",
     "sobrevivente": "Sobrevivente Nato"
 };
+
+// Opções de Uso/Dano para Armas
+EXTINCAO.USO_ARMA = {
+    "d4": "d4 (Leve/Improviso)",
+    "d6": "d6 (Curta/Padrão)",
+    "d8": "d8 (Média/Fuzil)",
+    "d10": "d10 (Pesada/Escopeta)",
+    "d12": "d12 (Brutal/Explosivo)"
+};

@@ -342,52 +342,37 @@
     "types": [
       "item",
       "arma",
+      "equipamento",
       "qualidade",
-      "defeito",
-      "trauma",
-      "projeto"
+      "defeito"
     ],
-    "item": {
-      "templates": [
-        "base"
-      ],
-      "quantity": 1,
-      "weight": 0,
-      "price": 0
+    "templates": {
+      "base": {
+        "description": "",
+        "source": "",
+        "quantity": 1,
+        "weight": 0
+      }
     },
     "arma": {
       "templates": [
         "base"
       ],
+      "uso": "d6",
       "dano": 2,
-      "uso": "d8",
-      "quantity": 1
+      "lethal": true
     },
-    "projeto": {
+    "equipamento": {
       "templates": [
         "base"
       ],
-      "custo": "10 Recursos",
-      "estado": "planejado",
-      "efeito": "Recuperação +1"
+      "isArmor": false,
+      "armor": 0
     },
-    "qualidade": {
+    "item": {
       "templates": [
         "base"
-      ],
-      "description": ""
-    },
-    "defeito": {
-      "templates": [
-        "base"
-      ],
-      "description": ""
-    },
-    "trauma": {
-      "templates": [
-        "base"
-      ],
-      "description": ""
+      ]
     }
   }
 }

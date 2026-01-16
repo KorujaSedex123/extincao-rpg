@@ -256,3 +256,281 @@
     background-color: #333 !important;
     color: #4eff8c !important;
 }
+/* ========================
+   INVENTÁRIO TÁTICO
+   ======================== */
+.inventory-layout { display: flex; flex-direction: column; gap: 15px; }
+.inventory-group { background: #0a0a0a; border: 1px solid #333; border-radius: 4px; overflow: hidden; }
+
+/* Cabeçalho */
+.inventory-header {
+    background: #222; padding: 5px 10px; border-bottom: 2px solid #444;
+    color: #888; font-size: 0.8em; font-weight: bold; align-items: center;
+}
+.inventory-header h3 { margin: 0; color: #ccc; flex: 1; }
+
+/* Lista */
+.item-list { list-style: none; margin: 0; padding: 0; }
+.item-list .item {
+    padding: 5px 10px; border-bottom: 1px solid #1a1a1a;
+    align-items: center; background: rgba(0,0,0,0.2); display: flex;
+}
+.item-list .item:hover { background: #151515; }
+
+/* Colunas */
+.item-image { flex: 0 0 24px; margin-right: 10px; }
+.item-name { flex: 1; color: #eee; font-size: 0.9em; margin: 0; }
+.item-detail { flex: 0 0 60px; text-align: center; color: #666; font-size: 0.8em; }
+.item-controls { flex: 0 0 50px; text-align: right; display: flex; gap: 5px; justify-content: flex-end; }
+
+/* Botões */
+.item-control { color: #555; cursor: pointer; font-size: 0.9em; }
+.item-control:hover { color: #fff; }
+.item-create { color: #4eff8c; transition: color 0.2s; } 
+.item-create:hover { color: #fff; text-shadow: 0 0 5px #4eff8c; }
+.item-delete:hover { color: #f44; }
+
+/* ==========================================================================
+   FICHA DE ITEM (TÁTICO / MINIMALISTA)
+   ========================================================================== */
+
+/* Remove o fundo branco padrão */
+.extincao-sheet.item .window-content {
+    background: #0f0f0f !important;
+    color: #ccc;
+    padding: 0;
+}
+
+/* Cabeçalho do Item */
+.extincao-sheet.item .item-header {
+    background: #1a1a1a;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #444;
+}
+
+.extincao-sheet.item .profile-img {
+    width: 64px; height: 64px;
+    border: 1px solid #444;
+    background: #000;
+}
+
+.extincao-sheet.item .header-details {
+    flex: 1;
+}
+
+.extincao-sheet.item .charname input {
+    font-size: 1.5em;
+    color: #fff;
+    border-bottom: 1px solid #333;
+}
+
+.extincao-sheet.item .type-tag {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    background: #222;
+    color: #666;
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+/* Grid de Status */
+.extincao-sheet.item .stats-grid {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.extincao-sheet.item .form-group {
+    background: #151515;
+    padding: 5px;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+}
+
+.extincao-sheet.item .form-group.full-width {
+    grid-column: span 2;
+}
+
+.extincao-sheet.item label {
+    font-size: 0.7em;
+    color: #666;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.extincao-sheet.item input[type="text"],
+.extincao-sheet.item input[type="number"] {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: "Courier New", monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.extincao-sheet.item input:focus {
+    box-shadow: none;
+    border-bottom: 1px solid #4eff8c;
+}
+
+/* Checkbox (Letal) */
+.extincao-sheet.item .checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+.extincao-sheet.item .checkbox-group input {
+    width: 20px; height: 20px;
+}
+
+/* Editor de Texto Escuro */
+.extincao-sheet.item .editor {
+    height: 100%;
+    background: #111;
+    color: #ccc;
+    padding: 10px;
+    border: none;
+}
+.extincao-sheet.item .tox-edit-area__iframe {
+    background: #111 !important;
+}
+
+/* ==========================================================================
+   FICHA DE ITEM MINIMALISTA (V4.0)
+   ========================================================================== */
+
+/* Fundo Geral */
+.extincao-sheet.item .window-content {
+    background: #050505 !important;
+    border: 1px solid #333;
+}
+
+/* Header Slim */
+.item-header-slim {
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+    background: #0a0a0a;
+    border-bottom: 1px solid #222;
+    align-items: center;
+}
+
+.profile-img-slim {
+    width: 48px; height: 48px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: #000;
+}
+
+.charname-slim {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #fff;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    width: 100%;
+    font-family: "Courier New", monospace;
+    transition: border 0.2s;
+}
+.charname-slim:focus { border-bottom-color: #4eff8c; box-shadow: none; }
+
+.item-meta { display: flex; gap: 10px; margin-top: 5px; }
+
+.type-badge {
+    font-size: 0.6em; text-transform: uppercase;
+    background: #222; color: #888;
+    padding: 2px 6px; border-radius: 2px; letter-spacing: 1px;
+}
+
+.lock-badge {
+    font-size: 0.6em; text-transform: uppercase;
+    color: #f44; padding: 2px 0; letter-spacing: 1px;
+}
+
+/* Abas */
+.tabs-slim {
+    border-bottom: 1px solid #222;
+    background: #080808;
+    margin: 0;
+}
+.tabs-slim .item {
+    font-size: 0.8em;
+    color: #555;
+    text-transform: uppercase;
+    padding: 8px;
+}
+.tabs-slim .item.active {
+    color: #4eff8c;
+    border-bottom: 2px solid #4eff8c;
+    text-shadow: 0 0 5px rgba(78,255,140,0.3);
+}
+
+/* Grid Limpo */
+.clean-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.clean-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.clean-field.full { grid-column: span 2; }
+
+.clean-field label {
+    font-size: 0.65em;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.clean-field input[type="text"],
+.clean-field input[type="number"],
+.clean-field select {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #333;
+    color: #ddd;
+    font-family: "Courier New", monospace;
+    font-size: 1.1em;
+    padding: 4px 0;
+    border-radius: 0;
+}
+
+.clean-field input:focus, .clean-field select:focus {
+    border-bottom-color: #4eff8c;
+    box-shadow: none;
+}
+
+/* Estilo Travado (Locked) */
+.extincao-sheet.item.locked input,
+.extincao-sheet.item.locked select {
+    border-bottom: 1px dashed #333;
+    color: #888;
+    cursor: not-allowed;
+    background: transparent !important;
+}
+
+/* Checkbox estilizado */
+.clean-field.checkbox {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    border-bottom: 1px solid #222;
+}
+.clean-field.checkbox input { width: 16px; height: 16px; margin: 0; }
+
+.clean-field.highlight input { color: #4eff8c; }
