@@ -1,136 +1,152 @@
 <form class="{{cssClass}} flexcol sobrevivente-sheet {{#if isLocked}}locked{{/if}}" autocomplete="off">
 
     <header class="sheet-header">
-        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
-        <div class="header-details">
-            <div class="header-top flexrow">
-                <h1 class="charname">
-                    <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Sobrevivente" {{#if isLocked}}readonly{{/if}}/>
-                </h1>
-                <a class="lock-btn" title="{{#if isLocked}}Destravar{{else}}Travar{{/if}}">
-                    <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
-                </a>
-            </div>
-            
-            <div class="header-sub">
-                <select name="system.details.archetype" class="archetype-select" {{#if isLocked}}disabled{{/if}}>
-                    {{#select system.details.archetype}}
-                    {{#each arquetipos as |label key|}}
-                    <option value="{{key}}">{{label}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
+        <div class="header-grid">
+
+            <div class="profile-img-container">
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+                {{#if isLocked}}<i class="fas fa-lock lock-status" title="Ficha Travada"></i>{{/if}}
             </div>
 
-            <div class="resources-grid">
-                <div class="resource-box health">
-                    <label>VIDA (PV)</label>
-                    <div class="resource-inputs">
-                        <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" {{#if isLocked}}readonly{{/if}}/>
-                        <span class="sep">/</span>
-                        <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" {{#if isLocked}}readonly{{/if}}/>
+            <div class="header-main">
+
+                <div class="header-row-top">
+                    <h1 class="charname">
+                        <input name="name" type="text" value="{{actor.name}}" placeholder="NOME DO AGENTE" {{#if
+                            isLocked}}readonly{{/if}} />
+                    </h1>
+
+                    <div class="archetype-box">
+                        <select name="system.details.archetype" {{#if isLocked}}disabled{{/if}}>
+                            {{#select system.details.archetype}}
+                            {{#each arquetipos as |label key|}}
+                            <option value="{{key}}">{{label}}</option>
+                            {{/each}}
+                            {{/select}}
+                        </select>
+                    </div>
+
+                    <a class="lock-btn" title="{{#if isLocked}}Destravar para Editar{{else}}Travar para Jogar{{/if}}">
+                        <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+                    </a>
+                </div>
+
+                <div class="header-row-middle">
+                    <div class="stress-bar-compact">
+                        <span class="label-mini">ESTRESSE</span>
+                        <div class="stress-track">
+                            {{#each (range 6) as |i|}}
+                            <a class="stress-box {{#if (gte ../system.resources.estresse.value (add i 1))}}active{{/if}}"
+                                data-index="{{add i 1}}"></a>
+                            {{/each}}
+                        </div>
                     </div>
                 </div>
-                <div class="resource-box willpower">
-                    <label>DETERMINAÇÃO</label>
+
+                <div class="header-row-bottom">
+
+                    <div class="mini-infection">
+                        <span class="label-mini"><i class="fas fa-biohazard"></i> VÍRUS</span>
+                        <div class="stages-mini">
+                            <a class="stage-dot {{#if (eq system.details.infection '0')}}active safe{{/if}}"
+                                data-value="0" title="Saudável"></a>
+                            <a class="stage-dot {{#if (eq system.details.infection '1')}}active warn{{/if}}"
+                                data-value="1" title="Incubação"></a>
+                            <a class="stage-dot {{#if (eq system.details.infection '2')}}active danger{{/if}}"
+                                data-value="2" title="Febre (-1d6)"></a>
+                            <a class="stage-dot {{#if (eq system.details.infection '3')}}active critical{{/if}}"
+                                data-value="3" title="Necrose (-2d6)"></a>
+                        </div>
+                    </div>
+
+                    <div class="mini-conditions">
+                        <a class="condition-btn {{#if system.conditions.fome}}active{{/if}}" data-prop="fome"
+                            title="Fome">
+                            <i class="fas fa-utensils"></i>
+                        </a>
+                        <a class="condition-btn {{#if system.conditions.sede}}active{{/if}}" data-prop="sede"
+                            title="Sede">
+                            <i class="fas fa-tint"></i>
+                        </a>
+                        <a class="condition-btn {{#if system.conditions.exausto}}active{{/if}}" data-prop="exausto"
+                            title="Exausto">
+                            <i class="fas fa-bed"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-stats">
+                <div class="resource-box health">
+                    <label>VIDA</label>
                     <div class="resource-inputs">
-                        <input type="number" name="system.resources.pr.value" value="{{system.resources.pr.value}}" {{#if isLocked}}readonly{{/if}}/>
+                        <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}"
+                            {{#if isLocked}}readonly{{/if}} />
                         <span class="sep">/</span>
-                        <input type="number" name="system.resources.pr.max" value="{{system.resources.pr.max}}" {{#if isLocked}}readonly{{/if}}/>
+                        <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}"
+                            readonly />
+                    </div>
+                </div>
+                <div class="resource-box stamina">
+                  <label>RESISTÊNCIA (PR)</label> <div class="resource-inputs">
+                    <div class="resource-inputs">
+                        <input type="number" name="system.resources.pr.value" value="{{system.resources.pr.value}}"
+                            {{#if isLocked}}readonly{{/if}} />
+                        <span class="sep">/</span>
+                        <input type="number" name="system.resources.pr.max" value="{{system.resources.pr.max}}"
+                            readonly />
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <section class="survival-panel">
-        
-        <div class="infection-monitor">
-            <label class="panel-label"><i class="fas fa-biohazard"></i> NÍVEL DE INFECÇÃO</label>
-            <div class="infection-stages">
-                <label class="stage-dot stage-0 {{#if (eq system.details.infection '0')}}active{{/if}}" title="Saudável">
-                    <input type="radio" name="system.details.infection" value="0" {{#if (eq system.details.infection '0')}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                </label>
-
-                <label class="stage-dot stage-1 {{#if (gte system.details.infection '1')}}active{{/if}}" title="Incubação (Assintomático)">
-                    <input type="radio" name="system.details.infection" value="1" {{#if (eq system.details.infection '1')}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                    <span>1</span>
-                </label>
-
-                <label class="stage-dot stage-2 {{#if (gte system.details.infection '2')}}active{{/if}}" title="Febre (Penalidade em Atributos)">
-                    <input type="radio" name="system.details.infection" value="2" {{#if (eq system.details.infection '2')}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                    <span>2</span>
-                </label>
-
-                <label class="stage-dot stage-3 {{#if (gte system.details.infection '3')}}active{{/if}}" title="Necrose (Dano Contínuo)">
-                    <input type="radio" name="system.details.infection" value="3" {{#if (eq system.details.infection '3')}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                    <span>3</span>
-                </label>
-            </div>
-            <div class="infection-text">
-                {{#if (eq system.details.infection '0')}}SAUDÁVEL{{/if}}
-                {{#if (eq system.details.infection '1')}}INCUBAÇÃO{{/if}}
-                {{#if (eq system.details.infection '2')}}FEBRE{{/if}}
-                {{#if (eq system.details.infection '3')}}NECROSE{{/if}}
-            </div>
-        </div>
-
-        <div class="conditions-panel">
-            <label class="panel-label"><i class="fas fa-exclamation-triangle"></i> CONDIÇÕES</label>
-            <div class="conditions-grid">
-                <label class="condition-btn {{#if system.conditions.fome}}active{{/if}}">
-                    <input type="checkbox" name="system.conditions.fome" {{#if system.conditions.fome}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                    <i class="fas fa-utensils"></i> FOME
-                </label>
-
-                <label class="condition-btn {{#if system.conditions.sede}}active{{/if}}">
-                    <input type="checkbox" name="system.conditions.sede" {{#if system.conditions.sede}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                    <i class="fas fa-tint"></i> SEDE
-                </label>
-
-                <label class="condition-btn {{#if system.conditions.frio}}active{{/if}}">
-                    <input type="checkbox" name="system.conditions.frio" {{#if system.conditions.frio}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                    <i class="fas fa-snowflake"></i> FRIO
-                </label>
-
-                <label class="condition-btn {{#if system.conditions.exausto}}active{{/if}}">
-                    <input type="checkbox" name="system.conditions.exausto" {{#if system.conditions.exausto}}checked{{/if}} {{#if isLocked}}disabled{{/if}}>
-                    <i class="fas fa-bed"></i> EXAUSTO
-                </label>
-            </div>
-        </div>
-    </section>
-
     <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="main">PRINCIPAL</a>
+        <a class="item" data-tab="main">STATUS</a>
         <a class="item" data-tab="items">INVENTÁRIO</a>
-        <a class="item" data-tab="bio">BIOGRAFIA</a>
+        <a class="item" data-tab="bio">DOSSIÊ</a>
     </nav>
 
     <section class="sheet-body">
-        
+
         <div class="tab main" data-group="primary" data-tab="main">
-            <div class="main-grid">
-                <div class="stats-col">
-                    {{#each system.attributes as |attr key|}}
-                    <div class="stat-block">
-                        <div class="stat-header rollable hover-glow" data-key="{{key}}" data-label="{{attr.label}}">
-                            <span class="stat-label">{{attr.label}}</span>
-                            <span class="stat-val">{{attr.value}}</span>
-                        </div>
-                        <div class="skills-list">
-                            {{#each ../system.skills as |skill sKey|}}
-                                {{#if (eq skill.attribute key)}}
-                                <div class="skill-row flexrow">
-                                    <span class="skill-name rollable" data-key="{{sKey}}" data-roll-type="skill" data-label="{{skill.label}}">{{skill.label}}</span>
-                                    <input type="number" name="system.skills.{{sKey}}.value" value="{{skill.value}}" {{#if ../../isLocked}}readonly{{/if}}/>
-                                </div>
-                                {{/if}}
-                            {{/each}}
-                        </div>
+
+            <div class="attributes-section">
+                {{#each system.attributes as |attr key|}}
+                <div class="attr-box-standalone">
+                    <div class="attr-header {{#if ../isLocked}}rollable hover-glow{{/if}}" data-key="{{key}}"
+                        data-label="{{attr.label}}">
+
+                        <input type="number" class="attr-val-input" name="system.attributes.{{key}}.value"
+                            value="{{attr.value}}" {{#if ../isLocked}}readonly{{/if}} />
+                        <div class="attr-label">{{attr.label}}</div>
                     </div>
-                    {{/each}}
                 </div>
+                {{/each}}
+            </div>
+
+            <hr class="separator-line">
+
+            <div class="skills-section">
+                {{#each system.attributes as |attr key|}}
+                <div class="skill-group-col">
+                    <div class="skill-group-header">{{attr.label}}</div>
+
+                    <div class="skills-list">
+                        {{#each ../system.skills as |skill sKey|}}
+                        {{#if (eq skill.attribute key)}}
+                        <div class="skill-item">
+                            <span class="skill-name {{#if ../../isLocked}}rollable{{/if}}" data-key="{{sKey}}"
+                                data-roll-type="skill" data-label="{{skill.label}}">{{skill.label}}</span>
+
+                            <input type="number" class="skill-input" name="system.skills.{{sKey}}.value"
+                                value="{{skill.value}}" {{#if ../../isLocked}}readonly{{/if}} />
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+                {{/each}}
             </div>
         </div>
 
@@ -139,7 +155,10 @@
         </div>
 
         <div class="tab bio" data-group="primary" data-tab="bio">
-            {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=(not isLocked)}}
+            <div class="bio-paper">
+                {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=(not
+                isLocked)}}
+            </div>
         </div>
 
     </section>

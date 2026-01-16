@@ -13,3 +13,8 @@ foundry
 
 # Boilerplate
 build/
+
+# Ignorar arquivos de trava de banco de dados do Foundry
+LOCK
+*/LOCK
+**/**/LOCK
