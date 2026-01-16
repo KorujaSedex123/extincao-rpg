@@ -330,112 +330,140 @@ export class BoilerplateActorSheet extends ActorSheet {
     this._processRoll(dataset);
   }
 
-  async _processRoll(dataset) {
-    let diceCount = 1;
-    let checkValue = 0;
-    let label = dataset.label || "Rolagem";
+async _processRoll(dataset) {
+        // 1. Definições Iniciais
+        let diceCount = 1;
+        let label = dataset.label || "Rolagem";
+        let isSpecialist = false; // Padrão: Ninguém é especialista até provar o contrário
+        
+        const SKILL_MAP = {
+            "briga": "for", "armas_brancas": "for", "atletismo": "for",
+            "armas_fogo": "des", "furtividade": "des", "pilotagem": "des", "ladinagem": "des", "esquiva": "des",
+            "vigor": "con",
+            "medicina": "int", "tecnologia": "int", "investigacao": "int", "sobrevivencia": "int", "ciencias": "int",
+            "percepcao": "per", "atencao": "per", "intuicao": "per",
+            "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
+        };
 
-    const SKILL_MAP = {
-      "briga": "for", "armas_brancas": "for", "atletismo": "for",
-      "armas_fogo": "des", "furtividade": "des", "pilotagem": "des", "ladinagem": "des", "esquiva": "des",
-      "vigor": "con",
-      "medicina": "int", "tecnologia": "int", "investigacao": "int", "sobrevivencia": "int", "ciencias": "int",
-      "percepcao": "per", "atencao": "per", "intuicao": "per",
-      "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
-    };
+        // 2. Configuração da Rolagem
+        if (dataset.rollType === 'skill') {
+            // --- ROLAGEM DE PERÍCIA ---
+            const skillKey = dataset.key;
+            const skill = this.actor.system.skills[skillKey];
+            
+            // Pega Atributo Base
+            const attrKey = SKILL_MAP[skillKey] || "int"; 
+            const attributeValue = this.actor.system.attributes[attrKey]?.value || 0;
+            
+            // Pool = Atributo + Perícia
+            diceCount = attributeValue + skill.value;
+            
+            // REGRA DE ESPECIALISTA: SÓ VALE AQUI!
+            // Se a Perícia for 4 ou 5, libera o sucesso no 5.
+            if (skill.value >= 4) {
+                isSpecialist = true;
+            }
 
-    // Montar Pool
-    if (dataset.rollType === 'skill') {
-      const skillKey = dataset.key;
-      const skill = this.actor.system.skills[skillKey];
-      checkValue = skill.value;
-      diceCount = skill.value + 1;
-    } else if (dataset.key) {
-      checkValue = this.actor.system.attributes[dataset.key]?.value || 1;
-      diceCount = checkValue;
-    }
+            // Atualiza o nome para mostrar a soma
+            label = `${label} (${attributeValue.toString().toUpperCase()} + ${skill.value})`;
 
-    // Regra de Especialista
-    const isSpecialist = checkValue >= 4;
-    const targetNumber = isSpecialist ? 5 : 6;
+        } else if (dataset.key) {
+            // --- ROLAGEM DE ATRIBUTO ---
+            const attributeValue = this.actor.system.attributes[dataset.key]?.value || 1;
+            diceCount = attributeValue; 
+            
+            // IMPORTANTE: Atributos puros NUNCA ativam especialista.
+            // Mesmo com Força 5, o alvo continua sendo 6.
+            isSpecialist = false; 
+        }
 
-    let roll = new Roll(`${diceCount}d6`);
-    await roll.evaluate();
+        // Segurança para nunca rolar 0 dados
+        if (diceCount < 1) diceCount = 1;
 
-    const diceResults = roll.terms[0].results;
-    let successCount = 0;
-    let onesCount = 0;
-    let hasCrit = false; // Flag para saber se houve crítico (6)
-    let diceHTML = "";
+        // 3. Define o Número Alvo
+        const targetNumber = isSpecialist ? 5 : 6;
 
-    for (let die of diceResults) {
-      const val = die.result;
-      let cssClass = "";
+        // 4. Executar Rolagem
+        let roll = new Roll(`${diceCount}d6`);
+        await roll.evaluate();
+        
+        // 5. Analisar cada dado
+        const diceResults = roll.terms[0].results;
+        let successCount = 0;
+        let onesCount = 0;
+        let hasCrit = false;
+        let diceHTML = "";
 
-      if (val === 6) {
-        successCount++;
-        hasCrit = true; // Só o 6 ativa crítico
-        cssClass = "crit";
-      } else if (val >= targetNumber) {
-        successCount++;
-        cssClass = "success"; // 5 é sucesso, mas não crítico
-      } else if (val === 1) {
-        onesCount++;
-        cssClass = "glitch";
-      }
+        for (let die of diceResults) {
+            const val = die.result;
+            let cssClass = "";
 
-      diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
-    }
+            if (val === 6) {
+                successCount++;
+                hasCrit = true;
+                cssClass = "crit";
+            } else if (val >= targetNumber) {
+                successCount++;
+                cssClass = "success";
+            } else if (val === 1) {
+                onesCount++;
+                cssClass = "glitch";
+            }
 
-    // Definir Resultado
-    let outcomeHTML = "";
-    let borderSideColor = "#666";
-    let pushButton = "";
+            diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
+        }
 
-    if (successCount > 0) {
-      borderSideColor = "#4eff8c";
+        // 6. Resultado Final
+        let outcomeHTML = "";
+        let borderSideColor = "#666";
+        let pushButton = "";
 
-      // SEPARADO: O texto CRÍTICO só aparece se houver um 6
-      const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">CRÍTICO!</div>` : "";
-
-      outcomeHTML = `
+        if (successCount > 0) {
+            // SUCESSO
+            borderSideColor = "#4eff8c";
+            const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">CRÍTICO!</div>` : "";
+            
+            outcomeHTML = `
                 <div class="roll-result success">
                     ${successCount} SUCESSO(S)
                     ${critText}
                 </div>`;
-    } else {
-      if (onesCount > 0) {
-        borderSideColor = "#f44";
-        outcomeHTML = `
+        } else {
+            // FALHA OU GLITCH
+            if (onesCount > 0) {
+                borderSideColor = "#f44";
+                outcomeHTML = `
                     <div class="roll-result failure" style="color:#f44; border-color:#f44;">GLITCH!</div>
                     <div class="roll-summary glitch-text">Algo deu muito errado...</div>`;
-      } else {
-        outcomeHTML = `<div class="roll-result failure">FALHA</div>`;
-      }
+            } else {
+                outcomeHTML = `<div class="roll-result failure">FALHA</div>`;
+            }
 
-      // Botão de Forçar
-      const rollData = {
-        actorId: this.actor.id,
-        diceCount: diceCount,
-        targetNumber: targetNumber,
-        label: label
-      };
-      const dataString = JSON.stringify(rollData).replace(/"/g, '&quot;');
-
-      pushButton = `
+            // Botão de Forçar (Passa os dados corretos para o reroll)
+            const rollData = {
+                actorId: this.actor.id,
+                diceCount: diceCount,
+                targetNumber: targetNumber, // Mantém o alvo original (6 ou 5)
+                label: label
+            };
+            const dataString = JSON.stringify(rollData).replace(/"/g, '&quot;');
+            
+            pushButton = `
                 <div style="margin-top: 10px; text-align: center;">
                     <button class="force-roll-btn" data-roll="${dataString}">
                         <i class="fas fa-bolt"></i> FORÇAR (+1 Estresse)
                     </button>
                 </div>
             `;
-    }
+        }
 
-    let specialistHint = isSpecialist ? `<div style="font-size:0.7em; color:#4eff8c; margin-bottom:5px;">[ESPECIALISTA: 5+ É SUCESSO]</div>` : "";
+        // Aviso visual discreto
+        let specialistHint = isSpecialist ? `<div style="font-size:0.7em; color:#4eff8c; margin-bottom:5px;">[ESPECIALISTA: 5+ É SUCESSO]</div>` : "";
 
-    roll.toMessage({
-      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-      content: `
+        // 7. Enviar para o Chat
+        roll.toMessage({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: `
             <div class="extincao-roll" style="border-left-color: ${borderSideColor}">
                 <h3>${label}</h3>
                 ${specialistHint}
@@ -447,6 +475,6 @@ export class BoilerplateActorSheet extends ActorSheet {
                 ${outcomeHTML}
                 ${pushButton}
             </div>`
-    });
+        });
   }
 }
