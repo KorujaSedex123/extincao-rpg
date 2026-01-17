@@ -3,14 +3,14 @@
     <header class="sheet-header npc-header">
         <div class="header-grid">
             <div class="profile-img-container">
-                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
                 {{#if isLocked}}<i class="fas fa-lock lock-status"></i>{{/if}}
             </div>
 
             <div class="header-main">
                 <div class="header-row-top">
-                    <input class="npc-name" name="name" type="text" value="{{actor.name}}" placeholder="NOME" {{#if isLocked}}readonly{{/if}}/>
-                    
+                    <input class="npc-name" name="name" type="text" value="{{actor.name}}" placeholder="NOME" {{#if isLocked}}readonly{{/if}} />
+
                     <div class="npc-controls">
                         <div class="archetype-box">
                             <select name="system.details.type" class="npc-type-select" {{#if isLocked}}disabled{{/if}}>
@@ -31,9 +31,9 @@
                     <label>INTEGRIDADE (PV)</label>
                     <div class="resource-inputs">
                         <a class="stat-control minus" data-target="pv"><i class="fas fa-minus"></i></a>
-                        <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" {{#if isLocked}}readonly{{/if}}/>
+                        <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" {{#if isLocked}}readonly{{/if}} />
                         <span class="sep">/</span>
-                        <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" {{#if isLocked}}readonly{{/if}}/>
+                        <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" {{#if isLocked}}readonly{{/if}} />
                         <a class="stat-control plus" data-target="pv"><i class="fas fa-plus"></i></a>
                     </div>
                 </div>
@@ -41,102 +41,125 @@
         </div>
     </header>
 
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="combat"><i class="fas fa-skull"></i> COMBATE</a>
+        <a class="item" data-tab="notes"><i class="fas fa-file-alt"></i> NOTAS / ESPÓLIO</a>
+    </nav>
+
     <section class="sheet-body npc-body">
 
-        {{#if (eq system.details.type 'infectado')}}
-        <div class="npc-section infected-mode">
-            <div class="defense-badge">
-                <label>DIFICULDADE DE ACERTO</label>
-                <input type="number" name="system.attributes.defense.value" value="{{system.attributes.defense.value}}" placeholder="1" {{#if isLocked}}readonly{{/if}}/>
-                <div class="defense-desc">SUCESSOS NECESSÁRIOS</div>
-            </div>
-            <div class="infected-note">
-                <i class="fas fa-biohazard"></i> Inimigo implacável. Não esquiva.
-            </div>
-        </div>
-        
-        {{else}}
-        <div class="npc-section living-mode">
-            <div class="npc-attr-grid">
-                {{#each system.attributes as |attr key|}}
-                {{#if (and (ne key 'defense') (ne key 'attack') (ne key 'damage'))}}
-                
-                <div class="npc-attr-box {{#if ../isLocked}}rollable locked-box{{/if}}" 
-                     data-key="{{key}}" 
-                     data-label="{{attr.label}}">
-                    
-                    <label class="{{#unless ../isLocked}}rollable{{/unless}}" 
-                           {{#unless ../isLocked}}data-key="{{key}}" data-label="{{attr.label}}"{{/unless}}>
-                           {{key}}
-                    </label>
-                    
-                    <input type="number" name="system.attributes.{{key}}.value" value="{{attr.value}}" {{#if ../isLocked}}readonly{{/if}}/>
-                </div>
-
-                {{/if}}
-                {{/each}}
-            </div>
+        <div class="tab combat" data-group="primary" data-tab="combat">
             
-            <div class="npc-active-defense">
-                <label><i class="fas fa-shield-alt"></i> DADOS DE ESQUIVA</label>
-                <div class="defense-input-row">
-                    <input type="number" name="system.attributes.defense.value" value="{{system.attributes.defense.value}}" placeholder="0" {{#if isLocked}}readonly{{/if}}/>
-                    <button class="roll-npc-btn rollable" data-roll-type="npc-defense" data-label="Esquiva">
-                        <i class="fas fa-dice"></i> ROLAR
-                    </button>
+            {{#if (eq system.details.type 'infectado')}}
+            
+            <div class="npc-section infected-mode">
+                <div class="defense-badge">
+                    <label>DIFICULDADE DE ACERTO</label>
+                    <input type="number" name="system.attributes.defense.value" value="{{system.attributes.defense.value}}" placeholder="1" {{#if isLocked}}readonly{{/if}} />
+                    <div class="defense-desc">SUCESSOS NECESSÁRIOS</div>
+                </div>
+                <div class="infected-note">
+                    <i class="fas fa-biohazard"></i> Inimigo implacável. Não esquiva.
                 </div>
             </div>
-        </div>
-        {{/if}}
 
-        <hr class="separator-line">
-
-        <div class="npc-attacks-section">
-            <div class="section-header">
-                <label><i class="fas fa-skull"></i> AÇÕES DE ATAQUE</label>
-                {{#unless isLocked}}
-                <a class="item-create" data-type="arma" title="Criar Ataque"><i class="fas fa-plus"></i> Novo</a>
-                {{/unless}}
-            </div>
-
-            <div class="npc-attack-list">
-                {{#each armas as |item id|}}
-                <div class="npc-attack-card item" data-item-id="{{item._id}}">
-                    <div class="attack-info">
-                        <div class="attack-name">{{item.name}}</div>
-                    </div>
+            {{else}}
+            
+            <div class="npc-section living-mode">
+                <div class="npc-attr-grid">
+                    {{#each system.attributes as |attr key|}}
+                    {{#if (and (ne key 'defense') (ne key 'attack') (ne key 'damage'))}}
                     
-                    <div class="attack-stats">
-                        <div class="stat-pill dice" title="Dados de Ataque">
-                            <i class="fas fa-dice-d6"></i> {{item.system.bonus}}
-                        </div>
-                        <div class="stat-pill dmg" title="Dano">
-                            <i class="fas fa-heart-broken"></i> {{item.system.dano}}
-                        </div>
+                    <div class="npc-attr-box {{#if ../isLocked}}rollable locked-box{{/if}}" 
+                         data-key="{{key}}" 
+                         data-label="{{attr.label}}">
+
+                        <label class="{{#unless ../isLocked}}rollable{{/unless}}" 
+                               {{#unless ../isLocked}}data-key="{{key}}" data-label="{{attr.label}}"{{/unless}}>
+                            {{key}}
+                        </label>
+
+                        <input type="number" name="system.attributes.{{key}}.value" value="{{attr.value}}" {{#if ../isLocked}}readonly{{/if}} />
                     </div>
 
-                    <button class="roll-npc-attack rollable" data-roll-type="item" title="Rolar Ataque">
-                        <i class="fas fa-crosshairs"></i>
-                    </button>
+                    {{/if}} 
+                    {{/each}}
+                </div>
 
-                    {{#unless ../isLocked}}
-                    <div class="item-controls">
-                        <a class="item-edit"><i class="fas fa-edit"></i></a>
-                        <a class="item-delete"><i class="fas fa-trash"></i></a>
+                <div class="npc-active-defense">
+                    <label><i class="fas fa-shield-alt"></i> DADOS DE ESQUIVA</label>
+                    <div class="defense-input-row">
+                        <input type="number" name="system.attributes.defense.value" value="{{system.attributes.defense.value}}" placeholder="0" {{#if isLocked}}readonly{{/if}} />
+                        <button class="roll-npc-btn rollable" data-roll-type="npc-defense" data-label="Esquiva">
+                            <i class="fas fa-dice"></i> ROLAR
+                        </button>
                     </div>
+                </div>
+            </div>
+            {{/if}}
+
+            <hr class="separator-line">
+
+            <div class="npc-attacks-section">
+                <div class="section-header">
+                    <label><i class="fas fa-crosshairs"></i> AÇÕES DE ATAQUE</label>
+                    {{#unless isLocked}}
+                    <a class="item-create" data-type="arma" title="Criar Ataque"><i class="fas fa-plus"></i> Novo</a>
                     {{/unless}}
                 </div>
-                {{/each}}
-                {{#if (eq armas.length 0)}}
-                <div class="empty-attacks">Sem ataques.</div>
-                {{/if}}
+
+                <div class="npc-attack-list">
+                    {{#each armas as |item id|}}
+                    <div class="npc-attack-card item" data-item-id="{{item._id}}">
+
+                        <button class="roll-npc-attack rollable" data-roll-type="item" title="Rolar {{item.name}}">
+                            <i class="fas fa-bullseye"></i>
+                        </button>
+
+                        <div class="attack-content">
+                            {{#unless ../isLocked}}
+                            <div class="edit-row top">
+                                <input type="text" class="inline-edit name" data-field="name" value="{{item.name}}" placeholder="Nome do Ataque" />
+                                <select class="inline-edit range" data-field="system.alcance">
+                                    {{#select item.system.alcance}}
+                                    <option value="Curto">Curto</option>
+                                    <option value="Médio">Médio</option>
+                                    <option value="Longo">Longo</option>
+                                    <option value="Área">Área</option>
+                                    {{/select}}
+                                </select>
+                            </div>
+                            <div class="edit-row mid">
+                                <input type="text" class="inline-edit desc" data-field="system.description" value="{{item.system.description}}" placeholder="Descrição..." />
+                            </div>
+                            <div class="edit-row bot">
+                                <div class="stat-edit" title="Dados"><i class="fas fa-dice-d6"></i> <input type="number" class="inline-edit num" data-field="system.bonus" value="{{item.system.bonus}}" /></div>
+                                <div class="stat-edit" title="Dano"><i class="fas fa-heart-broken"></i> <input type="text" class="inline-edit txt" data-field="system.dano" value="{{item.system.dano}}" /></div>
+                                <a class="item-delete"><i class="fas fa-trash"></i></a>
+                            </div>
+                            {{else}}
+                            <div class="view-row top">
+                                <span class="attack-name">{{item.name}}</span>
+                                <span class="range-badge {{item.system.alcance}}">{{item.system.alcance}}</span>
+                            </div>
+                            {{#if item.system.description}}<div class="view-row mid"><span class="attack-desc">{{item.system.description}}</span></div>{{/if}}
+                            <div class="view-row bot">
+                                <span class="stat-pill dice">{{item.system.bonus}}d6</span>
+                                <span class="stat-pill dmg">{{item.system.dano}} Dano</span>
+                            </div>
+                            {{/unless}}
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{#if (eq armas.length 0)}}<div class="empty-attacks">Sem ataques.</div>{{/if}}
+                </div>
             </div>
         </div>
 
-        <div class="npc-loot">
-            <label>COMPORTAMENTO / ESPÓLIO</label>
-            <div class="bio-paper">
-                {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=(not isLocked)}}
+        <div class="tab notes" data-group="primary" data-tab="notes">
+            <div class="notes-container">
+                <label>COMPORTAMENTO / TÁTICAS / ESPÓLIO</label>
+                <textarea name="system.details.biography" placeholder="Digite aqui o comportamento, itens que carrega ou táticas especiais..." {{#if isLocked}}readonly{{/if}}>{{system.details.biography}}</textarea>
             </div>
         </div>
 

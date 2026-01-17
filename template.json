@@ -163,15 +163,39 @@
         }
       },
       "attributes": {
-        "for": { "value": 1, "label": "Força" },
-        "des": { "value": 1, "label": "Destreza" },
-        "con": { "value": 1, "label": "Constituição" },
-        "int": { "value": 1, "label": "Inteligência" },
-        "per": { "value": 1, "label": "Percepção" },
-        "von": { "value": 1, "label": "Vontade" },
-        "defense": { "value": 0 },
-        "attack": { "value": 0 },
-        "damage": { "value": 0 }
+        "for": {
+          "value": 1,
+          "label": "Força"
+        },
+        "des": {
+          "value": 1,
+          "label": "Destreza"
+        },
+        "con": {
+          "value": 1,
+          "label": "Constituição"
+        },
+        "int": {
+          "value": 1,
+          "label": "Inteligência"
+        },
+        "per": {
+          "value": 1,
+          "label": "Percepção"
+        },
+        "von": {
+          "value": 1,
+          "label": "Vontade"
+        },
+        "defense": {
+          "value": 0
+        },
+        "attack": {
+          "value": 0
+        },
+        "damage": {
+          "value": 0
+        }
       },
       "skills": {
         "armas_fogo": {
@@ -330,12 +354,10 @@
       }
     },
     "arma": {
-      "templates": [
-        "base"
-      ],
-      "uso": "d6",
-      "dano": 2,
-      "lethal": true
+      "bonus": 0,
+      "dano": "1",
+      "alcance": "Curto",
+      "description": ""
     },
     "equipamento": {
       "templates": [

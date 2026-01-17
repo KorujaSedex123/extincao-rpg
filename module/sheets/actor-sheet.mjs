@@ -47,7 +47,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     }
 
     // Prepara itens (Inventário)
-    if (actorData.type == 'sobrevivente' || actorData.type == 'character') {
+    if (actorData.type == 'sobrevivente' || actorData.type == 'character' || actorData.type == 'npc') {
       this._prepareItems(context);
     }
 
@@ -134,89 +134,84 @@ export class BoilerplateActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
+  /** @override */
   activateListeners(html) {
     super.activateListeners(html);
 
-    // 1. TRAVA
+    // -------------------------------------------------------------
+    // 1. LISTENERS GERAIS (Trava, Abas, Inputs)
+    // -------------------------------------------------------------
+
+    // Trava da Ficha
     html.find('.lock-btn').click(async (ev) => {
       ev.preventDefault();
       const currentState = this.actor.getFlag("extincao", "sheetLocked");
       await this.actor.setFlag("extincao", "sheetLocked", !currentState);
     });
 
-    // 2. INFECÇÃO
+    // Inputs de Bolinha (Inspecionar/Infecção)
     html.find('.stage-dot').click(async (ev) => {
       ev.preventDefault();
       const val = ev.currentTarget.dataset.value;
       await this.actor.update({ "system.details.infection": val });
     });
 
-    // 3. CONDIÇÕES (Blindado)
+    // Inputs de Condição
     html.find('.condition-btn').click(async (ev) => {
       ev.preventDefault();
       const prop = ev.currentTarget.dataset.prop;
-      const conditions = this.actor.system.conditions || {};
-      const currentVal = conditions[prop] || false;
+      const currentVal = this.actor.system.conditions?.[prop] || false;
       await this.actor.update({ [`system.conditions.${prop}`]: !currentVal });
     });
 
-    // 4. ESTRESSE (Clique direto na bolinha)
-    html.find('.stress-box').click(async (ev) => {
-      const idx = Number(ev.currentTarget.dataset.index); // Qual bolinha clicou (1 a 6)
-      const current = this.actor.system.resources.estresse.value;
+    // -------------------------------------------------------------
+    // 2. GESTÃO DE RECURSOS (+ e -)
+    // -------------------------------------------------------------
 
-      // Se clicou na que já está ativa, desce 1. Se não, vai para o valor clicado.
-      const novoValor = idx === current ? idx - 1 : idx;
+    // Vida e Resistência
+    html.find('.stat-control').click(async (ev) => {
+      ev.preventDefault();
+      const btn = ev.currentTarget;
+      const target = btn.dataset.target; // pv ou pr
+      const isPlus = btn.classList.contains('plus');
+
+      const resource = this.actor.system.resources[target];
+      const current = Number(resource.value);
+      const max = Number(resource.max);
+
+      let novoValor = isPlus ? current + 1 : current - 1;
+      novoValor = Math.clamp(novoValor, 0, max);
+
+      await this.actor.update({ [`system.resources.${target}.value`]: novoValor });
+    });
+
+    // Estresse (Botões + e -)
+    html.find('.stress-control').click(async (ev) => {
+      ev.preventDefault();
+      const btn = ev.currentTarget;
+      const isPlus = btn.classList.contains('plus');
+      const current = Number(this.actor.system.resources.estresse.value);
+
+      let novoValor = isPlus ? current + 1 : current - 1;
+      novoValor = Math.clamp(novoValor, 0, 6); // Max 6
 
       await this.actor.update({ "system.resources.estresse.value": novoValor });
     });
-    // 5. MUDANÇA DE ARQUÉTIPO
-    html.find('select[name="system.details.archetype"]').change(async (ev) => {
-      ev.preventDefault();
-      const novoArquetipo = ev.currentTarget.value;
-      const stats = EXTINCAO.ARQUETIPOS_STATS[novoArquetipo];
-      if (stats) {
-        const confirm = await Dialog.confirm({
-          title: "Aplicar Arquétipo?",
-          content: `<p>Mudar para <strong>${EXTINCAO.ARQUETIPOS[novoArquetipo]}</strong> redefinirá seus Atributos.</p>`
-        });
-        if (confirm) {
-          await this.actor.update({
-            "system.attributes.for.value": stats.for,
-            "system.attributes.des.value": stats.des,
-            "system.attributes.con.value": stats.con,
-            "system.attributes.int.value": stats.int,
-            "system.attributes.per.value": stats.per,
-            "system.attributes.von.value": stats.von
-          });
-          ui.notifications.info(`Arquétipo aplicado!`);
-        }
-      }
+
+    // Estresse (Clique direto na bolinha)
+    html.find('.stress-box').click(async (ev) => {
+      const idx = Number(ev.currentTarget.dataset.index);
+      const current = this.actor.system.resources.estresse.value;
+      const novoValor = idx === current ? idx - 1 : idx;
+      await this.actor.update({ "system.resources.estresse.value": novoValor });
     });
 
-    // 6. ROLAGEM GERAL (Atributos, Perícias e ITENS)
-    html.find('.rollable').click(ev => {
-      ev.preventDefault();
-      const element = ev.currentTarget;
-      const dataset = element.dataset;
-
-      // Se for um ITEM (Ataque de NPC ou Arma), precisamos passar o objeto do item
-      let item = null;
-      if (dataset.rollType === 'item') {
-        const itemId = element.closest(".item").dataset.itemId;
-        item = this.actor.items.get(itemId);
-      }
-
-      this._processRoll(dataset, item);
-    });
-
-    // 7. RECUPERAR ESTRESSE (Botão de Ajuda)
+    // Recuperar Estresse (Botão Ajuda)
     html.find('.recover-stress-btn').click(async (ev) => {
       ev.preventDefault();
       const estresseAtual = this.actor.system.resources.estresse.value;
-
-      // Pega nome do alvo
       const targetId = this.actor.system.details.vinculo_target;
+
       let targetName = "seu Vínculo";
       if (targetId) {
         const targetActor = game.actors.get(targetId);
@@ -241,55 +236,58 @@ export class BoilerplateActorSheet extends ActorSheet {
       }
     });
 
-    // 8. CONTROLES RÁPIDOS (+ e -)
-    // Vida e Resistência
-    html.find('.stat-control').click(async (ev) => {
+    // -------------------------------------------------------------
+    // 3. ROLAGENS (Atributos, Perícias, Itens e NPCs)
+    // -------------------------------------------------------------
+    html.find('.rollable').click(ev => {
       ev.preventDefault();
-      const btn = ev.currentTarget;
-      const target = btn.dataset.target; // pv ou pr
-      const isPlus = btn.classList.contains('plus');
+      const element = ev.currentTarget;
+      const dataset = element.dataset;
 
-      const resource = this.actor.system.resources[target];
-      const current = Number(resource.value);
-      const max = Number(resource.max);
+      // Se for Item (Ataque NPC ou Arma Sobrevivente)
+      let item = null;
+      if (dataset.rollType === 'item') {
+        const itemId = element.closest(".item").dataset.itemId;
+        item = this.actor.items.get(itemId);
+      }
 
-      let novoValor = isPlus ? current + 1 : current - 1;
-
-      // CORREÇÃO: Math.clamp em vez de Math.clamped
-      novoValor = Math.clamp(novoValor, 0, max);
-
-      await this.actor.update({ [`system.resources.${target}.value`]: novoValor });
+      this._processRoll(dataset, item);
     });
 
-    // Estresse
-    html.find('.stress-control').click(async (ev) => {
+    // Mudança de Arquétipo
+    html.find('select[name="system.details.archetype"]').change(async (ev) => {
       ev.preventDefault();
-      const btn = ev.currentTarget;
-      const isPlus = btn.classList.contains('plus');
-      const current = Number(this.actor.system.resources.estresse.value);
-
-      let novoValor = isPlus ? current + 1 : current - 1;
-
-      // CORREÇÃO: Math.clamp em vez de Math.clamped
-      novoValor = Math.clamp(novoValor, 0, 6);
-
-      await this.actor.update({ "system.resources.estresse.value": novoValor });
+      const novoArquetipo = ev.currentTarget.value;
+      const stats = EXTINCAO.ARQUETIPOS_STATS[novoArquetipo];
+      if (stats) {
+        const confirm = await Dialog.confirm({
+          title: "Aplicar Arquétipo?",
+          content: `<p>Mudar para <strong>${EXTINCAO.ARQUETIPOS[novoArquetipo]}</strong> redefinirá seus Atributos.</p>`
+        });
+        if (confirm) {
+          await this.actor.update({
+            "system.attributes.for.value": stats.for,
+            "system.attributes.des.value": stats.des,
+            "system.attributes.con.value": stats.con,
+            "system.attributes.int.value": stats.int,
+            "system.attributes.per.value": stats.per,
+            "system.attributes.von.value": stats.von
+          });
+          ui.notifications.info(`Arquétipo aplicado!`);
+        }
+      }
     });
 
-    // 9. LIMPAR VÍNCULO (Drag & Drop UI)
-    html.find('.clear-link').click(async (ev) => {
-      ev.preventDefault();
-      const target = ev.currentTarget.dataset.target;
-      await this.actor.update({ [`system.details.${target}_target`]: "" });
-    });
+    // -------------------------------------------------------------
+    // 4. GESTÃO DE ITENS (Criar, Editar, Deletar)
+    // -------------------------------------------------------------
 
-    // --- GESTÃO DE ITENS ---
-    html.find('.item-edit').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.sheet.render(true);
-    });
+    // CRIAR ITEM (+ Novo)
+    if (this.actor.isOwner) {
+      html.find('.item-create').click(this._onItemCreate.bind(this));
+    }
 
+    // Deletar Item
     html.find('.item-delete').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
@@ -301,11 +299,36 @@ export class BoilerplateActorSheet extends ActorSheet {
       });
     });
 
-    if (this.actor.isOwner) {
-      html.find('.item-create').click(this._onItemCreate.bind(this));
-    }
+    // Editar Item (Janela)
+    html.find('.item-edit').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.sheet.render(true);
+    });
 
-    // DRAG START
+    // Edição Inline (NPC)
+    html.find('.inline-edit').change(async ev => {
+      ev.preventDefault();
+      const input = ev.currentTarget;
+      const el = input.closest('.item');
+      const itemId = el.dataset.itemId;
+      const field = input.dataset.field;
+      const value = input.value;
+
+      const item = this.actor.items.get(itemId);
+      if (item) await item.update({ [field]: value });
+    });
+
+    // Limpar Vínculo
+    html.find('.clear-link').click(async (ev) => {
+      ev.preventDefault();
+      const target = ev.currentTarget.dataset.target;
+      await this.actor.update({ [`system.details.${target}_target`]: "" });
+    });
+
+    // -------------------------------------------------------------
+    // 5. DRAG AND DROP
+    // -------------------------------------------------------------
     if (this.actor.isOwner) {
       let handler = ev => this._onDragStart(ev);
       html.find('li.item').each((i, li) => {
@@ -316,19 +339,33 @@ export class BoilerplateActorSheet extends ActorSheet {
     }
   }
 
-  // --- MÉTODOS AUXILIARES ---
+  /* -------------------------------------------- */
+  /* MÉTODOS AUXILIARES (ESSENCIAL)              */
+  /* -------------------------------------------- */
 
+  /**
+   * Cria um novo item baseado no dataset do botão clicado
+   * @param {Event} event 
+   */
   async _onItemCreate(event) {
     event.preventDefault();
     const header = event.currentTarget;
+    // Pega o tipo (ex: "arma") do HTML data-type="arma"
     const type = header.dataset.type;
+    console.log(`Criando novo item do tipo ${type}`);
+
+    // Cria o objeto com um nome padrão bonito
     const itemData = {
       name: `Novo ${type.charAt(0).toUpperCase() + type.slice(1)}`,
       type: type,
       system: {}
     };
+
+    // Cria no banco de dados
     return await Item.create(itemData, { parent: this.actor });
   }
+  // --- MÉTODOS AUXILIARES ---
+
 
   async _onRoll(event) {
     event.preventDefault();
