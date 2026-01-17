@@ -163,45 +163,15 @@
         }
       },
       "attributes": {
-        "defesa": {
-          "value": 1,
-          "label": "Defesa (Sucessos)"
-        },
-        "ataque": {
-          "value": 3,
-          "label": "Dados de Ataque (Genérico)"
-        },
-        "dano": {
-          "value": 2,
-          "label": "Dano Base"
-        },
-        "nivel": {
-          "value": 1
-        },
-        "for": {
-          "value": 1,
-          "label": "Força"
-        },
-        "des": {
-          "value": 1,
-          "label": "Destreza"
-        },
-        "con": {
-          "value": 1,
-          "label": "Constituição"
-        },
-        "int": {
-          "value": 1,
-          "label": "Inteligência"
-        },
-        "per": {
-          "value": 1,
-          "label": "Percepção"
-        },
-        "von": {
-          "value": 1,
-          "label": "Vontade"
-        }
+        "for": { "value": 1, "label": "Força" },
+        "des": { "value": 1, "label": "Destreza" },
+        "con": { "value": 1, "label": "Constituição" },
+        "int": { "value": 1, "label": "Inteligência" },
+        "per": { "value": 1, "label": "Percepção" },
+        "von": { "value": 1, "label": "Vontade" },
+        "defense": { "value": 0 },
+        "attack": { "value": 0 },
+        "damage": { "value": 0 }
       },
       "skills": {
         "armas_fogo": {

@@ -801,3 +801,420 @@
     cursor: not-allowed;
     box-shadow: none;
 }
+
+/* ==========================================================================
+   FICHA DE NPC (INIMIGO TÁTICO)
+   ========================================================================== */
+
+/* Header Diferenciado (Mais agressivo) */
+.npc-sheet .sheet-header {
+    background: #1a0505; /* Fundo avermelhado muito escuro */
+    border-bottom: 2px solid #800;
+}
+
+/* Ajuste do Topo para caber o cadeado */
+.npc-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.npc-lock {
+    color: #f44;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.npc-lock:hover {
+    color: #fff;
+    text-shadow: 0 0 5px #f00;
+}
+
+/* Quando a ficha está TRAVADA (.locked) */
+.npc-sheet.locked input {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: default;
+    color: #ffcccc !important; /* Um tom levemente diferente para indicar leitura */
+}
+
+/* Esconde a seta do dropdown quando travado para ficar limpo */
+.npc-sheet.locked select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent !important;
+    border: none !important;
+    text-align: right;
+    pointer-events: none;
+    color: #f44 !important;
+}
+
+/* Ajuste visual do Input de Ataque Travado */
+.npc-sheet.locked .combat-box input {
+    border-bottom: 1px dashed #333 !important; /* Mantém uma linha guia sutil */
+}
+
+.npc-name {
+    font-size: 1.6em !important;
+    color: #f88 !important; /* Texto vermelho claro */
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Select de Tipo */
+.npc-type-select {
+    width: 100%;
+    background: #311 !important;
+    color: #f44 !important;
+    border: 1px solid #522 !important;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Barra de Vida NPC com botões */
+.npc-hp-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #000;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 2px;
+    margin-top: 5px;
+}
+.npc-hp-bar .resource-inputs {
+    width: 100%;
+    justify-content: center;
+    gap: 5px;
+}
+.npc-hp-bar label { font-size: 0.6em; color: #666; font-weight: bold; letter-spacing: 2px; }
+.npc-hp-bar input {
+    width: 40px !important;
+    font-size: 1.2em;
+}
+
+/* Grid de Combate */
+.npc-combat-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr; /* Ataque maior */
+    gap: 10px;
+    padding: 10px;
+    background: #0a0a0a;
+}
+
+.combat-box {
+    background: #111;
+    border: 1px solid #333;
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.combat-box label {
+    font-size: 0.7em;
+    color: #888;
+    text-transform: uppercase;
+    border-bottom: 1px solid #222;
+    margin-bottom: 5px;
+    padding-bottom: 2px;
+}
+
+.combat-box input {
+    width: 100%;
+    font-size: 1.5em;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: #eee;
+    font-weight: bold;
+}
+
+/* Estilo Específico: Ataque */
+.combat-box.attack { border-color: #522; }
+.combat-box.attack label { color: #f66; }
+.combat-box.attack .input-row { display: flex; gap: 5px; align-items: center; }
+
+/* Botão de Rolar NPC */
+.roll-npc-btn {
+    background: #500;
+    color: #fff;
+    border: 1px solid #f44;
+    font-size: 0.8em;
+    padding: 5px 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+.roll-npc-btn:hover {
+    background: #f00;
+    box-shadow: 0 0 10px #f00;
+}
+
+/* Estilo Específico: Infectado (Defesa Desabilitada) */
+.combat-box.defense.disabled-stat {
+    opacity: 0.5;
+    background: #1a0a0a;
+    border-color: #333;
+}
+.combat-box.defense.disabled-stat input {
+    color: #555;
+    pointer-events: none; /* Impede clique */
+}
+.warning-text {
+    color: #f44;
+    font-size: 0.7em;
+    float: right;
+    animation: pulse 2s infinite;
+}
+
+/* Loot e Notas */
+.npc-loot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow: hidden;
+}
+.npc-loot label {
+    color: #aaa;
+    font-size: 0.8em;
+    font-weight: bold;
+    border-bottom: 1px solid #333;
+    margin-bottom: 5px;
+}
+
+/* ========================
+   MODOS DE NPC (VIVO vs INFECTADO)
+   ======================== */
+
+/* MODO INFECTADO (Defesa Passiva) */
+.infected-mode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background: #1a0505; /* Vermelho sangue muito escuro */
+    border: 1px dashed #500;
+    margin-bottom: 10px;
+}
+/* Quando a ficha está travada, a caixa vira um botão */
+.npc-sheet.locked .npc-attr-box.locked-box {
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #444;
+    background: #111;
+}
+
+.defense-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.defense-badge label {
+    color: #f66;
+    font-size: 0.8em;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.defense-badge input {
+    font-size: 4em !important; /* NÚMERO GIGANTE */
+    height: auto !important;
+    width: 100px !important;
+    text-align: center;
+    color: #f44 !important;
+    background: transparent;
+    border: none;
+    font-weight: 900;
+    text-shadow: 0 0 10px #500;
+}
+
+.defense-desc {
+    font-size: 0.7em;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.infected-note {
+    margin-top: 10px;
+    font-size: 0.75em;
+    color: #a55;
+    font-style: italic;
+}
+
+/* MODO VIVO (Atributos D&D Style) */
+.npc-attr-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 Atributos */
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.npc-attr-box {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3px;
+}
+
+.npc-attr-box label {
+    font-size: 0.6em;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+    cursor: pointer; /* Indica que pode rolar */
+}
+.npc-attr-box label:hover { color: #fff; text-decoration: underline; }
+
+.npc-attr-box input {
+    width: 100% !important;
+    text-align: center;
+    font-size: 1.1em;
+    border: none;
+    color: #eee;
+}
+
+.npc-active-defense {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.defense-input-row { display: flex; align-items: center; gap: 10px; }
+.defense-input-row input { width: 40px !important; text-align: center; font-size: 1.2em; font-weight: bold; }
+
+/* ========================
+   LISTA DE ATAQUES (ACTIONS)
+   ======================== */
+
+.npc-attacks-section {
+    margin-top: 5px;
+    background: #050505;
+    padding: 5px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+.section-header label { color: #f44; font-weight: bold; font-size: 0.8em; }
+
+.npc-attack-list { display: flex; flex-direction: column; gap: 5px; }
+
+.npc-attack-card {
+    display: flex;
+    align-items: center;
+    background: #151515;
+    border: 1px solid #333;
+    border-left: 3px solid #f44; /* Tarja vermelha */
+    padding: 5px 10px;
+    border-radius: 3px;
+    gap: 10px;
+}
+
+.attack-info { flex: 1; }
+.attack-name { font-weight: bold; color: #eee; font-size: 0.9em; }
+
+.attack-stats { display: flex; gap: 5px; }
+
+.stat-pill {
+    font-size: 0.75em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.stat-pill.dice { background: #222; color: #ccc; border: 1px solid #444; }
+.stat-pill.dmg { background: #311; color: #f66; border: 1px solid #522; }
+
+/* Botão de Rolar Ataque (Munição/Ação) */
+.roll-npc-attack {
+    background: #f44;
+    color: #000;
+    border: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8em;
+    transition: all 0.2s;
+}
+.roll-npc-attack:hover { background: #fff; box-shadow: 0 0 5px #f44; }
+
+.item-controls { display: flex; gap: 5px; font-size: 0.8em; opacity: 0.5; }
+.item-controls:hover { opacity: 1; }
+
+.empty-attacks { color: #444; font-style: italic; font-size: 0.8em; text-align: center; padding: 10px; }
+
+/* ========================
+   ATRIBUTOS NPC: CAIXA CLICÁVEL (TRAVADO)
+   ======================== */
+
+/* Quando a ficha está travada, a caixa vira um botão */
+.npc-sheet.locked .npc-attr-box.locked-box {
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #444;
+    background: #111;
+}
+
+/* Hover: Brilho vermelho tático */
+.npc-sheet.locked .npc-attr-box.locked-box:hover {
+    background: #220000;
+    border-color: #f44;
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.3);
+}
+
+.npc-sheet.locked .npc-attr-box.locked-box:hover label {
+    color: #fff;
+}
+
+.npc-sheet.locked .npc-attr-box.locked-box:hover input {
+    color: #fff !important;
+}
+
+/* Importante: O input não deve roubar o clique da DIV pai */
+.npc-sheet.locked .npc-attr-box input {
+    pointer-events: none; 
+    user-select: none;
+}
+
+/* Ajuste Visual do Input quando travado */
+.npc-sheet.locked .npc-attr-box input {
+    border: none !important; /* Remove linha de baixo */
+    color: #f88 !important;  /* Vermelho claro */
+}
+
+/* Layout do Grid */
+.npc-attr-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.npc-attr-box {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 2px;
+}
