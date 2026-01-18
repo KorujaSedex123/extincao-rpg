@@ -2,8 +2,8 @@
 import { BoilerplateActor } from './documents/actor.mjs';
 import { BoilerplateItem } from './documents/item.mjs';
 // Import sheet classes.
-import { BoilerplateActorSheet } from './sheets/actor-sheet.mjs';
-import { BoilerplateItemSheet } from './sheets/item-sheet.mjs';
+import { ExtincaoActorSheet } from './sheets/actor-sheet.mjs';
+import { ExtincaoItemSheet } from './sheets/item-sheet.mjs';
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { BOILERPLATE } from './helpers/config.mjs';
@@ -44,7 +44,7 @@ Hooks.once('init', function () {
 
   // Register sheet application classes
   Actors.unregisterSheet('core', ActorSheet);
-  Actors.registerSheet('boilerplate', BoilerplateActorSheet, {
+  Actors.registerSheet('boilerplate', ExtincaoActorSheet, {
     makeDefault: true,
     label: 'BOILERPLATE.SheetLabels.Actor',
   });

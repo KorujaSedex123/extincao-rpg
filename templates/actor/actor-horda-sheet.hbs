@@ -1,94 +1,95 @@
-<form class="{{cssClass}} flexcol horda-sheet {{#if isLocked}}locked{{/if}}" autocomplete="off">
+<form class="{{cssClass}} flexcol extincao-sheet horda-sheet {{#if isLocked}}locked{{/if}}" autocomplete="off">
 
     <header class="sheet-header horda-header">
-        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
-        
-        <div class="header-details">
-            <div class="header-top flexrow" style="align-items: center; justify-content: space-between;">
-                <h1 class="charname" style="margin:0; flex:1;">
-                    <input name="name" type="text" value="{{actor.name}}" placeholder="NOME DA AMEAÇA" {{#if isLocked}}readonly{{/if}}/>
-                </h1>
-                <a class="lock-btn" title="{{#if isLocked}}Destravar{{else}}Travar{{/if}}" style="color: #ff4444; font-size: 1.2em; margin-left: 10px;">
-                    <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
-                </a>
+        <div class="header-grid">
+
+            <div class="profile-img-container">
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+                {{#if isLocked}}<i class="fas fa-lock lock-status"></i>{{/if}}
             </div>
 
-            <div class="header-sub flexrow" style="gap: 10px; margin-top: 5px;">
-                <div class="horda-type" style="flex: 1;">
-                    <input name="system.details.tipo" type="text" value="{{system.details.tipo}}" placeholder="Tipo (ex: Corredores)" {{#if isLocked}}readonly{{/if}} style="text-align: left;"/>
-                </div>
-                <div class="horda-density" style="flex: 0 0 140px;">
-                    <select name="system.attributes.densidade.value" style="width:100%; background:#330000; color:#ffcc00; border:1px solid #660000;" {{#if isLocked}}disabled{{/if}}>
-                        {{#select system.attributes.densidade.value}}
-                        {{#each densidadeOptions as |label key|}}
-                        <option value="{{key}}">{{label}}</option>
-                        {{/each}}
-                        {{/select}}
-                    </select>
-                </div>
-            </div>
+            <div class="header-main">
+                <div class="header-row-top">
+                    <input class="horda-name" name="name" type="text" value="{{actor.name}}" placeholder="NOME DA HORDA"
+                        {{#if isLocked}}readonly{{/if}} />
 
-            <div class="horda-integrity-box" style="margin-top: 10px; background: rgba(0,0,0,0.5); padding: 5px; border: 1px solid #550000; border-radius: 4px;">
-                <div class="integrity-header flexrow" style="justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                    <label style="color:#ffcc00; font-size: 0.8em; font-weight: bold;"><i class="fas fa-heartbeat"></i> INTEGRIDADE / TAMANHO</label>
-                    <div class="size-inputs" style="display: flex; gap: 5px;">
-                        <input type="number" name="system.attributes.tamanho.value" value="{{system.attributes.tamanho.value}}" {{#if isLocked}}readonly{{/if}} style="width: 50px; text-align: right; color: #fff; background: transparent; border: none; font-weight: bold;"/>
-                        <span style="color:#666;">/</span>
-                        <input type="number" name="system.attributes.tamanho.max" value="{{system.attributes.tamanho.max}}" class="max-input" {{#if isLocked}}readonly{{/if}} style="width: 50px; text-align: left; color: #888; background: transparent; border: none;"/>
+                    <div class="horda-controls">
+                        <input type="text" name="system.details.tipo" class="horda-type" value="{{system.details.tipo}}"
+                            placeholder="Tipo de Infectado" {{#if isLocked}}readonly{{/if}} />
+
+                        <a class="lock-btn npc-lock"><i
+                                class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i></a>
                     </div>
                 </div>
-                <div class="horda-bar" style="height: 8px; background: #330000; width: 100%; position: relative;">
-                    <div class="bar-fill" style="width: {{barTamanho}}%; background: #ff0000; height: 100%; box-shadow: 0 0 5px #ff0000;"></div>
+
+                <div class="horda-size-bar">
+                    <div class="bar-fill"
+                        style="width: {{percentage system.attributes.tamanho.value system.attributes.tamanho.max}}%;">
+                    </div>
+
+                    <div class="bar-content">
+                        <label><i class="fas fa-users"></i> TAMANHO DO ENXAME (PV)</label>
+                        <div class="resource-inputs">
+                            <a class="stat-control minus" data-target="tamanho"><i class="fas fa-minus"></i></a>
+                            <input type="number" name="system.attributes.tamanho.value"
+                                value="{{system.attributes.tamanho.value}}" {{#if isLocked}}readonly{{/if}} />
+                            <span class="sep">/</span>
+                            <input type="number" name="system.attributes.tamanho.max"
+                                value="{{system.attributes.tamanho.max}}" {{#if isLocked}}readonly{{/if}} />
+                            <a class="stat-control plus" data-target="tamanho"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="main"><i class="fas fa-skull"></i> COMBATE</a>
-        <a class="item" data-tab="relatorio"><i class="fas fa-file-medical-alt"></i> RELATÓRIO</a>
-    </nav>
-
     <section class="sheet-body horda-body">
-        
-        <div class="tab main" data-group="primary" data-tab="main">
-            
-            <div class="horda-stats-grid">
-                <div class="stat-box danger">
-                    <label>FORÇA (d6)</label>
-                    <input type="number" name="system.attributes.forca.value" value="{{system.attributes.forca.value}}" {{#if isLocked}}readonly{{/if}}/>
-                    <div class="sub-label">Dados de Ataque</div>
-                </div>
 
-                <div class="stat-box warning">
-                    <label>DANO BASE</label>
-                    <input type="number" name="system.attributes.dano.value" value="{{system.attributes.dano.value}}" {{#if isLocked}}readonly{{/if}}/>
-                    <div class="sub-label">Sucessos aumentam isso</div>
+        <div class="horda-threat-panel">
+
+            <div class="threat-box damage">
+                <div class="threat-icon"><i class="fas fa-skull-crossbones"></i></div>
+                <div class="threat-data">
+                    <label>DANO AUTOMÁTICO</label>
+                    <input type="number" name="system.attributes.dano.value" value="{{system.attributes.dano.value}}"
+                        placeholder="1" {{#if isLocked}}readonly{{/if}} />
+                    <span class="threat-sub">POR RODADA/CONTATO</span>
                 </div>
             </div>
 
-            <div class="horda-actions" style="margin-top: 30px;">
-                <button class="roll-horda-attack hover-glow-red">
-                    <i class="fas fa-biohazard"></i> REALIZAR ATAQUE EM MASSA
-                </button>
+            <div class="threat-box force">
+                <div class="threat-icon"><i class="fas fa-fist-raised"></i></div>
+                <div class="threat-data">
+                    <label>FORÇA BRUTA</label>
+                    <input type="number" name="system.attributes.forca.value" value="{{system.attributes.forca.value}}"
+                        placeholder="1" {{#if isLocked}}readonly{{/if}} />
+                    <span class="threat-sub">DADOS DE AÇÃO</span>
+                </div>
             </div>
 
-            {{#if isLocked}}
-            <div style="text-align: center; color: #660000; margin-top: 20px; font-style: italic;">
-                <i class="fas fa-lock"></i> Parâmetros Travados
-            </div>
-            {{/if}}
         </div>
 
-        <div class="tab relatorio" data-group="primary" data-tab="relatorio">
-            <div class="horda-bio" style="height: 100%; display: flex; flex-direction: column;">
-                <label style="display:block; margin-bottom:10px; color:#ffaaaa; border-bottom:1px solid #550000;">
-                    <i class="fas fa-search"></i> ORIGEM E COMPORTAMENTO
-                </label>
-                <div class="bio-editor" style="flex: 1; background: rgba(0,0,0,0.3); padding: 10px; border: 1px dashed #550000;">
-                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=(not isLocked)}}
-                </div>
+        <div class="escape-rule-card">
+            <div class="rule-header">
+                <i class="fas fa-running"></i> REGRAS DE ENGAJAMENTO
             </div>
+            <div class="rule-content">
+                <p><strong>DANO DE CERCO:</strong> A Horda causa <strong>{{system.attributes.dano.value}}</strong> de
+                    dano automático em quem terminar o turno engajado.</p>
+                <hr>
+                <p><strong>ESCAPAR:</strong> Exige um teste de <strong>FORÇA (Dif. 2)</strong> ou Atletismo para abrir
+                    caminho.</p>
+            </div>
+            <button class="broadcast-rule-btn" data-action="broadcast-horda">
+                <i class="fas fa-bullhorn"></i> ANUNCIAR REGRA NO CHAT
+            </button>
+        </div>
+
+        <div class="horda-notes">
+            <label>COMPORTAMENTO / DESCRIÇÃO</label>
+            <textarea name="system.details.biography" placeholder="Descreva o comportamento da horda..." {{#if
+                isLocked}}readonly{{/if}}>{{system.details.biography}}</textarea>
         </div>
 
     </section>

@@ -286,10 +286,6 @@
         "base"
       ],
       "attributes": {
-        "forca": {
-          "value": 1,
-          "label": "Força da Horda"
-        },
         "tamanho": {
           "value": 10,
           "max": 10,
@@ -299,14 +295,14 @@
           "value": 1,
           "label": "Dano de Cerco"
         },
-        "densidade": {
-          "value": "bando",
-          "label": "Classificação"
+        "forca": {
+          "value": 1,
+          "label": "Força da Horda"
         }
       },
       "details": {
-        "tipo": "Caminhantes",
-        "biography": ""
+        "biography": "",
+        "tipo": "Caminhantes"
       }
     },
     "refugio": {

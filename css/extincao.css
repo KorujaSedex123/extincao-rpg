@@ -1258,3 +1258,142 @@
     outline: none;
     background: #0a0a0a;
 }
+
+/* ==========================================================================
+   FICHA DE HORDA (PERIGO AMBIENTAL)
+   ========================================================================== */
+
+/* Header Horda */
+.horda-sheet .sheet-header {
+    background: #1a1505; /* Fundo amarelado muito escuro */
+    border-bottom: 2px solid #b80;
+}
+
+.horda-name {
+    font-size: 1.6em !important;
+    color: #fb0 !important; /* Laranja/Amarelo */
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.horda-controls {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+}
+
+.horda-type {
+    background: transparent; border: none; border-bottom: 1px dashed #b80;
+    color: #aaa; font-style: italic; font-size: 0.9em; flex: 1;
+    font-family: "Courier New", monospace;
+}
+
+/* Barra de Tamanho (Vida) */
+.horda-size-bar {
+    margin-top: 10px;
+    background: #000;
+    border: 1px solid #444;
+    border-radius: 4px;
+    position: relative; /* Importante para a barra ficar dentro */
+    overflow: hidden;   /* Corta o excesso da barra */
+    min-height: 50px;
+    display: flex; align-items: center; justify-content: center;
+}
+.horda-size-bar label { 
+    color: #fb0; font-size: 0.75em; font-weight: bold; letter-spacing: 2px; text-shadow: 0 1px 2px #000;
+}
+
+.horda-size-bar input {
+    text-shadow: 0 0 5px #000; /* Garante leitura sobre a barra */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.bar-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: linear-gradient(90deg, #640, #b80); /* Degradê Laranja/Marrom */
+    opacity: 0.5;
+    transition: width 0.5s ease-in-out;
+    z-index: 0;
+}
+
+/* O Conteúdo (Texto e Inputs) */
+.bar-content {
+    position: relative;
+    z-index: 1; /* Fica na frente da barra */
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%; padding: 5px;
+}
+
+/* Corpo da Ficha */
+.horda-body {
+    padding: 15px;
+    display: flex; flex-direction: column; gap: 15px;
+}
+
+/* Painel de Ameaça (Grid Central) */
+.horda-threat-panel {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+}
+
+.threat-box {
+    background: #110c00;
+    border: 1px solid #640;
+    border-radius: 6px;
+    display: flex; align-items: center;
+    padding: 10px;
+    gap: 10px;
+}
+.threat-box.damage { border-color: #b40; }
+.threat-box.force { border-color: #860; }
+
+.threat-icon {
+    font-size: 2em; color: #b40; opacity: 0.8; width: 40px; text-align: center;
+}
+
+.threat-data {
+    flex: 1; display: flex; flex-direction: column;
+}
+.threat-data label { font-size: 0.6em; color: #888; font-weight: bold; text-transform: uppercase; }
+.threat-data input {
+    font-size: 2em; font-weight: 900; color: #eee;
+    background: transparent; border: none; height: auto; padding: 0;
+}
+.threat-data .threat-sub { font-size: 0.5em; color: #640; text-transform: uppercase; }
+
+/* Regra de Fuga */
+.escape-rule-card {
+    background: #111;
+    border: 1px dashed #444;
+    border-left: 3px solid #fb0;
+    padding: 10px;
+    border-radius: 4px;
+}
+.rule-header {
+    color: #fb0; font-weight: bold; font-size: 0.9em; border-bottom: 1px solid #333; margin-bottom: 5px; padding-bottom: 3px;
+}
+.rule-content {
+    font-size: 0.8em; color: #ccc; line-height: 1.4; margin-bottom: 10px;
+}
+.rule-content strong { color: #fff; }
+
+.broadcast-rule-btn {
+    background: #320; color: #fb0; border: 1px solid #640;
+    width: 100%; font-size: 0.75em; padding: 4px;
+    cursor: pointer; text-transform: uppercase; font-weight: bold;
+    transition: all 0.2s;
+}
+.broadcast-rule-btn:hover { background: #fb0; color: #000; box-shadow: 0 0 10px #fb0; }
+
+/* Notas */
+.horda-notes {
+    flex: 1; display: flex; flex-direction: column;
+}
+.horda-notes label { font-size: 0.7em; color: #666; font-weight: bold; margin-bottom: 5px; }
+.horda-notes textarea {
+    background: #080808; border: 1px solid #333; color: #aaa;
+    flex: 1; resize: none; padding: 10px; font-family: "Courier New";
+}
+
+/* Modo Travado da Horda */
+.horda-sheet.locked input { border: none !important; pointer-events: none; color: #fb0 !important; }
+.horda-sheet.locked textarea { border: none !important; pointer-events: none; }

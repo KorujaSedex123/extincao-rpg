@@ -1,7 +1,9 @@
 import { onManageActiveEffect, prepareActiveEffectCategories } from "../helpers/effects.mjs";
 import { EXTINCAO } from "../helpers/config.mjs";
 
-export class BoilerplateActorSheet extends ActorSheet {
+const ActorSheet = foundry.appv1.sheets.ActorSheet;
+
+export class ExtincaoActorSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
@@ -16,9 +18,22 @@ export class BoilerplateActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
-    return `systems/extincao/templates/actor/actor-${this.actor.type}-sheet.hbs`;
-  }
+    // Se for Horda, carrega o template específico
+    if (this.actor.type === 'horda') {
+      return "systems/extincao/templates/actor/actor-horda-sheet.hbs";
+    }
 
+    // Se for NPC, carrega o de NPC
+    if (this.actor.type === 'npc') {
+      return "systems/extincao/templates/actor/actor-npc-sheet.hbs";
+    }
+    if (this.actor.type === 'sobrevivente' || this.actor.type === 'character') {
+      // Padrão (Sobrevivente)
+      return "systems/extincao/templates/actor/actor-sobrevivente-sheet.hbs";
+    }
+
+    return "systems/extincao/templates/actor/actor-sobrevivente-sheet.hbs";
+  }
   /* -------------------------------------------- */
 
   /** @override */
@@ -169,20 +184,33 @@ export class BoilerplateActorSheet extends ActorSheet {
     // -------------------------------------------------------------
 
     // Vida e Resistência
+    // 8. CONTROLES RÁPIDOS (+ e -)
+    // Vida, Resistência e Tamanho da Horda
     html.find('.stat-control').click(async (ev) => {
       ev.preventDefault();
       const btn = ev.currentTarget;
-      const target = btn.dataset.target; // pv ou pr
+      const target = btn.dataset.target; // 'pv', 'pr' ou 'tamanho'
       const isPlus = btn.classList.contains('plus');
 
-      const resource = this.actor.system.resources[target];
+      // 1. Tenta achar em Resources (Vida/Resistência)
+      let path = `system.resources.${target}`;
+      let resource = this.actor.system.resources[target];
+
+      // 2. Se não achou, tenta em Attributes (Tamanho da Horda)
+      if (!resource) {
+        path = `system.attributes.${target}`;
+        resource = this.actor.system.attributes[target];
+      }
+
+      if (!resource) return; // Segurança
+
       const current = Number(resource.value);
       const max = Number(resource.max);
 
       let novoValor = isPlus ? current + 1 : current - 1;
       novoValor = Math.clamp(novoValor, 0, max);
 
-      await this.actor.update({ [`system.resources.${target}.value`]: novoValor });
+      await this.actor.update({ [`${path}.value`]: novoValor });
     });
 
     // Estresse (Botões + e -)
@@ -337,6 +365,40 @@ export class BoilerplateActorSheet extends ActorSheet {
         li.addEventListener("dragstart", handler, false);
       });
     }
+
+    // 11. BOTÃO DA HORDA: ANUNCIAR REGRA
+    html.find('.broadcast-rule-btn').click(ev => {
+      ev.preventDefault();
+
+      // Pega os dados atuais
+      const dano = this.actor.system.attributes.dano.value;
+      const forca = this.actor.system.attributes.forca.value;
+
+      const content = `
+            <div class="extincao-roll" style="border-left-color: #fb0;">
+                <h3 style="color:#fb0"><i class="fas fa-biohazard"></i> ${this.actor.name}</h3>
+                <div style="font-size: 0.9em; margin-bottom: 10px; color: #ccc;">
+                    O enxame cerca vocês. A densidade é crítica.
+                </div>
+                
+                <div class="roll-result failure" style="border-color: #b40; color: #f88; background: #210; font-size: 1.1em;">
+                    DANO AUTOMÁTICO: ${dano}
+                    <div style="font-size:0.5em; color:#966;">SE TERMINAR O TURNO PERTO</div>
+                </div>
+
+                <div style="background: #111; padding: 5px; border: 1px dashed #fb0; text-align: center; margin-top: 10px; color: #fb0;">
+                    <strong>PARA ESCAPAR:</strong><br>
+                    Teste de FORÇA ou ATLETISMO<br>
+                    <span style="font-size: 1.2em; font-weight: bold;">DIFICULDADE 2</span>
+                </div>
+            </div>
+        `;
+
+      ChatMessage.create({
+        content: content,
+        speaker: ChatMessage.getSpeaker({ actor: this.actor })
+      });
+    });
   }
 
   /* -------------------------------------------- */

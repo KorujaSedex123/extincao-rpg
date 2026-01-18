@@ -14,7 +14,7 @@
     }
   ],
   "esmodules": [
-    "module/extincao.mjs"
+    "extincao.mjs"
   ],
   "styles": [
     "css/extincao.css"

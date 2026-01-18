@@ -1,12 +1,12 @@
 /**
  * EXTINÇÃO RPG SYSTEM
- * Arquivo principal de inicialização (Compatível V12+)
+ * Arquivo principal de inicialização
  */
 
-import { BoilerplateActorSheet } from "./sheets/actor-sheet.mjs";
-import { BoilerplateItemSheet } from "./sheets/item-sheet.mjs";
-import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
-import { registerHandlebarsHelpers } from "./helpers/handlebars.mjs";
+// Importa as nossas classes de Ficha (certifique-se que os arquivos na pasta module/sheets têm esses nomes de classe)
+import { preloadHandlebarsTemplates } from "./module/helpers/templates.mjs";
+import { ExtincaoActorSheet } from "./module/sheets/actor-sheet.mjs";
+import { ExtincaoItemSheet } from "./module/sheets/item-sheet.mjs";
 
 /* -------------------------------------------- */
 /* Inicialização do Sistema                    */
@@ -19,37 +19,49 @@ Hooks.once('init', async function () {
     CONFIG.Actor.documentClass = Actor;
     CONFIG.Item.documentClass = Item;
 
-    // --- REGISTRO DE FICHAS (SINTAXE V12 SEM AVISOS) ---
-
-    // 1. Desregistra as fichas padrão do sistema "core"
-    // O erro diz que "Actors" global é depreciado, então usamos o caminho completo:
-    // foundry.documents.collections.Actors
-    // Mas para registerSheet, acessamos a coleção "actors" do jogo ou a classe.
-
-    // A maneira mais segura e moderna é acessar via 'Actors' do namespace 'foundry.documents.collections'
+    // Definindo as constantes com os caminhos novos
     const Actors = foundry.documents.collections.Actors;
     const Items = foundry.documents.collections.Items;
-    // Para ActorSheet e ItemSheet, o erro aponta para 'foundry.appv1.sheets'
     const ActorSheet = foundry.appv1.sheets.ActorSheet;
     const ItemSheet = foundry.appv1.sheets.ItemSheet;
 
+    // Desregistra fichas do Core
     Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet("extincao", BoilerplateActorSheet, {
+    Items.unregisterSheet("core", ItemSheet);
+
+    // Registra Ficha de Ator (Extinção)
+    Actors.registerSheet("extincao", ExtincaoActorSheet, {
         types: ["sobrevivente", "npc", "horda", "refugio"],
         makeDefault: true,
-        label: "Ficha Padrão Extinção"
+        label: "Ficha Extinção"
     });
 
-    Items.unregisterSheet("core", ItemSheet);
-    Items.registerSheet("extincao", BoilerplateItemSheet, {
+    // Registra Ficha de Item (Extinção)
+    Items.registerSheet("extincao", ExtincaoItemSheet, {
         makeDefault: true,
         label: "Ficha de Item Extinção"
     });
 
-    // Registra os Helpers
-    registerHandlebarsHelpers();
+    // -----------------------------------------------------------
+    // HELPER: PERCENTAGE (Para Barra de Vida da Horda)
+    // -----------------------------------------------------------
+    Handlebars.registerHelper('percentage', function (value, max) {
+        let v = Number(value) || 0;
+        let m = Number(max) || 1;
+        if (m === 0) return 0;
+        return Math.round((v * 100) / m);
+    });
 
-    // Carrega os templates HTML
+    // -----------------------------------------------------------
+    // HELPER: SELECT (Para Dropdowns funcionarem)
+    // -----------------------------------------------------------
+    Handlebars.registerHelper('select', function (value, options) {
+        const $el = $('<select />').html(options.fn(this));
+        $el.find('[value="' + value + '"]').attr({ 'selected': 'selected' });
+        return $el.html();
+    });
+
+    // Carrega os templates HTML (Função definida no final deste arquivo)
     return preloadHandlebarsTemplates();
 });
 
@@ -57,7 +69,7 @@ Hooks.once('init', async function () {
 /* Automação de Nomes (Inimigo 1, 2...)        */
 /* -------------------------------------------- */
 Hooks.on("preCreateActor", (actor, data, options, userId) => {
-    const isDefaultName = data.name.startsWith("Actor") || data.name.startsWith("New Actor");
+    const isDefaultName = data.name.startsWith("Actor") || data.name.startsWith("New Actor") || data.name.startsWith("Novo Ator");
 
     if (isDefaultName) {
         let baseName = "Ator";
@@ -66,18 +78,17 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
         else if (data.type === "sobrevivente") baseName = "Sobrevivente";
         else if (data.type === "refugio") baseName = "Refúgio";
 
-        // Conta quantos existem
+        // Conta quantos existem para dar numero (Ex: Inimigo 3)
         const count = game.actors.filter(a => a.type === data.type).length + 1;
-
         actor.updateSource({ name: `${baseName} ${count}` });
     }
 });
 
 /* ==========================================================================
-   LÓGICA DE FORÇAR ROLAGEM (COM DICE SO NICE + V13 READY)
+   LÓGICA DE FORÇAR ROLAGEM (COM DICE SO NICE)
    ========================================================================== */
 Hooks.on("renderChatMessageHTML", (message, html) => {
-    
+
     const btn = html.querySelector(".force-roll-btn");
     if (!btn) return;
 
@@ -86,7 +97,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         ev.stopPropagation();
 
         let rollData;
-        try { rollData = JSON.parse(btn.dataset.roll); } 
+        try { rollData = JSON.parse(btn.dataset.roll); }
         catch (err) { return ui.notifications.error("Erro ao ler dados."); }
 
         const actor = game.actors.get(rollData.actorId);
@@ -97,7 +108,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         if (currentStress >= 6) return ui.notifications.warn("Estresse máximo!");
 
         await actor.update({ "system.resources.estresse.value": currentStress + 1 });
-        
+
         // 2. UI do Botão
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-check"></i> FORÇADO!';
@@ -108,14 +119,10 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         let roll = new Roll(`${rollData.diceCount}d6`);
         await roll.evaluate();
 
-        // ---------------------------------------------------------
-        // CORREÇÃO: FORÇAR DICE SO NICE A APARECER
-        // ---------------------------------------------------------
+        // Dice So Nice
         if (game.dice3d) {
-            // (rolagem, usuário, sincronizar_com_outros)
             game.dice3d.showForRoll(roll, game.user, true);
         }
-        // ---------------------------------------------------------
 
         const diceResults = roll.terms[0].results;
         let successCount = 0;
@@ -125,25 +132,25 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         for (let die of diceResults) {
             const val = die.result;
             let cssClass = "";
-            
-            if (val === 6) { 
-                successCount++; 
-                hasCrit = true; 
-                cssClass = "crit"; 
+
+            if (val === 6) {
+                successCount++;
+                hasCrit = true;
+                cssClass = "crit";
             }
-            else if (val >= rollData.targetNumber) { 
-                successCount++; 
-                cssClass = "success"; 
+            else if (val >= rollData.targetNumber) {
+                successCount++;
+                cssClass = "success";
             }
             else if (val === 1) { cssClass = "glitch"; }
-            
+
             diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
         }
 
         // 4. Resultado Final
         let outcomeHTML = "";
         let borderSideColor = "#666";
-        
+
         if (successCount > 0) {
             borderSideColor = "#4eff8c";
             const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">CRÍTICO!</div>` : "";

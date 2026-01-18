@@ -1,6 +1,7 @@
 import { EXTINCAO } from "../helpers/config.mjs";
 
-export class BoilerplateItemSheet extends ItemSheet {
+const ItemSheet = foundry.appv1.sheets.ItemSheet;
+export class ExtincaoItemSheet extends ItemSheet {
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
