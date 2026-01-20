@@ -2,12 +2,16 @@
     "TYPES.Actor.sobrevivente": "Sobrevivente",
     "TYPES.Actor.npc": "Inimigo / NPC",
     "TYPES.Actor.horda": "A Horda",
+    "TYPES.Actor.refugio": "Refúgio",
+    "TYPES.Actor.habitante": "Habitante / Civil", 
+
     "TYPES.Item.item": "Equipamento",
     "TYPES.Item.arma": "Arma",
     "TYPES.Item.qualidade": "Qualidade",
     "TYPES.Item.defeito": "Defeito",
     "TYPES.Item.trauma": "Trauma",
-    "TYPES.Item.habitante": "Habitante/Civil",
+    "TYPES.Item.habitante": "Habitante",
+
     "EXTINCAO.Forca": "Força",
     "EXTINCAO.Destreza": "Destreza",
     "EXTINCAO.Constituicao": "Constituição",
@@ -18,6 +22,5 @@
     "EXTINCAO.Resistencia": "Resistência",
     "EXTINCAO.Estresse": "Estresse",
     "EXTINCAO.Armas": "Armas",
-    "EXTINCAO.Equipamentos": "Equipamentos",
-    "TYPES.Actor.refugio": "Refúgio"
+    "EXTINCAO.Equipamentos": "Equipamentos"
 }

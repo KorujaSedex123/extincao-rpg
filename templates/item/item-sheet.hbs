@@ -1,9 +1,10 @@
 <form class="{{cssClass}} item-sheet-window {{#if isLocked}}locked{{/if}}" autocomplete="off">
-    
+
     <header class="sheet-header item-header-slim">
-        <img class="profile-img-slim" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <img class="profile-img-slim" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         <div class="header-details">
-            <input class="charname-slim" name="name" type="text" value="{{item.name}}" placeholder="Nome do Item" {{#if isLocked}}readonly{{/if}}/>
+            <input class="charname-slim" name="name" type="text" value="{{item.name}}" placeholder="Nome do Item" {{#if
+                isLocked}}readonly{{/if}} />
             <div class="item-meta">
                 <span class="type-badge">{{item.type}}</span>
                 {{#if isLocked}}<span class="lock-badge"><i class="fas fa-lock"></i> TRAVADO</span>{{/if}}
@@ -20,13 +21,13 @@
 
         <div class="tab attributes" data-group="primary" data-tab="attributes">
             <div class="clean-grid">
-                
+
                 {{#if isArma}}
                 <div class="clean-field">
                     <label>DANO FIXO</label>
-                    <input type="number" name="system.dano" value="{{system.dano}}" {{#if isLocked}}readonly{{/if}}/>
+                    <input type="number" name="system.dano" value="{{system.dano}}" {{#if isLocked}}readonly{{/if}} />
                 </div>
-                
+
                 <div class="clean-field">
                     <label>DADO DE USO</label>
                     <select name="system.uso" {{#if isLocked}}disabled{{/if}}>
@@ -40,46 +41,52 @@
 
                 <div class="clean-field checkbox">
                     <label>LETAL</label>
-                    <input type="checkbox" name="system.lethal" {{checked system.lethal}} {{#if isLocked}}disabled{{/if}}/>
+                    <input type="checkbox" name="system.lethal" {{checked system.lethal}} {{#if
+                        isLocked}}disabled{{/if}} />
                 </div>
                 {{/if}}
 
                 {{#if isEquipamento}}
                 <div class="clean-field">
                     <label>QTD</label>
-                    <input type="number" name="system.quantity" value="{{system.quantity}}" {{#if isLocked}}readonly{{/if}}/>
+                    <input type="number" name="system.quantity" value="{{system.quantity}}" {{#if
+                        isLocked}}readonly{{/if}} />
                 </div>
 
                 <div class="clean-field checkbox">
                     <label>É ARMADURA?</label>
-                    <input type="checkbox" name="system.isArmor" {{checked system.isArmor}} {{#if isLocked}}disabled{{/if}}/>
+                    <input type="checkbox" name="system.isArmor" {{checked system.isArmor}} {{#if
+                        isLocked}}disabled{{/if}} />
                 </div>
 
                 {{#if system.isArmor}}
                 <div class="clean-field highlight">
                     <label>DEFESA</label>
-                    <input type="number" name="system.armor" value="{{system.armor}}" {{#if isLocked}}readonly{{/if}}/>
+                    <input type="number" name="system.armor" value="{{system.armor}}" {{#if isLocked}}readonly{{/if}} />
                 </div>
                 {{/if}}
                 {{/if}}
-                
+
                 {{#if isItem}}
                 <div class="clean-field">
                     <label>QTD</label>
-                    <input type="number" name="system.quantity" value="{{system.quantity}}" {{#if isLocked}}readonly{{/if}}/>
+                    <input type="number" name="system.quantity" value="{{system.quantity}}" {{#if
+                        isLocked}}readonly{{/if}} />
                 </div>
                 {{/if}}
 
                 {{#if (or isEquipamento isItem)}}
                 <div class="clean-field">
                     <label>PESO</label>
-                    <input type="number" name="system.weight" value="{{system.weight}}" {{#if isLocked}}readonly{{/if}}/>
+                    <input type="number" name="system.weight" value="{{system.weight}}" {{#if
+                        isLocked}}readonly{{/if}} />
                 </div>
                 {{/if}}
-                
+
                 <div class="clean-field full">
                     <label>CUSTO / DETALHES</label>
-                    <input type="text" name="system.price" value="{{system.price}}" placeholder="-" {{#if isLocked}}readonly{{/if}}/>
+                    <input type="text" name="system.price" value="{{system.price}}" placeholder="-" {{#if
+                        isLocked}}readonly{{/if}} />
                 </div>
 
             </div>
@@ -87,7 +94,8 @@
 
         <div class="tab description" data-group="primary" data-tab="description">
             <div class="bio-paper dark-editor">
-                {{editor system.description target="system.description" button=true owner=owner editable=(not isLocked)}}
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable
+                engine="prosemirror"}}
             </div>
         </div>
     </section>

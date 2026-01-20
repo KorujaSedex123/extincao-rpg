@@ -1,30 +1,49 @@
-<form class="{{cssClass}}" autocomplete="off">
-    <header class="sheet-header" style="background:#0f151a; border-bottom:2px solid #446688;">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="border-color:#446688;"/>
+<form class="{{cssClass}} item-sheet-habitante" autocomplete="off">
+    
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
         <div class="header-details">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome do Habitante" style="color:#aaddff;"/></h1>
-            <div class="item-subtitle" style="color:#6688aa;">
-                FICHA DE POPULAÇÃO
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Nome do Sobrevivente"/>
+            </h1>
+            
+            <div class="role-container">
+                <label><i class="fas fa-briefcase"></i> RESPONSABILIDADE / FUNÇÃO</label>
+                <input class="role-input" type="text" name="system.funcao" value="{{system.funcao}}" placeholder="Ex: Médico, Guarda, Cozinheiro, Líder..."/>
             </div>
         </div>
     </header>
 
-    <div class="sheet-body" style="padding:10px; background:#0a0a0a; color:#ccc;">
-        <div class="grid grid-2col" style="gap:10px; margin-bottom:10px;">
-            <div class="form-group">
-                <label style="color:#4488cc; font-weight:bold;">Função / Cargo</label>
-                <input type="text" name="system.funcao" value="{{system.funcao}}" placeholder="Ex: Médico, Guarda" style="background:#111; color:#fff; border:1px solid #333;"/>
+    <div class="sheet-body">
+        
+        <section class="status-row">
+            
+            <div class="status-group health">
+                <label><i class="fas fa-heart"></i> ESTADO DE SAÚDE</label>
+                <div class="resource-inputs">
+                    <input type="number" name="system.saude" value="{{system.saude}}" placeholder="Atual"/>
+                    <span class="sep">/</span>
+                    <input type="number" name="system.maxSaude" value="{{system.maxSaude}}" placeholder="Max"/>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label style="color:#4488cc; font-weight:bold;">Estado de Saúde</label>
-                <input type="text" name="system.estado" value="{{system.estado}}" placeholder="Ex: Saudável, Ferido" style="background:#111; color:#fff; border:1px solid #333;"/>
+            <div class="status-group infection">
+                <label><i class="fas fa-biohazard"></i> NÍVEL DE INFECÇÃO</label>
+                <div class="resource-inputs">
+                    <input type="number" name="system.infeccao" value="{{system.infeccao}}" placeholder="0"/>
+                </div>
             </div>
-        </div>
 
-        <div class="bio-box">
-            <label style="color:#4488cc; font-weight:bold; border-bottom:1px solid #333; display:block; margin-bottom:5px;">HISTÓRICO & NOTAS</label>
-            {{editor system.description target="system.description" button=true owner=owner editable=editable}}
-        </div>
+        </section>
+
+        <hr>
+
+        <section class="bio-section">
+            <label class="bio-label"><i class="fas fa-file-medical-alt"></i> BIO & HISTÓRICO</label>
+            <div class="bio-editor">
+                {{editor system.notas target="system.notas" button=true owner=owner editable=editable engine="prosemirror"}}
+            </div>
+        </section>
+
     </div>
 </form>

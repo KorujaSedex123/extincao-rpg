@@ -7,96 +7,67 @@
             </div>
             <div class="header-main">
                 <div class="header-title flexrow">
-                    <h1 class="charname"><input name="name" type="text" value="{{actor.name}}"
-                            placeholder="NOME DO REFÚGIO" /></h1>
+                    <h1 class="charname">
+                        <input name="name" type="text" value="{{actor.name}}" placeholder="NOME DO REFÚGIO" />
+                    </h1>
                     <a class="lock-btn" title="{{#if isLocked}}Destravar{{else}}Travar{{/if}}">
                         <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
                     </a>
                 </div>
                 <div class="refuge-subtitle">
-                    <i class="fas fa-shield-alt"></i> ZONA SEGURA CONFIRMADA
+                    <input type="text" name="system.details.notes" value="{{system.details.notes}}"
+                        placeholder="Localização ou Detalhes..." />
                 </div>
             </div>
         </div>
     </header>
 
-    <section class="refuge-stats">
+    <section class="refugio-dashboard">
 
-        <div class="refuge-stat-box bar-container">
-            <div class="bar-fill defesa" style="width: {{barDefesa}}%;"></div>
-            <div class="bar-content">
-                <label class="rollable hover-glow" data-key="defesa" data-label="DEFESA DO REFÚGIO"
-                    title="Rolar Defesa">
-                    <i class="fas fa-shield-virus"></i> DEFESA <i class="fas fa-dice-d6 die-icon"></i>
-                </label>
-                <div class="resource-value-container">
-                    {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="defesa"><i
-                            class="fas fa-minus"></i></a>{{/if}}
-                    <div class="resource-inputs">
-                        <input type="number" name="system.attributes.defesa.value"
-                            value="{{system.attributes.defesa.value}}" {{#if isLocked}}readonly{{/if}} />
-                        <span class="sep">/</span>
-                        <input type="number" name="system.attributes.defesa.max"
-                            value="{{system.attributes.defesa.max}}" {{#if isLocked}}readonly{{/if}}
-                            class="max-input" />
-                    </div>
-                    {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="defesa"><i
-                            class="fas fa-plus"></i></a>{{/if}}
+        <div class="stat-pill defense">
+            <div class="pill-icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="pill-data">
+                <label>DEFESA</label>
+                <div class="pill-values">
+                    <a class="stat-control minus" data-target="defesa"><i class="fas fa-minus"></i></a>
+                    <input type="number" name="system.attributes.defesa.value" value="{{system.attributes.defesa.value}}" />
+                    <span class="sep">/</span>
+                    <input type="number" class="max-input" name="system.attributes.defesa.max" value="{{system.attributes.defesa.max}}" />
+                    <a class="stat-control plus" data-target="defesa"><i class="fas fa-plus"></i></a>
                 </div>
-                <div class="stat-desc">Segurança</div>
             </div>
         </div>
 
-        <div class="refuge-stat-box bar-container">
-            <div class="bar-fill recursos" style="width: {{barRecursos}}%;"></div>
-            <div class="bar-content">
-                <label>
-                    <i class="fas fa-boxes"></i> RECURSOS
-                    <a class="daily-consumption" title="Passar o Dia"><i class="fas fa-history"
-                            style="font-size: 0.8em; color: #fff; cursor: pointer;"></i></a>
-                </label>
-                <div class="resource-value-container">
-                    {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="recursos"><i
-                            class="fas fa-minus"></i></a>{{/if}}
-                    <div class="resource-inputs">
-                        <input type="number" name="system.attributes.recursos.value"
-                            value="{{system.attributes.recursos.value}}" {{#if isLocked}}readonly{{/if}} />
-                        <span class="sep">/</span>
-                        <input type="number" name="system.attributes.recursos.max"
-                            value="{{system.attributes.recursos.max}}" {{#if isLocked}}readonly{{/if}}
-                            class="max-input" />
-                    </div>
-                    {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="recursos"><i
-                            class="fas fa-plus"></i></a>{{/if}}
+        <div class="stat-pill resources">
+            <div class="pill-icon"><i class="fas fa-box-open"></i></div>
+            <div class="pill-data">
+                <label>RECURSOS</label>
+                <div class="pill-values">
+                    <a class="stat-control minus" data-target="recursos"><i class="fas fa-minus"></i></a>
+                    <input type="number" name="system.attributes.recursos.value" value="{{system.attributes.recursos.value}}" />
+                    <span class="sep">/</span>
+                    <input type="number" class="max-input" name="system.attributes.recursos.max" value="{{system.attributes.recursos.max}}" />
+                    <a class="stat-control plus" data-target="recursos"><i class="fas fa-plus"></i></a>
                 </div>
-                <div class="stat-desc">Suprimentos</div>
             </div>
         </div>
 
-        <div class="refuge-stat-box bar-container">
-            <div class="bar-fill moral" style="width: {{barMoral}}%;"></div>
-            <div class="bar-content">
-                <label class="rollable hover-glow" data-key="moral" data-label="TESTE DE MORAL" title="Rolar Moral">
-                    <i class="fas fa-users"></i> MORAL <i class="fas fa-dice-d6 die-icon"></i>
-                </label>
-                <div class="resource-value-container">
-                    {{#if isLocked}}<a class="resource-control" data-action="minus" data-target="moral"><i
-                            class="fas fa-minus"></i></a>{{/if}}
-                    <div class="resource-inputs">
-                        <input type="number" name="system.attributes.moral.value"
-                            value="{{system.attributes.moral.value}}" {{#if isLocked}}readonly{{/if}} />
-                        <span class="sep">/</span>
-                        <input type="number" name="system.attributes.moral.max" value="{{system.attributes.moral.max}}"
-                            {{#if isLocked}}readonly{{/if}} class="max-input" />
-                    </div>
-                    {{#if isLocked}}<a class="resource-control" data-action="plus" data-target="moral"><i
-                            class="fas fa-plus"></i></a>{{/if}}
+        <div class="stat-pill morale">
+            <div class="pill-icon"><i class="fas fa-heart"></i></div>
+            <div class="pill-data">
+                <label>MORAL</label>
+                <div class="pill-values">
+                    <a class="stat-control minus" data-target="moral"><i class="fas fa-minus"></i></a>
+                    <input type="number" name="system.attributes.moral.value" value="{{system.attributes.moral.value}}" />
+                    <span class="sep">/</span>
+                    <input type="number" class="max-input" name="system.attributes.moral.max" value="{{system.attributes.moral.max}}" />
+                    <a class="stat-control plus" data-target="moral"><i class="fas fa-plus"></i></a>
                 </div>
-                <div class="stat-desc">Sanidade</div>
             </div>
         </div>
 
     </section>
+
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="population"><i class="fas fa-user-friends"></i> POPULAÇÃO</a>
         <a class="item" data-tab="stock"><i class="fas fa-box-open"></i> ESTOQUE</a>
@@ -106,179 +77,80 @@
     <section class="sheet-body">
 
         <div class="tab population" data-group="primary" data-tab="population">
-            <div class="item-group">
-                <div class="inventory-header flexrow">
-                    <h3>HABITANTES / SOBREVIVENTES</h3>
-                    {{#unless isLocked}}<a class="habitante-create" title="Adicionar Habitante"><i
-                            class="fas fa-plus"></i></a>{{/unless}}
-                </div>
-
-                <ol class="item-list">
-                    {{#each system.habitantes as |habitante idx|}}
-                    <li class="item flexrow habitante-control" data-index="{{idx}}">
-                        <div class="item-image" title="Ver Detalhes" style="cursor:pointer;">
-                            <img src="{{#if habitante.img}}{{habitante.img}}{{else}}icons/svg/mystery-man.svg{{/if}}" />
-                        </div>
-                        <div class="item-name-col flexcol" style="flex:1; padding-left:10px;">
-                            <h4 class="item-name" style="color:#aaddff; cursor:pointer; margin:0;">
-                                {{habitante.nome}}
-                            </h4>
-                            <span class="item-func" style="color:#6688aa; font-size:0.8em;">{{habitante.funcao}}</span>
-                        </div>
-                        <div class="item-status status-{{habitante.saude}}"
-                            style="font-size:0.8em; margin-right:10px; font-weight:bold; text-transform:capitalize;">
-                            {{habitante.saude}}
-                        </div>
-                        {{#unless ../isLocked}}
-                        <div class="item-controls" style="flex:0 0 30px;">
-                            <a class="habitante-delete" data-index="{{idx}}"><i class="fas fa-trash"></i></a>
-                        </div>
-                        {{/unless}}
-                    </li>
-                    {{/each}}
-
-                    {{#unless system.habitantes}}
-                    <li class="item flexrow" style="padding:10px; color:#666; font-style:italic;">
-                        Nenhum sobrevivente registrado. Arraste personagens para cá.
-                    </li>
-                    {{/unless}}
-                </ol>
+            <div class="inventory-header flexrow">
+                <h3>HABITANTES REGISTRADOS</h3>
+                {{#unless isLocked}}
+                <a class="item-create" data-type="habitante" title="Adicionar"><i class="fas fa-plus"></i> Adicionar</a>
+                {{/unless}}
             </div>
 
-            <div class="bio-container" style="margin-top:10px; border-color:#446688;">
-                <h3 class="bio-header" style="color:#4488cc;">DIÁRIO DE BORDO</h3>
-                <div class="bio-editor short">
-                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner
-                    editable=editable}}
+            <div class="inhabitants-list-dark">
+                {{#each habitantes as |item id|}}
+                <div class="hab-bar item" data-item-id="{{item._id}}">
+                    <div class="hab-icon-area">
+                        <img src="{{item.img}}" class="hab-avatar" />
+                        {{#if (gt item.system.infeccao 0)}}
+                        <div class="infection-overlay active"><i class="fas fa-biohazard"></i></div>
+                        {{/if}}
+                    </div>
+                    <div class="hab-info-area">
+                        <div class="hab-name-row"><span class="hab-name-display item-edit">{{item.name}}</span></div>
+                        <span class="hab-summary-text">{{item.system.funcao}}</span>
+                    </div>
+                    <div class="hab-stats-area">
+                        <div class="hp-pill {{#if (lte item.system.saude 3)}}critical{{/if}}">
+                            <i class="fas fa-heart"></i> <span>{{item.system.saude}} / {{item.system.maxSaude}}</span>
+                        </div>
+                        <div class="hab-controls">
+                            <a class="item-edit"><i class="fas fa-edit"></i></a>
+                            {{#unless ../isLocked}}<a class="item-delete"><i class="fas fa-trash"></i></a>{{/unless}}
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{#unless habitantes}}
+                <div class="empty-state-dark"><p>Refúgio vazio.</p></div>
+                {{/unless}}
+            </div>
+
+            <div class="bio-container" style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #333;">
+                <h3 class="bio-header" style="font-size: 0.9em; color: #6688aa; margin-bottom: 5px;"><i class="fas fa-book"></i> DIÁRIO DE BORDO</h3>
+                <div class="bio-editor" style="min-height: 200px; background: #080808; border: 1px solid #333; padding: 5px;">
+                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=(not isLocked) engine="prosemirror"}}
                 </div>
             </div>
         </div>
 
         <div class="tab stock" data-group="primary" data-tab="stock">
-            <div class="item-group">
-                <div class="inventory-header flexrow">
-                    <h3>ARSENAL E SUPRIMENTOS</h3>
-                    <div class="header-stat">QTD</div>
-                    {{#unless isLocked}}<a class="item-create" data-type="item"><i
-                            class="fas fa-plus"></i></a>{{/unless}}
-                </div>
-
-                <ol class="item-list">
-                    {{!-- 1. ARMAS --}}
-                    {{#each armas as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <div class="item-image item-open" title="Visualizar Item" style="cursor:pointer;">
-                            <img src="{{item.img}}" />
-                        </div>
-
-                        <div class="item-name-col flexcol item-open" title="Visualizar Item"
-                            style="cursor:pointer; flex:1; padding-left:10px;">
-                            <h4 class="item-name"
-                                style="margin:0; color:#aaddff; text-decoration:underline dashed #446688;">{{item.name}}
-                            </h4>
-                            <span style="font-size:0.8em; color:#ff4444;">Arma (Dano {{item.system.dano}})</span>
-                        </div>
-
-                        <div class="item-detail" style="font-weight:bold;">
-                            x{{#if item.system.quantity}}{{item.system.quantity}}{{else}}1{{/if}}
-                        </div>
-
-                        {{#unless ../isLocked}}
-                        <div class="item-controls">
-                            <a class="item-edit"><i class="fas fa-edit"></i></a>
-                            <a class="item-delete"><i class="fas fa-trash"></i></a>
-                        </div>
-                        {{/unless}}
-                    </li>
-                    {{/each}}
-
-                    {{!-- 2. EQUIPAMENTOS --}}
-                    {{#each equipamentos as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <div class="item-image item-open" title="Visualizar Item" style="cursor:pointer;">
-                            <img src="{{item.img}}" />
-                        </div>
-
-                        <div class="item-name-col flexcol item-open" title="Visualizar Item"
-                            style="cursor:pointer; flex:1; padding-left:10px;">
-                            <h4 class="item-name"
-                                style="margin:0; color:#aaddff; text-decoration:underline dashed #446688;">{{item.name}}
-                            </h4>
-                            <span style="font-size:0.8em; color:#aaddff;">Item</span>
-                        </div>
-
-                        <div class="item-detail" style="font-weight:bold;">
-                            x{{item.system.quantity}}
-                        </div>
-
-                        {{#unless ../isLocked}}
-                        <div class="item-controls">
-                            <a class="item-edit"><i class="fas fa-edit"></i></a>
-                            <a class="item-delete"><i class="fas fa-trash"></i></a>
-                        </div>
-                        {{/unless}}
-                    </li>
-                    {{/each}}
-                </ol>
-            </div>
+            {{> "systems/extincao/templates/actor/parts/actor-items.hbs"}}
         </div>
 
         <div class="tab main" data-group="primary" data-tab="main">
-            <div class="item-group">
-                <div class="inventory-header flexrow">
-                    <h3>ESTRUTURAS & MELHORIAS</h3>
-                    <div class="header-stat" style="flex:0 0 100px;">STATUS</div>
-                    {{#unless isLocked}}<a class="item-create" data-type="projeto" title="Novo Projeto"><i
-                            class="fas fa-hammer"></i></a>{{/unless}}
-                </div>
-
-                <ol class="item-list">
-                    {{#each projetos as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <div class="item-image item-open" title="Ver Planta" style="cursor:pointer;">
-                            <img src="{{item.img}}" />
-                        </div>
-
-                        <div class="item-name-col flexcol item-open" title="Ver Detalhes"
-                            style="cursor:pointer; flex:1; padding-left:10px;">
-                            <h4 class="item-name"
-                                style="margin:0; color:#aaddff; text-decoration:underline dashed #446688;">{{item.name}}
-                            </h4>
-                            <span style="font-size:0.8em; color:#bbb;"><i class="fas fa-coins"></i> Custo:
-                                {{item.system.custo}}</span>
-                        </div>
-
-                        <div class="item-detail" style="flex:0 0 100px; text-align:center;">
-                            {{#if (eq item.system.estado "pronto")}}
-                            <span
-                                style="color:#4eff8c; font-weight:bold; border:1px solid #4eff8c; padding:2px 5px; border-radius:4px; font-size:0.7em;">PRONTO</span>
-                            {{else if (eq item.system.estado "construindo")}}
-                            <span
-                                style="color:#ffb347; font-weight:bold; border:1px solid #ffb347; padding:2px 5px; border-radius:4px; font-size:0.7em;">EM
-                                OBRAS</span>
-                            {{else}}
-                            <span
-                                style="color:#888; border:1px solid #666; padding:2px 5px; border-radius:4px; font-size:0.7em; border-style:dashed;">PLANEJADO</span>
-                            {{/if}}
-                        </div>
-
-                        {{#unless ../isLocked}}
-                        <div class="item-controls">
-                            <a class="item-edit"><i class="fas fa-edit"></i></a>
-                            <a class="item-delete"><i class="fas fa-trash"></i></a>
-                        </div>
-                        {{/unless}}
-                    </li>
-                    {{/each}}
-
-                    {{#unless projetos}}
-                    <li class="item flexrow"
-                        style="padding:10px; color:#666; font-style:italic; justify-content:center;">
-                        <p>Nenhuma estrutura construída. Inicie um novo projeto.</p>
-                    </li>
-                    {{/unless}}
-                </ol>
+            <div class="inventory-header flexrow">
+                <h3>ESTRUTURAS</h3>
+                <div class="header-stat">STATUS</div>
+                {{#unless isLocked}}<a class="item-create" data-type="projeto"><i class="fas fa-hammer"></i></a>{{/unless}}
             </div>
+            <ol class="item-list">
+                {{#each projetos as |item id|}}
+                <li class="item flexrow" data-item-id="{{item._id}}">
+                    <div class="item-image item-open" style="cursor:pointer;"><img src="{{item.img}}" /></div>
+                    <div class="item-name-col flexcol item-open" style="cursor:pointer; flex:1; padding-left:10px;">
+                        <h4 class="item-name" style="margin:0; color:#aaddff;">{{item.name}}</h4>
+                        <span style="font-size:0.8em; color:#bbb;">Custo: {{item.system.custo}}</span>
+                    </div>
+                    <div class="item-detail" style="flex:0 0 100px; text-align:center;">
+                        <span style="color:#888; border:1px dashed #666; padding:2px 5px; font-size:0.7em;">{{item.system.estado}}</span>
+                    </div>
+                    {{#unless ../isLocked}}
+                    <div class="item-controls">
+                        <a class="item-edit"><i class="fas fa-edit"></i></a>
+                        <a class="item-delete"><i class="fas fa-trash"></i></a>
+                    </div>
+                    {{/unless}}
+                </li>
+                {{/each}}
+            </ol>
         </div>
 
     </section>

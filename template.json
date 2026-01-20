@@ -312,25 +312,25 @@
       "attributes": {
         "defesa": {
           "value": 0,
-          "max": 10,
-          "label": "Defesa"
+          "max": 5,
+          "label": "Defesa Física"
         },
         "recursos": {
-          "value": 10,
-          "max": 20,
+          "value": 0,
+          "max": 5,
           "label": "Recursos"
         },
         "moral": {
-          "value": 5,
-          "max": 10,
+          "value": 0,
+          "max": 5,
           "label": "Moral"
         }
       },
+      "habitantes": [],
       "details": {
         "biography": "",
-        "projetos": ""
-      },
-      "habitantes": []
+        "notes": ""
+      }
     }
   },
   "Item": {
@@ -339,7 +339,8 @@
       "arma",
       "equipamento",
       "qualidade",
-      "defeito"
+      "defeito",
+      "habitante"
     ],
     "templates": {
       "base": {
@@ -366,6 +367,16 @@
       "templates": [
         "base"
       ]
+    },
+    "habitante": {
+      "templates": [
+        "base"
+      ],
+      "funcao": "",
+      "saude": 10,
+      "maxSaude": 10,
+      "infeccao": 0,
+      "notas": ""
     }
   }
 }

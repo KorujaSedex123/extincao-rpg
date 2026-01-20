@@ -1397,3 +1397,416 @@
 /* Modo Travado da Horda */
 .horda-sheet.locked input { border: none !important; pointer-events: none; color: #fb0 !important; }
 .horda-sheet.locked textarea { border: none !important; pointer-events: none; }
+
+/* ==========================================================
+   LISTA DE HABITANTES (ESTILO DARK / ITEM)
+   ========================================================== */
+
+.inhabitants-list-dark {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Espaço entre as barras */
+    padding: 5px;
+    margin-top: 5px;
+}
+
+/* A Barra do Item */
+.hab-bar {
+    display: flex;
+    align-items: center;
+    background: #0e0e12; /* Fundo quase preto */
+    border: 1px solid #222;
+    border-left: 3px solid #444; /* Identidade visual na esquerda */
+    border-radius: 4px;
+    padding: 5px 10px;
+    height: 56px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    position: relative;
+    cursor: default;
+}
+
+/* Efeito Hover */
+.hab-bar:hover {
+    background: #15151b;
+    border-color: #333;
+    border-left-color: #4da; /* Acende a lateral em ciano */
+    transform: translateX(2px); /* Leve movimento para a direita */
+}
+
+/* 1. ÁREA DA FOTO E INFECÇÃO */
+.hab-icon-area {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.hab-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #333;
+}
+
+/* Bolinha de Infecção (Sobreposta) */
+.infection-overlay {
+    position: absolute;
+    bottom: -2px;
+    right: -5px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    z-index: 2;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+
+.infection-overlay.active {
+    opacity: 1;
+    border-color: #bfa12a;
+    background: #000;
+    box-shadow: 0 0 5px rgba(191, 161, 42, 0.5);
+}
+
+.infection-overlay i {
+    font-size: 0.7em;
+    color: #bfa12a;
+}
+
+/* 2. ÁREA DE INFORMAÇÕES (Nome e Função) */
+.hab-info-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hab-name-row {
+    display: flex;
+    align-items: center;
+}
+
+/* O Nome (Clicável para editar) */
+.hab-name-display {
+    font-family: "Segoe UI", sans-serif;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #eee;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s;
+}
+.hab-name-display:hover {
+    color: #4eff8c;
+    text-decoration: underline;
+}
+
+/* Texto da Função (Cinza) */
+.hab-summary-text {
+    font-size: 0.85em;
+    color: #777;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+/* 3. ÁREA DE STATUS (Vida e Botões) */
+.hab-stats-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 10px;
+}
+
+/* Pílula de Vida */
+.hp-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: #050505;
+    border: 1px solid #333;
+    padding: 4px 10px;
+    border-radius: 20px;
+    min-width: 80px;
+    color: #eee;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.hp-pill i {
+    font-size: 0.8em;
+    color: #28a745; /* Verde */
+}
+
+/* Vida Crítica (<= 3) */
+.hp-pill.critical {
+    border-color: #800;
+    background: #250505;
+    color: #f88;
+    animation: pulse 1.5s infinite;
+}
+.hp-pill.critical i { color: #dc3545; }
+
+/* Botões de Controle (Lápis e Lixeira) */
+.hab-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.hab-controls a {
+    color: #444;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.hab-controls a:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.hab-controls a.item-delete:hover {
+    color: #ff4444;
+}
+
+/* Estado Vazio */
+.empty-state-dark {
+    text-align: center;
+    padding: 30px;
+    border: 2px dashed #333;
+    border-radius: 8px;
+    color: #555;
+    font-style: italic;
+    background: rgba(0,0,0,0.2);
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+/* ========================
+   DASHBOARD (CORREÇÃO DE TAMANHO E SIMETRIA)
+   ======================== */
+
+.refugio-dashboard {
+    /* TRAVA O TAMANHO DA SECTION */
+    flex: 0 0 auto;      /* Não deixa o Foundry esticar essa seção */
+    height: 50px;        /* Altura fixa e compacta (o "retângulo vermelho") */
+    box-sizing: border-box; /* Garante que padding não aumente o tamanho */
+    
+    display: flex;
+    gap: 8px;
+    padding: 5px 8px;    /* Padding reduzido */
+    background: #050505;
+    border-bottom: 2px solid #333;
+    width: 100%;
+}
+
+/* Cápsula (Ajustada para caber na altura nova) */
+.stat-pill {
+    /* LARGURA IGUAL PARA TODOS (Simetria) */
+    flex: 1 1 0px;       /* Divide o espaço matematicamente por 3 */
+    width: 0;
+    min-width: 0;
+
+    height: 100%;        /* Ocupa exatamente os 50px do pai */
+    background: #0e1212;
+    border: 1px solid #234;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    overflow: hidden;
+}
+
+.stat-pill:hover { border-color: #4da; background: #111818; }
+
+/* Ícone */
+.pill-icon {
+    font-size: 1.3em;    /* Levemente menor */
+    margin-right: 8px;
+    width: 24px; text-align: center;
+    flex-shrink: 0;
+}
+.stat-pill.defense .pill-icon { color: #44a; }
+.stat-pill.resources .pill-icon { color: #a84; }
+.stat-pill.morale .pill-icon { color: #a44; }
+
+/* Dados */
+.pill-data {
+    display: flex; flex-direction: column; width: 100%; justify-content: center;
+}
+
+.pill-data label {
+    font-size: 0.55em;   /* Letra pequena para caber */
+    color: #678; font-weight: bold; letter-spacing: 1px; margin-bottom: 0; line-height: 1;
+}
+
+/* Valores e Inputs */
+.pill-values {
+    display: flex; align-items: center; justify-content: space-between; width: 100%;
+}
+
+.pill-values input {
+    width: 100% !important;
+    background: transparent; border: none;
+    font-size: 1.3em;    /* Números grandes e visíveis */
+    font-weight: 900; color: #eee;
+    text-align: center; padding: 0; height: 20px;
+}
+.pill-values input.max-input {
+    font-size: 0.9em; color: #555; height: 16px;
+}
+.pill-values .sep { color: #444; font-size: 1em; margin: 0 2px; }
+
+/* Botões +/- */
+.stat-control {
+    width: 16px; height: 16px; /* Botões compactos */
+    background: #111; border: 1px solid #333; border-radius: 3px;
+    color: #666; font-size: 0.6em;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+}
+.stat-control:hover { color: #fff; border-color: #777; background: #222; }
+
+/* =========================================
+   FICHA DE ITEM: HABITANTE (DOSSIÊ)
+   ========================================= */
+
+.item-sheet-habitante {
+    min-height: 400px;
+    background: #0b0c10; /* Fundo Escuro */
+    color: #eee;
+}
+
+/* Ajuste no Header */
+.item-sheet-habitante .sheet-header {
+    background: #111;
+    border-bottom: 2px solid #333;
+    padding: 10px;
+    align-items: center;
+}
+
+.item-sheet-habitante .profile-img {
+    background: #000;
+    border: 1px solid #444;
+    border-radius: 4px;
+}
+
+.item-sheet-habitante .charname input {
+    color: #fff;
+    font-family: "Segoe UI", sans-serif;
+    font-weight: bold;
+}
+
+/* Campo de Responsabilidade */
+.role-container {
+    margin-top: 5px;
+    background: #1a1a20;
+    padding: 5px;
+    border-radius: 4px;
+    border-left: 3px solid #4da; /* Detalhe colorido */
+}
+.role-container label {
+    font-size: 0.7em;
+    color: #4da;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+}
+.role-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #ddd;
+    font-size: 1em;
+}
+.role-input:focus { border-bottom: 1px solid #4da; }
+
+/* Linha de Status (Saúde e Infecção) */
+.status-row {
+    display: flex;
+    gap: 15px;
+    padding: 15px 10px;
+    background: #0e0e12;
+    margin-bottom: 10px;
+}
+
+.status-group {
+    flex: 1;
+    background: #050505;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+}
+
+.status-group label {
+    font-size: 0.8em;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #888;
+}
+.status-group.health label i { color: #d44; }
+.status-group.infection label i { color: #bfa12a; }
+
+.status-group .resource-inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-group input {
+    background: transparent;
+    border: 1px solid #222;
+    color: #eee;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 60px;
+    border-radius: 4px;
+}
+
+/* Área da Bio */
+.bio-section {
+    padding: 0 10px 10px 10px;
+    height: 300px; /* Altura fixa para o editor */
+    display: flex;
+    flex-direction: column;
+}
+
+.bio-label {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #6688aa;
+    margin-bottom: 5px;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 2px;
+}
+
+.bio-editor {
+    flex: 1;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px;
+}
+.bio-editor .editor { height: 100%; }

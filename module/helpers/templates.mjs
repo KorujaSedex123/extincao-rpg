@@ -30,6 +30,9 @@ export const preloadHandlebarsTemplates = async function() {
     "systems/extincao/templates/actor/actor-horda-sheet.hbs",
     
     // 4. Item (Arma)
-    "systems/extincao/templates/item/item-arma-sheet.hbs"
+    "systems/extincao/templates/item/item-arma-sheet.hbs",
+
+    // 5. Refúgio
+    "systems/extincao/templates/actor/actor-refugio-sheet.hbs"
   ]);
 };

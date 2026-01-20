@@ -31,6 +31,9 @@ export class ExtincaoActorSheet extends ActorSheet {
       // Padrão (Sobrevivente)
       return "systems/extincao/templates/actor/actor-sobrevivente-sheet.hbs";
     }
+    if (this.actor.type === 'refugio') {
+      return "systems/extincao/templates/actor/actor-refugio-sheet.hbs";
+    }
 
     return "systems/extincao/templates/actor/actor-sobrevivente-sheet.hbs";
   }
@@ -62,7 +65,7 @@ export class ExtincaoActorSheet extends ActorSheet {
     }
 
     // Prepara itens (Inventário)
-    if (actorData.type == 'sobrevivente' || actorData.type == 'character' || actorData.type == 'npc') {
+    if (actorData.type == 'sobrevivente' || actorData.type == 'character' || actorData.type == 'npc' || actorData.type == 'refugio') {
       this._prepareItems(context);
     }
 
@@ -92,56 +95,77 @@ export class ExtincaoActorSheet extends ActorSheet {
     const equipamentos = [];
     const itens = [];
     const qualidades = [];
+    const habitantes = [];
 
     for (let i of context.items) {
       i.img = i.img || "icons/svg/item-bag.svg";
       if (i.type === 'arma') { armas.push(i); }
       else if (i.type === 'equipamento') { equipamentos.push(i); }
       else if (i.type === 'qualidade' || i.type === 'defeito') { qualidades.push(i); }
-      else { itens.push(i); }
+      else if (i.type === 'projeto') { projetos.push(i); }
+
+      // SE FOR HABITANTE, VAI PARA A LISTA DE GENTE
+      else if (i.type === 'habitante') {
+        i.img = i.img || "icons/svg/mystery-man.svg"; // Ícone padrão de pessoa
+        habitantes.push(i);
+      }
     }
 
     context.armas = armas;
     context.equipamentos = equipamentos;
     context.itens = itens;
     context.qualidades = qualidades;
+    context.habitantes = habitantes;
   }
-
-  /* -------------------------------------------- */
-  /* DRAG AND DROP HANDLER (CORRIGIDO)           */
-  /* -------------------------------------------- */
 
   /** @override */
   async _onDrop(event) {
-    let data;
-    try {
-      // Lê o JSON direto do evento
-      data = JSON.parse(event.dataTransfer.getData("text/plain"));
-    } catch (err) {
-      return false;
-    }
+    const data = TextEditor.getDragEventData(event);
+    const actor = this.actor;
 
-    // Verifica se soltou dentro das nossas zonas de drop
-    const dropZone = event.target.closest(".drop-zone");
+    // ---------------------------------------------------------
+    // LÓGICA ESPECIAL DO REFÚGIO: ATOR -> ITEM HABITANTE
+    // ---------------------------------------------------------
+    if (actor.type === 'refugio' && data.type === 'Actor') {
+      // 1. Busca os dados do Ator que foi arrastado
+      const sourceActor = await fromUuid(data.uuid);
+      if (!sourceActor) return;
 
-    // Se soltou um ATOR dentro de uma ZONA DE DROP
-    if (dropZone && data.type === "Actor") {
-      const connectionType = dropZone.dataset.connection; // "vinculo" ou "atrito"
-
-      // Pega o Ator arrastado
-      const draggedActor = await fromUuid(data.uuid);
-
-      if (draggedActor) {
-        // Salva o ID do ator no campo correto
-        await this.actor.update({
-          [`system.details.${connectionType}_target`]: draggedActor.id
-        });
-        return; // Interrompe o processo padrão
+      // Segurança: Não deixar colocar um Refúgio dentro de outro
+      if (sourceActor.type === 'refugio') {
+        return ui.notifications.warn("Você não pode abrigar um Refúgio dentro de outro!");
       }
+
+      // 2. Prepara os dados para criar o ITEM "Habitante"
+      // Estamos tirando uma "foto" dos status atuais do personagem
+      const habitanteData = {
+        name: sourceActor.name,
+        type: 'habitante', // O tipo de item que definimos no template.json
+        img: sourceActor.img,
+        system: {
+          // Tenta pegar Arquétipo (Sobrevivente) ou Conceito (NPC) para a Função
+          funcao: sourceActor.system.details?.archetype || sourceActor.system.details?.concept || "Sobrevivente",
+
+          // Mapeia Vida (PV)
+          saude: sourceActor.system.resources?.pv?.value ?? 10,
+          maxSaude: sourceActor.system.resources?.pv?.max ?? 10,
+
+          // Mapeia Infecção (Se tiver)
+          infeccao: sourceActor.system.details?.infection ?? 0,
+
+          // Adiciona uma nota automática da origem
+          notas: `Registrado a partir de: ${sourceActor.name}`
+        }
+      };
+
+      // 3. Cria o Item dentro do Refúgio
+      return await this.actor.createEmbeddedDocuments("Item", [habitanteData]);
     }
 
-    // Se não foi nas zonas especiais, deixa o Foundry fazer o padrão
-    super._onDrop(event);
+    // ---------------------------------------------------------
+    // COMPORTAMENTO PADRÃO (Arrastar Armas, Itens, etc.)
+    // ---------------------------------------------------------
+    return super._onDrop(event);
   }
 
   /* -------------------------------------------- */
@@ -398,6 +422,34 @@ export class ExtincaoActorSheet extends ActorSheet {
         content: content,
         speaker: ChatMessage.getSpeaker({ actor: this.actor })
       });
+    });
+
+    html.find('.stat-control').click(async (ev) => {
+      ev.preventDefault();
+      const btn = ev.currentTarget;
+      const target = btn.dataset.target; // ex: 'defesa', 'recursos'
+      const isPlus = btn.classList.contains('plus');
+
+      // 1. Procura em Resources (Vida, Estresse - Sobrevivente)
+      let path = `system.resources.${target}`;
+      let resource = this.actor.system.resources?.[target];
+
+      // 2. Se não achou, procura em Attributes (Defesa, Recursos - Refúgio/Horda)
+      if (!resource) {
+        path = `system.attributes.${target}`;
+        resource = this.actor.system.attributes?.[target];
+      }
+
+      if (!resource) return; // Segurança
+
+      const current = Number(resource.value);
+      const max = Number(resource.max);
+
+      // Calcula novo valor (respeitando min 0 e max)
+      let novoValor = isPlus ? current + 1 : current - 1;
+      novoValor = Math.max(0, Math.min(novoValor, max)); // Trava entre 0 e Max
+
+      await this.actor.update({ [`${path}.value`]: novoValor });
     });
   }
 
