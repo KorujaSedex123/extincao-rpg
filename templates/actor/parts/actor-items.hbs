@@ -1,82 +1,122 @@
 <div class="inventory-layout">
 
-  <div class="inventory-group">
-    <div class="inventory-header flexrow">
-      <h3 class="item-name">ARMAS</h3>
-      <div class="item-detail" style="flex: 0 0 80px;">USO</div>
-      <div class="item-detail">DANO</div>
-      <div class="item-controls">
-        <a class="item-control item-create" title="Add Arma" data-type="arma"><i class="fas fa-plus"></i> Add</a>
-      </div>
-    </div>
-    <ol class="item-list">
-      {{#each armas as |item id|}}
-      <li class="item flexrow" data-item-id="{{item._id}}">
-        <div class="item-image"><img src="{{item.img}}" width="24" height="24" /></div>
-        <h4 class="item-name rollable" data-roll-type="item">{{item.name}}</h4>
-
-        <div class="item-detail" style="flex: 0 0 80px; color: #4eff8c; font-weight:bold;">{{system.uso}}</div>
-
-        <div class="item-detail">{{system.dano}}</div>
-        <div class="item-controls">
-          <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
-          <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+    <div class="inventory-group">
+        <div class="inventory-header flexrow">
+            <h3 class="item-name">ARMAS</h3>
+            <div class="item-detail" style="flex: 0 0 60px;">USO</div>
+            <div class="item-detail" style="flex: 0 0 60px;">DANO</div>
+            <div class="item-controls">
+                <a class="item-control item-create" title="Adicionar Arma" data-type="arma">
+                    <i class="fas fa-plus"></i> Add
+                </a>
+            </div>
         </div>
-      </li>
-      {{/each}}
-    </ol>
-  </div>
+        <ol class="item-list">
+            {{#each armas as |item id|}}
+            <li class="item flexrow" data-item-id="{{item._id}}">
+                <div class="item-image item-open" style="cursor: pointer;">
+                    <img src="{{item.img}}" width="24" height="24" />
+                </div>
+                
+                <h4 class="item-name item-open" style="cursor: pointer; color: #aaddff;">
+                    {{item.name}}
+                </h4>
 
-  <div class="inventory-group">
-    <div class="inventory-header flexrow">
-      <h3 class="item-name">EQUIPAMENTOS</h3>
-      <div class="item-detail">QTD</div>
-      <div class="item-controls">
-        <a class="item-control item-create" title="Add Equip" data-type="equipamento"><i class="fas fa-plus"></i>
-          Add</a>
-      </div>
+                <div class="item-detail" style="flex: 0 0 60px; color: #4eff8c; font-weight:bold; text-align: center;">
+                    {{item.system.uso}}
+                </div>
+
+                <div class="item-detail" style="flex: 0 0 60px; color: #ff4444; font-weight:bold; text-align: center;">
+                    {{item.system.dano}}
+                </div>
+
+                <div class="item-controls">
+                    <a class="item-control item-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                    <a class="item-control item-delete" title="Excluir"><i class="fas fa-trash"></i></a>
+                </div>
+            </li>
+            {{/each}}
+        </ol>
     </div>
-    <ol class="item-list">
-      {{#each equipamentos as |item id|}}
-      <li class="item flexrow" data-item-id="{{item._id}}">
-        <div class="item-image"><img src="{{item.img}}" width="24" height="24" /></div>
-        <h4 class="item-name">{{item.name}}</h4>
 
-        {{#if system.isArmor}}
-        <span title="Armadura: {{system.armor}}" style="color:#aaa; margin-right:5px;"><i class="fas fa-shield-alt"></i>
-          {{system.armor}}</span>
-        {{/if}}
-
-        <div class="item-detail">{{system.quantity}}</div>
-        <div class="item-controls">
-          <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
-          <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+    <div class="inventory-group">
+        <div class="inventory-header flexrow">
+            <h3 class="item-name">EQUIPAMENTOS</h3>
+            <div class="item-detail" style="flex: 0 0 60px;">QTD</div>
+            <div class="item-controls">
+                <a class="item-control item-create" title="Adicionar Equipamento" data-type="equipamento">
+                    <i class="fas fa-plus"></i> Add
+                </a>
+            </div>
         </div>
-      </li>
-      {{/each}}
-    </ol>
-  </div>
+        <ol class="item-list">
+            {{#each equipamentos as |item id|}}
+            <li class="item flexrow" data-item-id="{{item._id}}">
+                <div class="item-image item-open" style="cursor: pointer;">
+                    <img src="{{item.img}}" width="24" height="24" />
+                </div>
+                
+                <h4 class="item-name item-open" style="cursor: pointer;">
+                    {{item.name}}
+                </h4>
 
-  <div class="inventory-group">
-    <div class="inventory-header flexrow">
-      <h3 class="item-name">DIVERSOS</h3>
-      <div class="item-detail">QTD</div>
-      <div class="item-controls">
-        <a class="item-control item-create" title="Add Item" data-type="item"><i class="fas fa-plus"></i> Add</a>
-      </div>
+                {{#if item.system.isArmor}}
+                <span title="Valor de Armadura" style="color:#aaa; margin-right:10px; font-size: 0.9em;">
+                    <i class="fas fa-shield-alt"></i> {{item.system.armor}}
+                </span>
+                {{/if}}
+
+                <div class="item-detail" style="flex: 0 0 60px; text-align: center;">
+                    {{item.system.quantity}}
+                </div>
+
+                <div class="item-controls">
+                    <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
+                    <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+                </div>
+            </li>
+            {{/each}}
+        </ol>
     </div>
-    <ol class="item-list">
-      {{#each itens as |item id|}}
-      <li class="item flexrow" data-item-id="{{item._id}}">
-        <div class="item-image"><img src="{{item.img}}" width="24" height="24" /></div>
-        <h4 class="item-name">{{item.name}}</h4>
-        <div class="item-detail">{{system.quantity}}</div>
-        <div class="item-controls">
-          <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
-          <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+
+    <div class="inventory-group">
+        <div class="inventory-header flexrow">
+            <h3 class="item-name">DIVERSOS / SUCATA</h3>
+            <div class="item-detail" style="flex: 0 0 60px;">QTD</div>
+            <div class="item-controls">
+                <a class="item-control item-create" title="Adicionar Item" data-type="item">
+                    <i class="fas fa-plus"></i> Add
+                </a>
+            </div>
         </div>
-      </li>
-      {{/each}}
-    </ol>
-  </div>
+        <ol class="item-list">
+            {{#each itens as |item id|}}
+            <li class="item flexrow" data-item-id="{{item._id}}">
+                <div class="item-image item-open" style="cursor: pointer;">
+                    <img src="{{item.img}}" width="24" height="24" />
+                </div>
+                
+                <h4 class="item-name item-open" style="cursor: pointer; color: #bbccdd;">
+                    {{item.name}}
+                </h4>
+
+                <div class="item-detail" style="flex: 0 0 60px; text-align: center; color: #888;">
+                    {{item.system.quantity}}
+                </div>
+
+                <div class="item-controls">
+                    <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
+                    <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+                </div>
+            </li>
+            {{/each}}
+            
+            {{#unless itens}}
+            <li class="item flexrow" style="padding: 5px; color: #444; font-size: 0.8em; justify-content: center; border: 1px dashed #222;">
+                Nenhum item diverso.
+            </li>
+            {{/unless}}
+        </ol>
+    </div>
+
 </div>
