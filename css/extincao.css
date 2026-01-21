@@ -2085,3 +2085,39 @@
     50% { transform: scale(1.1); opacity: 1; filter: invert(1) drop-shadow(0 0 15px #4da); }
     100% { transform: scale(1); opacity: 0.8; }
 }
+
+/* Botão de Evoluir (Miniatura na Imagem) */
+.profile-img-container {
+    position: relative; /* Garante que o botão fique posicionado relativo à imagem */
+}
+
+.level-up-btn {
+    position: absolute;
+    bottom: 0px;        /* Cola na parte de baixo */
+    right: 0px;         /* Cola na direita */
+    
+    width: 25px;
+    height: 25px;
+    
+    background: #0a0a0a;
+    border: 1px solid #4da;
+    border-radius: 4px; /* Levemente arredondado */
+    color: #4da;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-size: 0.8em;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 5px rgba(0,0,0,0.8);
+}
+
+.level-up-btn:hover {
+    background: #4da;
+    color: #000;
+    box-shadow: 0 0 10px #4da;
+    transform: scale(1.1);
+}

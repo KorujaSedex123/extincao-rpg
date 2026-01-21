@@ -5,15 +5,18 @@
 
             <div class="profile-img-container">
                 <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+                
                 {{#if isLocked}}<i class="fas fa-lock lock-status" title="Ficha Travada"></i>{{/if}}
+
+                <a class="level-up-btn" title="Fim de Sessão (Evoluir)">
+                    <i class="fas fa-arrow-up"></i>
+                </a>
             </div>
 
             <div class="header-main">
-
                 <div class="header-row-top">
                     <h1 class="charname">
-                        <input name="name" type="text" value="{{actor.name}}" placeholder="NOME DO AGENTE" {{#if
-                            isLocked}}readonly{{/if}} />
+                        <input name="name" type="text" value="{{actor.name}}" placeholder="NOME DO AGENTE" {{#if isLocked}}readonly{{/if}} />
                     </h1>
 
                     <div class="archetype-box">
@@ -34,57 +37,34 @@
                 <div class="header-row-middle">
                     <div class="stress-bar-compact">
                         <span class="label-mini">ESTRESSE</span>
-
                         <a class="stress-control minus"><i class="fas fa-minus"></i></a>
-
                         <div class="stress-track">
-                            <a class="stress-box {{#if (gte system.resources.estresse.value 1)}}active{{/if}}"
-                                data-index="1"></a>
-                            <a class="stress-box {{#if (gte system.resources.estresse.value 2)}}active{{/if}}"
-                                data-index="2"></a>
-                            <a class="stress-box {{#if (gte system.resources.estresse.value 3)}}active{{/if}}"
-                                data-index="3"></a>
-                            <a class="stress-box {{#if (gte system.resources.estresse.value 4)}}active{{/if}}"
-                                data-index="4"></a>
-                            <a class="stress-box {{#if (gte system.resources.estresse.value 5)}}active{{/if}}"
-                                data-index="5"></a>
-                            <a class="stress-box {{#if (gte system.resources.estresse.value 6)}}active{{/if}}"
-                                data-index="6"></a>
+                            <a class="stress-box {{#if (gte system.resources.estresse.value 1)}}active{{/if}}" data-index="1"></a>
+                            <a class="stress-box {{#if (gte system.resources.estresse.value 2)}}active{{/if}}" data-index="2"></a>
+                            <a class="stress-box {{#if (gte system.resources.estresse.value 3)}}active{{/if}}" data-index="3"></a>
+                            <a class="stress-box {{#if (gte system.resources.estresse.value 4)}}active{{/if}}" data-index="4"></a>
+                            <a class="stress-box {{#if (gte system.resources.estresse.value 5)}}active{{/if}}" data-index="5"></a>
+                            <a class="stress-box {{#if (gte system.resources.estresse.value 6)}}active{{/if}}" data-index="6"></a>
                         </div>
-
                         <a class="stress-control plus"><i class="fas fa-plus"></i></a>
                     </div>
                 </div>
 
                 <div class="header-row-bottom">
-
                     <div class="mini-infection">
                         <span class="label-mini"><i class="fas fa-biohazard"></i> VÍRUS</span>
                         <div class="stages-mini">
-                            <a class="stage-dot {{#if (eq system.details.infection '0')}}active safe{{/if}}"
-                                data-value="0" title="Saudável"></a>
-                            <a class="stage-dot {{#if (eq system.details.infection '1')}}active warn{{/if}}"
-                                data-value="1" title="Incubação"></a>
-                            <a class="stage-dot {{#if (eq system.details.infection '2')}}active danger{{/if}}"
-                                data-value="2" title="Febre (-1d6)"></a>
-                            <a class="stage-dot {{#if (eq system.details.infection '3')}}active critical{{/if}}"
-                                data-value="3" title="Necrose (-2d6)"></a>
+                            <a class="stage-dot {{#if (eq system.details.infection '0')}}active safe{{/if}}" data-value="0" title="Saudável"></a>
+                            <a class="stage-dot {{#if (eq system.details.infection '1')}}active warn{{/if}}" data-value="1" title="Incubação"></a>
+                            <a class="stage-dot {{#if (eq system.details.infection '2')}}active danger{{/if}}" data-value="2" title="Febre (-1d6)"></a>
+                            <a class="stage-dot {{#if (eq system.details.infection '3')}}active critical{{/if}}" data-value="3" title="Necrose (-2d6)"></a>
                         </div>
                     </div>
 
                     <div class="mini-conditions">
-                        <a class="condition-btn {{#if system.conditions.fome}}active{{/if}}" data-prop="fome"
-                            title="Fome">
-                            <i class="fas fa-utensils"></i>
-                        </a>
-                        <a class="condition-btn {{#if system.conditions.sede}}active{{/if}}" data-prop="sede"
-                            title="Sede">
-                            <i class="fas fa-tint"></i>
-                        </a>
-                        <a class="condition-btn {{#if system.conditions.exausto}}active{{/if}}" data-prop="exausto"
-                            title="Exausto">
-                            <i class="fas fa-bed"></i>
-                        </a>
+                        <a class="condition-btn {{#if system.conditions.fome}}active{{/if}}" data-prop="fome" title="Fome"><i class="fas fa-utensils"></i></a>
+                        <a class="condition-btn {{#if system.conditions.sede}}active{{/if}}" data-prop="sede" title="Sede"><i class="fas fa-tint"></i></a>
+                        <a class="condition-btn {{#if system.conditions.exausto}}active{{/if}}" data-prop="exausto" title="Exausto"><i class="fas fa-bed"></i></a>
                     </div>
                 </div>
             </div>
@@ -94,26 +74,20 @@
                     <label>VIDA</label>
                     <div class="resource-inputs">
                         <a class="stat-control minus" data-target="pv"><i class="fas fa-minus"></i></a>
-                        <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}"
-                            {{#if isLocked}}readonly{{/if}} />
+                        <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" {{#if isLocked}}readonly{{/if}} />
                         <a class="stat-control plus" data-target="pv"><i class="fas fa-plus"></i></a>
-
                         <span class="sep">/</span>
-                        <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}"
-                            readonly />
+                        <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" readonly />
                     </div>
                 </div>
                 <div class="resource-box stamina">
                     <label>RESISTÊNCIA (PR)</label>
                     <div class="resource-inputs">
                         <a class="stat-control minus" data-target="pr"><i class="fas fa-minus"></i></a>
-                        <input type="number" name="system.resources.pr.value" value="{{system.resources.pr.value}}"
-                            {{#if isLocked}}readonly{{/if}} />
+                        <input type="number" name="system.resources.pr.value" value="{{system.resources.pr.value}}" {{#if isLocked}}readonly{{/if}} />
                         <a class="stat-control plus" data-target="pr"><i class="fas fa-plus"></i></a>
-
                         <span class="sep">/</span>
-                        <input type="number" name="system.resources.pr.max" value="{{system.resources.pr.max}}"
-                            readonly />
+                        <input type="number" name="system.resources.pr.max" value="{{system.resources.pr.max}}" readonly />
                     </div>
                 </div>
             </div>
@@ -129,14 +103,12 @@
     <section class="sheet-body">
 
         <div class="tab main" data-group="primary" data-tab="main">
+            
             <div class="attributes-section">
                 {{#each system.attributes as |attr key|}}
                 <div class="attr-box-standalone">
-                    <div class="attr-header {{#if ../isLocked}}rollable hover-glow{{/if}}" data-key="{{key}}"
-                        data-label="{{attr.label}}">
-
-                        <input type="number" class="attr-val-input" name="system.attributes.{{key}}.value"
-                            value="{{attr.value}}" {{#if ../isLocked}}readonly{{/if}} />
+                    <div class="attr-header {{#if ../isLocked}}rollable hover-glow{{/if}}" data-key="{{key}}" data-label="{{attr.label}}">
+                        <input type="number" class="attr-val-input" name="system.attributes.{{key}}.value" value="{{attr.value}}" {{#if ../isLocked}}readonly{{/if}} />
                         <div class="attr-label">{{attr.label}}</div>
                     </div>
                 </div>
@@ -154,6 +126,13 @@
                         {{#each ../system.skills as |skill sKey|}}
                         {{#if (eq skill.attribute key)}}
                         <div class="skill-item">
+                            
+                            <div class="skill-fail-check" style="margin-right: 5px; display:flex; align-items:center;">
+                                <input type="checkbox" name="system.skills.{{sKey}}.failure" {{checked skill.failure}} 
+                                       title="Falhou em teste? Marque para evoluir." 
+                                       style="width:14px; height:14px; accent-color:#4da; cursor:pointer;"/>
+                            </div>
+
                             <span class="skill-name {{#if ../../isLocked}}rollable{{/if}}" data-key="{{sKey}}"
                                 data-roll-type="skill" data-label="{{skill.label}}">{{skill.label}}</span>
 
@@ -173,45 +152,36 @@
         </div>
 
         <div class="tab bio" data-group="primary" data-tab="bio">
-
             <div class="dossier-header">
                 <div class="dossier-title">DADOS DO SUJEITO</div>
-
                 <div class="dossier-grid">
                     <div class="clean-field">
                         <label>IDADE</label>
-                        <input type="text" name="system.details.age" value="{{system.details.age}}" placeholder="--"
-                            {{#if isLocked}}readonly{{/if}} />
+                        <input type="text" name="system.details.age" value="{{system.details.age}}" placeholder="--" {{#if isLocked}}readonly{{/if}} />
                     </div>
                     <div class="clean-field">
                         <label>ALTURA</label>
-                        <input type="text" name="system.details.height" value="{{system.details.height}}"
-                            placeholder="--" {{#if isLocked}}readonly{{/if}} />
+                        <input type="text" name="system.details.height" value="{{system.details.height}}" placeholder="--" {{#if isLocked}}readonly{{/if}} />
                     </div>
                     <div class="clean-field">
                         <label>PESO</label>
-                        <input type="text" name="system.details.weight" value="{{system.details.weight}}"
-                            placeholder="--" {{#if isLocked}}readonly{{/if}} />
+                        <input type="text" name="system.details.weight" value="{{system.details.weight}}" placeholder="--" {{#if isLocked}}readonly{{/if}} />
                     </div>
                     <div class="clean-field">
                         <label>TIPO SANG.</label>
-                        <input type="text" name="system.details.blood" value="{{system.details.blood}}" placeholder="--"
-                            {{#if isLocked}}readonly{{/if}} />
+                        <input type="text" name="system.details.blood" value="{{system.details.blood}}" placeholder="--" {{#if isLocked}}readonly{{/if}} />
                     </div>
                 </div>
             </div>
 
             <div class="relations-section">
-
                 <div class="relation-box bond">
                     <div class="relation-header">
                         <label><i class="fas fa-link"></i> VÍNCULO</label>
                         {{#unless isLocked}}
-                        <a class="recover-stress-btn" title="Recuperar 1 Estresse"><i class="fas fa-heartbeat"></i>
-                            AJUDAR</a>
+                        <a class="recover-stress-btn" title="Recuperar 1 Estresse"><i class="fas fa-heartbeat"></i> AJUDAR</a>
                         {{/unless}}
                     </div>
-
                     <div class="drop-zone" data-connection="vinculo">
                         {{#if vinculoActor}}
                         <div class="linked-actor">
@@ -222,14 +192,10 @@
                             {{/unless}}
                         </div>
                         {{else}}
-                        <div class="empty-drop">
-                            <i class="fas fa-user-plus"></i> Arraste Aliado Aqui
-                        </div>
+                        <div class="empty-drop"><i class="fas fa-user-plus"></i> Arraste Aliado Aqui</div>
                         {{/if}}
                     </div>
-
-                    <textarea name="system.details.vinculo" placeholder="Motivo do vínculo..." {{#if
-                        isLocked}}readonly{{/if}}>{{system.details.vinculo}}</textarea>
+                    <textarea name="system.details.vinculo" placeholder="Motivo do vínculo..." {{#if isLocked}}readonly{{/if}}>{{system.details.vinculo}}</textarea>
                 </div>
 
                 <div class="relation-box friction">
@@ -237,7 +203,6 @@
                         <label><i class="fas fa-exclamation-triangle"></i> ATRITO</label>
                         <span class="xp-hint">Gera XP</span>
                     </div>
-
                     <div class="drop-zone" data-connection="atrito">
                         {{#if atritoActor}}
                         <div class="linked-actor">
@@ -248,27 +213,19 @@
                             {{/unless}}
                         </div>
                         {{else}}
-                        <div class="empty-drop">
-                            <i class="fas fa-user-slash"></i> Arraste Rival Aqui
-                        </div>
+                        <div class="empty-drop"><i class="fas fa-user-slash"></i> Arraste Rival Aqui</div>
                         {{/if}}
                     </div>
-
-                    <textarea name="system.details.atrito" placeholder="Motivo do conflito..." {{#if
-                        isLocked}}readonly{{/if}}>{{system.details.atrito}}</textarea>
+                    <textarea name="system.details.atrito" placeholder="Motivo do conflito..." {{#if isLocked}}readonly{{/if}}>{{system.details.atrito}}</textarea>
                 </div>
-
             </div>
 
             <div class="dossier-body">
                 <div class="dossier-title">REGISTROS / HISTÓRICO</div>
                 <div class="bio-paper dark-editor">
-                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=(not
-                    isLocked)}}
+                    {{editor enrichedBiography target="system.details.biography" button=true owner=owner editable=(not isLocked)}}
                 </div>
             </div>
-
         </div>
-
     </section>
 </form>

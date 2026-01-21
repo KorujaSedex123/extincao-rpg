@@ -209,6 +209,8 @@ export class ExtincaoActorSheet extends ActorSheet {
       await this.actor.setFlag("extincao", "sheetLocked", !currentState);
     });
 
+    html.find('.level-up-btn').click(this._onLevelUp.bind(this));
+
     // Inputs de Bolinha (Inspecionar/Infecção)
     html.find('.stage-dot').click(async (ev) => {
       ev.preventDefault();
@@ -531,5 +533,95 @@ export class ExtincaoActorSheet extends ActorSheet {
    */
   async _processRoll(dataset, item = null) {
     return taskRoll(this.actor, dataset, item);
+  }
+
+  /**
+     * Processa a evolução das perícias marcadas (Versão Visual Melhorada)
+     */
+  async _onLevelUp(event) {
+    event.preventDefault();
+
+    const confirm = await Dialog.confirm({
+      title: "Finalizar Sessão?",
+      content: "<p>Deseja evoluir todas as perícias marcadas com falha? (+1 Nível)</p>"
+    });
+
+    if (!confirm) return;
+
+    const updates = {};
+    const skills = this.actor.system.skills;
+    let skillRows = "";
+    let count = 0;
+
+    for (let [key, skill] of Object.entries(skills)) {
+      if (skill.failure) {
+        updates[`system.skills.${key}.value`] = skill.value + 1;
+        updates[`system.skills.${key}.failure`] = false;
+
+        // --- CORREÇÃO DO NOME ---
+        // Tenta traduzir. Se não achar, usa o Label da perícia ou formata a chave.
+        let label = game.i18n.localize(`EXTINCAO.Skill.${key}`);
+        if (label.startsWith("EXTINCAO.Skill.")) {
+          label = skill.label || key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ");
+        }
+
+        // --- HTML DA LINHA DA PERÍCIA ---
+        skillRows += `
+                <div style="display: flex; justify-content: space-between; align-items: center; 
+                            background: rgba(255, 255, 255, 0.03); padding: 6px 10px; margin-bottom: 4px; 
+                            border-left: 3px solid #4da; border-radius: 0 4px 4px 0; border-bottom: 1px solid #222;">
+                    <span style="font-weight: bold; color: #eee; text-transform: uppercase; font-size: 0.9em; letter-spacing: 0.5px;">
+                        ${label}
+                    </span>
+                    <div style="color: #4da; font-family: monospace; font-weight: bold; font-size: 1.1em;">
+                        <span style="color:#666;">${skill.value}</span>
+                        <i class="fas fa-caret-right" style="color: #666; margin: 0 5px;"></i>
+                        <span style="color:#4da; text-shadow: 0 0 5px rgba(77, 221, 170, 0.4);">${skill.value + 1}</span>
+                    </div>
+                </div>`;
+        count++;
+      }
+    }
+
+    if (count > 0) {
+      await this.actor.update(updates);
+
+      // --- HTML DO CARD COMPLETO ---
+      const content = `
+        <div class="extincao-chat-card" style="background: #080808; border: 1px solid #333; border-left: 4px solid #4da; box-shadow: 0 0 15px rgba(77, 221, 170, 0.1);">
+            
+            <div style="padding: 10px; background: linear-gradient(90deg, #111 0%, #050505 100%); border-bottom: 1px solid #333; display: flex; align-items: center;">
+                <div style="background: #4da; color: #000; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 10px; box-shadow: 0 0 8px #4da;">
+                    <i class="fas fa-level-up-alt"></i>
+                </div>
+                <div>
+                    <h3 style="margin: 0; color: #4da; font-family: 'Courier New', monospace; font-size: 1.1em; letter-spacing: 1px; text-transform: uppercase;">
+                        EVOLUÇÃO REGISTRADA
+                    </h3>
+                    <div style="font-size: 0.65em; color: #666;">PROTOCOLO DE APRENDIZADO</div>
+                </div>
+            </div>
+
+            <div style="padding: 12px; color: #ccc; font-family: 'Segoe UI', sans-serif; font-size: 0.9em;">
+                <div style="margin-bottom: 12px; font-style: italic; color: #888; border-bottom: 1px dashed #333; padding-bottom: 8px;">
+                    "O que não te mata, te torna mais letal."
+                    <br>O sobrevivente assimilou novas técnicas:
+                </div>
+                
+                ${skillRows}
+                
+                <div style="margin-top: 15px; text-align: right; font-size: 0.75em; color: #555;">
+                    <i class="fas fa-check-circle"></i> SESSÃO FINALIZADA
+                </div>
+            </div>
+        </div>`;
+
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        content: content
+      });
+    } else {
+      ui.notifications.info("Nenhuma perícia marcada para evolução.");
+    }
   }
 }

@@ -3,7 +3,7 @@
  * Responsável por gerenciar modais, regras de desespero e chat cards.
  */
 export async function taskRoll(actor, dataset, item = null) {
-    
+
     // 1. Definições Iniciais
     let baseDice = 0;
     // Tradução: "Rolagem"
@@ -13,46 +13,46 @@ export async function taskRoll(actor, dataset, item = null) {
 
     // Mapa de Atributos para Perícias
     const SKILL_MAP = {
-      "briga": "for", "armas_brancas": "for", "atletismo": "for",
-      "armas_fogo": "des", "furtividade": "des", "pilotagem": "des", "ladinagem": "des", "esquiva": "des",
-      "vigor": "con",
-      "medicina": "int", "tecnologia": "int", "investigacao": "int", "sobrevivencia": "int", "ciencias": "int",
-      "percepcao": "per", "atencao": "per", "intuicao": "per",
-      "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
+        "briga": "for", "armas_brancas": "for", "atletismo": "for",
+        "armas_fogo": "des", "furtividade": "des", "pilotagem": "des", "ladinagem": "des", "esquiva": "des",
+        "vigor": "con",
+        "medicina": "int", "tecnologia": "int", "investigacao": "int", "sobrevivencia": "int", "ciencias": "int",
+        "percepcao": "per", "atencao": "per", "intuicao": "per",
+        "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
     };
 
     // A. Lógica de Perícias
     if (dataset.rollType === 'skill') {
-      const skillKey = dataset.key;
-      const skill = actor.system.skills[skillKey];
-      const attrKey = SKILL_MAP[skillKey] || "int";
-      const attributeValue = actor.system.attributes[attrKey]?.value || 0;
-      
-      baseDice = attributeValue + skill.value;
-      
-      // Regra de Especialista
-      if (skill.value >= 4) isSpecialist = true;
-      
-      label = `${label} (${attributeValue.toString().toUpperCase()} + ${skill.value})`;
-    } 
+        const skillKey = dataset.key;
+        const skill = actor.system.skills[skillKey];
+        const attrKey = SKILL_MAP[skillKey] || "int";
+        const attributeValue = actor.system.attributes[attrKey]?.value || 0;
+
+        baseDice = attributeValue + skill.value;
+
+        // Regra de Especialista
+        if (skill.value >= 4) isSpecialist = true;
+
+        label = `${label} (${attributeValue.toString().toUpperCase()} + ${skill.value})`;
+    }
     // B. Lógica de Atributos
     else if (dataset.key) {
-      baseDice = actor.system.attributes[dataset.key]?.value || 0;
-    } 
+        baseDice = actor.system.attributes[dataset.key]?.value || 0;
+    }
     // C. Lógica de Itens
     else if (dataset.rollType === 'item' && item) {
-      baseDice = Number(item.system.bonus) || 1; 
-      const damage = item.system.dano || "0";
-      // Tradução: "Ataque: Nome"
-      label = `${game.i18n.localize("EXTINCAO.Roll.Attack")}: ${item.name}`;
-      damageInfo = damage;
-    } 
+        baseDice = Number(item.system.bonus) || 1;
+        const damage = item.system.dano || "0";
+        // Tradução: "Ataque: Nome"
+        label = `${game.i18n.localize("EXTINCAO.Roll.Attack")}: ${item.name}`;
+        damageInfo = damage;
+    }
     // D. Lógica de NPC
     else if (dataset.rollType === 'npc-attack') {
-      baseDice = actor.system.attributes.attack.value || 1;
-      damageInfo = actor.system.attributes.damage.value || "1";
+        baseDice = actor.system.attributes.attack.value || 1;
+        damageInfo = actor.system.attributes.damage.value || "1";
     } else if (dataset.rollType === 'npc-defense') {
-      baseDice = actor.system.attributes.defense.value || 1;
+        baseDice = actor.system.attributes.defense.value || 1;
     }
 
     // 2. CONSTRUÇÃO DO MODAL (HTML com Traduções)
@@ -90,16 +90,16 @@ export async function taskRoll(actor, dataset, item = null) {
                     callback: async (html) => {
                         const modifier = Number(html.find('[name="modifier"]').val()) || 0;
                         const forceDesperation = html.find('[name="forceDesperation"]').is(':checked');
-                        
+
                         let finalDiceCount = baseDice + modifier;
                         let isDesperate = false;
-                        let glitchThreshold = 1; 
+                        let glitchThreshold = 1;
 
                         // Lógica de Desespero
                         if (finalDiceCount <= 0 || forceDesperation) {
                             if (finalDiceCount <= 0) finalDiceCount = 1;
                             isDesperate = true;
-                            glitchThreshold = 3; 
+                            glitchThreshold = 3;
                             // Tradução: "(DESESPERO)"
                             label += ` <span style='color:#f44; font-weight:bold;'>${game.i18n.localize("EXTINCAO.Roll.DesperationTag")}</span>`;
                         }
@@ -122,8 +122,8 @@ export async function taskRoll(actor, dataset, item = null) {
                         for (let die of diceResults) {
                             const val = die.result;
                             let cssClass = "";
-                            if (val === 6) { successCount++; hasCrit = true; cssClass = "crit"; } 
-                            else if (val >= targetNumber) { successCount++; cssClass = "success"; } 
+                            if (val === 6) { successCount++; hasCrit = true; cssClass = "crit"; }
+                            else if (val >= targetNumber) { successCount++; cssClass = "success"; }
                             else if (val <= glitchThreshold) { onesCount++; cssClass = "glitch"; }
                             diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
                         }
@@ -137,19 +137,39 @@ export async function taskRoll(actor, dataset, item = null) {
                             // SUCESSO
                             borderSideColor = "#4eff8c";
                             if (actor.type === 'npc') borderSideColor = "#f44";
-                            
+
                             // Tradução: "CRÍTICO!"
                             const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">${game.i18n.localize("EXTINCAO.Roll.Critical")}</div>` : "";
-                            
+
                             let damageHtml = "";
                             if (damageInfo && damageInfo !== "0") {
                                 // Tradução: "DANO: valor"
-                                damageHtml = `<div style="margin-top:5px; border-top:1px solid #333; padding-top:2px; font-weight:bold; color:${actor.type==='npc'?'#f44':'#ccc'}">${game.i18n.localize("EXTINCAO.Roll.Damage")}: ${damageInfo}</div>`;
+                                damageHtml = `<div style="margin-top:5px; border-top:1px solid #333; padding-top:2px; font-weight:bold; color:${actor.type === 'npc' ? '#f44' : '#ccc'}">${game.i18n.localize("EXTINCAO.Roll.Damage")}: ${damageInfo}</div>`;
                             }
-                            
+
                             // Tradução: "SUCESSO(S)"
-                            outcomeHTML = `<div class="roll-result success" style="${actor.type==='npc'?'color:#f44; border-color:#f44; background:#210;':''}"> ${successCount} ${game.i18n.localize("EXTINCAO.Roll.Success")} ${critText} </div> ${damageHtml}`;
+                            outcomeHTML = `<div class="roll-result success" style="${actor.type === 'npc' ? 'color:#f44; border-color:#f44; background:#210;' : ''}"> ${successCount} ${game.i18n.localize("EXTINCAO.Roll.Success")} ${critText} </div> ${damageHtml}`;
                         } else {
+
+                            // --- AUTOMAÇÃO DE APRENDIZADO (NOVO) ---
+                            // Se for uma rolagem de Perícia E falhou
+                            if (dataset.rollType === 'skill' && actor) {
+                                // Verifica se a perícia já não está marcada
+                                const skillKey = dataset.key;
+                                const isMarked = actor.system.skills[skillKey].failure;
+
+                                if (!isMarked) {
+                                    // Marca a falha no ator automaticamente
+                                    await actor.update({ [`system.skills.${skillKey}.failure`]: true });
+
+                                    // Avisa no chat (Opcional, mas legal)
+                                    ChatMessage.create({
+                                        content: `<em style="font-size:0.8em; color:#888;">${actor.name} aprendeu com seu erro em ${label}... (Marcado para evolução)</em>`,
+                                        speaker: ChatMessage.getSpeaker({ actor: actor })
+                                    });
+                                }
+                            }
+
                             // FALHA
                             if (onesCount > 0) {
                                 borderSideColor = "#f44";
@@ -161,7 +181,7 @@ export async function taskRoll(actor, dataset, item = null) {
                                 // Tradução: "FALHA"
                                 outcomeHTML = `<div class="roll-result failure">${game.i18n.localize("EXTINCAO.Roll.Failure")}</div>`;
                             }
-                            
+
                             // Botão de Forçar (Macro Support)
                             if (actor.type === 'sobrevivente' && !isDesperate) {
                                 const rollData = { actorId: actor.id, diceCount: finalDiceCount, targetNumber: targetNumber, label: label };
