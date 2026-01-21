@@ -86,35 +86,52 @@ export class ExtincaoActorSheet extends ActorSheet {
 
     return context;
   }
-
   /**
-   * Organiza os itens em categorias
-   */
+    * Organiza os itens em categorias para facilitar o uso no HTML
+    */
   _prepareItems(context) {
+    // 1. Cria as gavetas (listas) vazias
     const armas = [];
     const equipamentos = [];
-    const itens = [];
+    const itens = [];       // <--- ESTA É A GAVETA DE DIVERSOS
     const qualidades = [];
+    const projetos = [];
     const habitantes = [];
 
+    // 2. Separa cada item na gaveta certa
     for (let i of context.items) {
       i.img = i.img || "icons/svg/item-bag.svg";
-      if (i.type === 'arma') { armas.push(i); }
-      else if (i.type === 'equipamento') { equipamentos.push(i); }
-      else if (i.type === 'qualidade' || i.type === 'defeito') { qualidades.push(i); }
-      else if (i.type === 'projeto') { projetos.push(i); }
 
-      // SE FOR HABITANTE, VAI PARA A LISTA DE GENTE
+      // -- SEPARAÇÃO --
+      if (i.type === 'arma') {
+        armas.push(i);
+      }
+      else if (i.type === 'equipamento') {
+        equipamentos.push(i);
+      }
+      else if (i.type === 'qualidade' || i.type === 'defeito') {
+        qualidades.push(i);
+      }
       else if (i.type === 'habitante') {
-        i.img = i.img || "icons/svg/mystery-man.svg"; // Ícone padrão de pessoa
+        i.img = i.img || "icons/svg/mystery-man.svg";
         habitantes.push(i);
+      }
+      else if (i.type === 'projeto') {
+        projetos.push(i);
+      }
+
+      // 3. TUDO O RESTO VAI PARA DIVERSOS
+      else {
+        itens.push(i);  // <--- AQUI ELE GUARDA O ITEM GENÉRICO
       }
     }
 
+    // 4. Entrega as listas prontas para o HTML usar
     context.armas = armas;
     context.equipamentos = equipamentos;
-    context.itens = itens;
+    context.itens = itens;      // <--- IMPORTANTE: ENVIA A LISTA 'itens'
     context.qualidades = qualidades;
+    context.projetos = projetos;
     context.habitantes = habitantes;
   }
 
