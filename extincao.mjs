@@ -3,21 +3,25 @@
  * Arquivo principal de inicialização
  */
 
-// Importa as nossas classes de Ficha (certifique-se que os arquivos na pasta module/sheets têm esses nomes de classe)
+// 1. IMPORTA AS CLASSES DE DOCUMENTO (Isso traz a função .roll() para o sistema)
+import { ExtincaoActor } from "./module/documents/actor.mjs";
+import { ExtincaoItem } from "./module/documents/item.mjs";
+
+// Importa as nossas classes de Ficha
 import { preloadHandlebarsTemplates } from "./module/helpers/templates.mjs";
 import { ExtincaoActorSheet } from "./module/sheets/actor-sheet.mjs";
 import { ExtincaoItemSheet } from "./module/sheets/item-sheet.mjs";
 
 /* -------------------------------------------- */
-/* Inicialização do Sistema                    */
+/* Inicialização do Sistema                     */
 /* -------------------------------------------- */
 
 Hooks.once('init', async function () {
     console.log(`EXTINÇÃO | Inicializando o Sistema...`);
 
-    // Adiciona classes customizadas ao CONFIG
-    CONFIG.Actor.documentClass = Actor;
-    CONFIG.Item.documentClass = Item;
+    // 2. REGISTRA AS CLASSES NO CONFIG (Correção do erro item.roll)
+    CONFIG.Actor.documentClass = ExtincaoActor;
+    CONFIG.Item.documentClass = ExtincaoItem;
 
     // Definindo as constantes com os caminhos novos
     const Actors = foundry.documents.collections.Actors;
@@ -66,7 +70,7 @@ Hooks.once('init', async function () {
 });
 
 /* -------------------------------------------- */
-/* Automação de Nomes (Inimigo 1, 2...)        */
+/* Automação de Nomes (Inimigo 1, 2...)         */
 /* -------------------------------------------- */
 Hooks.on("preCreateActor", (actor, data, options, userId) => {
     const isDefaultName = data.name.startsWith("Actor") || data.name.startsWith("New Actor") || data.name.startsWith("Novo Ator");

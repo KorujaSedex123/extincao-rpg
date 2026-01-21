@@ -278,6 +278,14 @@ export class ExtincaoActorSheet extends ActorSheet {
       await this.actor.update({ "system.resources.estresse.value": novoValor });
     });
 
+    html.find('.item-open').click(ev => {
+      ev.preventDefault(); // Impede comportamento padrão
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+
+      // Agora o item.roll() vai existir porque registramos a classe ExtincaoItem!
+      if (item) item.roll();
+    });
     // Recuperar Estresse (Botão Ajuda)
     html.find('.recover-stress-btn').click(async (ev) => {
       ev.preventDefault();
@@ -514,13 +522,17 @@ export class ExtincaoActorSheet extends ActorSheet {
     this._processRoll(dataset);
   }
 
+  /**
+   * Processa a rolagem com Modal de Bônus e Regra de Desespero
+   */
+  /**
+   * Processa a rolagem com Modal Estilizado (Dark)
+   */
   async _processRoll(dataset, item = null) {
     // 1. Definições Iniciais
-    let diceCount = 0;
+    let baseDice = 0;
     let label = dataset.label || "Rolagem";
     let damageInfo = "";
-
-    // PADRÃO: Ninguém é especialista até provar o contrário (Perícia >= 4)
     let isSpecialist = false;
 
     const SKILL_MAP = {
@@ -532,165 +544,194 @@ export class ExtincaoActorSheet extends ActorSheet {
       "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
     };
 
-    // ====================================================
-    // A. ROLAGEM DE PERÍCIA (Sobrevivente)
-    // ====================================================
+    // Lógica de Base (Igual à anterior)
     if (dataset.rollType === 'skill') {
       const skillKey = dataset.key;
       const skill = this.actor.system.skills[skillKey];
       const attrKey = SKILL_MAP[skillKey] || "int";
       const attributeValue = this.actor.system.attributes[attrKey]?.value || 0;
-
-      // Pool = Atributo + Perícia
-      diceCount = attributeValue + skill.value;
-
-      // LÓGICA ESPECIALISTA: SÓ ATIVA AQUI!
-      // Se a PERÍCIA for >= 4, ativa o bônus.
-      if (skill.value >= 4) {
-        isSpecialist = true;
-      }
-
+      baseDice = attributeValue + skill.value;
+      if (skill.value >= 4) isSpecialist = true;
       label = `${label} (${attributeValue.toString().toUpperCase()} + ${skill.value})`;
-    }
-
-    // ====================================================
-    // B. ROLAGEM DE ATRIBUTO / DEFESA (Geral)
-    // ====================================================
-    else if (dataset.key) {
-      // Se rolar Inteligência 5 puro, NÃO é especialista.
-      diceCount = this.actor.system.attributes[dataset.key]?.value || 0;
-      isSpecialist = false; // Garante que atributo puro nunca ativa
-    }
-
-    // ====================================================
-    // C. ROLAGEM DE ITEM / ATAQUE NPC
-    // ====================================================
-    else if (dataset.rollType === 'item' && item) {
-      diceCount = Number(item.system.bonus) || 1;
+    } else if (dataset.key) {
+      baseDice = this.actor.system.attributes[dataset.key]?.value || 0;
+    } else if (dataset.rollType === 'item' && item) {
+      baseDice = Number(item.system.bonus) || 1;
       const damage = item.system.dano || "0";
-
       label = `Ataque: ${item.name}`;
       damageInfo = damage;
-      isSpecialist = false; // Itens rolam normal (6)
-    }
-
-    // ====================================================
-    // D. ROLAGEM DE NPC SIMPLES
-    // ====================================================
-    else if (dataset.rollType === 'npc-attack') {
-      diceCount = this.actor.system.attributes.attack.value || 1;
+    } else if (dataset.rollType === 'npc-attack') {
+      baseDice = this.actor.system.attributes.attack.value || 1;
       damageInfo = this.actor.system.attributes.damage.value || "1";
-      isSpecialist = false;
     } else if (dataset.rollType === 'npc-defense') {
-      diceCount = this.actor.system.attributes.defense.value || 1;
-      isSpecialist = false;
+      baseDice = this.actor.system.attributes.defense.value || 1;
     }
 
-    if (diceCount < 1) diceCount = 1;
+    // 2. CONTEÚDO DO MODAL (HTML CUSTOMIZADO)
+    const dialogContent = `
+        <div style="background: #0e0e12; color: #eee; padding: 5px;">
+            
+            <div class="form-group flexrow" style="align-items: center; margin-bottom: 15px;">
+                <label style="flex:1; font-weight:bold; color:#aaddff;"> 
+                    <i class="fas fa-plus-minus"></i> Modificador:
+                </label>
+                <input type="number" name="modifier" value="0" 
+                    style="flex:0 0 80px; background:#111; color:#fff; border:1px solid #444; text-align:center; font-size:1.2em; font-weight:bold;" autofocus/>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px; border: 1px dashed #333; padding: 5px; border-radius: 4px;">
+                <label class="checkbox" style="color:#ff5555; display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <input type="checkbox" name="forceDesperation" style="width:16px; height:16px;"/> 
+                    <span><i class="fas fa-exclamation-triangle"></i> Forçar Desespero (Glitch no 3)</span>
+                </label>
+            </div>
 
-    // Define o alvo baseado na flag
-    const targetNumber = isSpecialist ? 5 : 6;
+            <div style="background:#000; padding:10px; border-radius:4px; font-size:0.9em; color:#888; text-align:center; border: 1px solid #222;">
+                Pool Base: <span style="color:#4eff8c; font-size:1.4em; font-weight:bold;">${baseDice}</span> dados
+                ${isSpecialist ? '<div style="color:#4eff8c; font-weight:bold; margin-top:2px; font-size:0.8em;">(ESPECIALISTA: Sucesso no 5+)</div>' : ''}
+            </div>
+        </div>
+    `;
 
-    // 2. Executar Rolagem
-    let roll = new Roll(`${diceCount}d6`);
-    await roll.evaluate();
+    // 3. CRIAÇÃO DA JANELA DIALOG
+    new Dialog({
+      title: `Rolar: ${label}`,
+      content: dialogContent,
+      default: "roll",
+      buttons: {
+        roll: {
+          label: `<span style="font-weight:bold; color:#000;">ROLAR</span>`,
+          icon: '<i class="fas fa-dice-d6" style="color:#000;"></i>',
+          // Estilizando o botão do Foundry
+          callback: async (html) => {
+            const modifier = Number(html.find('[name="modifier"]').val()) || 0;
+            const forceDesperation = html.find('[name="forceDesperation"]').is(':checked');
 
-    if (game.dice3d) { game.dice3d.showForRoll(roll, game.user, true); }
+            let finalDiceCount = baseDice + modifier;
+            let isDesperate = false;
+            let glitchThreshold = 1;
 
-    // 3. Analisar Resultados
-    const diceResults = roll.terms[0].results;
-    let successCount = 0;
-    let onesCount = 0;
-    let hasCrit = false;
-    let diceHTML = "";
+            // Lógica de Desespero (Automática OU Manual)
+            if (finalDiceCount <= 0 || forceDesperation) {
+              if (finalDiceCount <= 0) finalDiceCount = 1;
 
-    for (let die of diceResults) {
-      const val = die.result;
-      let cssClass = "";
+              isDesperate = true;
+              glitchThreshold = 3; // Glitch no 1, 2, 3
+              label += " <span style='color:#f44; font-weight:bold;'>(DESESPERO)</span>";
+            }
 
-      if (val === 6) {
-        successCount++;
-        hasCrit = true;
-        cssClass = "crit"; // Verde Neon
-      } else if (val >= targetNumber) {
-        successCount++;
-        cssClass = "success"; // Verde Suave (só acontece se target for 5)
-      } else if (val === 1) {
-        onesCount++;
-        cssClass = "glitch"; // Vermelho
+            // Define o alvo (5 ou 6)
+            const targetNumber = isSpecialist ? 5 : 6;
+
+            // Executa a Rolagem
+            let roll = new Roll(`${finalDiceCount}d6`);
+            await roll.evaluate();
+
+            if (game.dice3d) { game.dice3d.showForRoll(roll, game.user, true); }
+
+            // Analisa Resultados
+            const diceResults = roll.terms[0].results;
+            let successCount = 0;
+            let onesCount = 0;
+            let hasCrit = false;
+            let diceHTML = "";
+
+            for (let die of diceResults) {
+              const val = die.result;
+              let cssClass = "";
+
+              if (val === 6) {
+                successCount++;
+                hasCrit = true;
+                cssClass = "crit";
+              }
+              else if (val >= targetNumber) {
+                successCount++;
+                cssClass = "success";
+              }
+              else if (val <= glitchThreshold) {
+                onesCount++;
+                cssClass = "glitch";
+              }
+
+              diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
+            }
+
+            // Monta o Chat
+            let outcomeHTML = "";
+            let borderSideColor = "#666";
+            let pushButton = "";
+
+            if (successCount > 0) {
+              borderSideColor = "#4eff8c";
+              if (this.actor.type === 'npc') borderSideColor = "#f44";
+
+              const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">CRÍTICO!</div>` : "";
+
+              let damageHtml = "";
+              if (damageInfo && damageInfo !== "0") {
+                damageHtml = `<div style="margin-top:5px; border-top:1px solid #333; padding-top:2px; font-weight:bold; color:${this.actor.type === 'npc' ? '#f44' : '#ccc'}">DANO: ${damageInfo}</div>`;
+              }
+
+              outcomeHTML = `
+                            <div class="roll-result success" style="${this.actor.type === 'npc' ? 'color:#f44; border-color:#f44; background:#210;' : ''}">
+                                ${successCount} SUCESSO(S)
+                                ${critText}
+                            </div>
+                            ${damageHtml}
+                        `;
+            } else {
+              if (onesCount > 0) {
+                borderSideColor = "#f44";
+                const glitchLabel = isDesperate ? "DESASTRE!" : "GLITCH!";
+                outcomeHTML = `
+                                <div class="roll-result failure" style="color:#f44; border-color:#f44;">${glitchLabel}</div>
+                                <div class="roll-summary glitch-text">Situação agravada...</div>`;
+              } else {
+                outcomeHTML = `<div class="roll-result failure">FALHA</div>`;
+              }
+
+              if (this.actor.type === 'sobrevivente' && !isDesperate) {
+                const rollData = {
+                  actorId: this.actor.id,
+                  diceCount: finalDiceCount,
+                  targetNumber: targetNumber,
+                  label: label
+                };
+                const dataString = JSON.stringify(rollData).replace(/"/g, '&quot;');
+
+                pushButton = `
+                                <div style="margin-top: 10px; text-align: center;">
+                                    <button class="force-roll-btn" data-roll="${dataString}">
+                                        <i class="fas fa-bolt"></i> FORÇAR (+1 Estresse)
+                                    </button>
+                                </div>
+                            `;
+              }
+            }
+
+            let specialistHint = isSpecialist ? `<div style="font-size:0.7em; color:#4eff8c; margin-bottom:5px;">[ESPECIALISTA: 5+ É SUCESSO]</div>` : "";
+
+            if (isDesperate) {
+              specialistHint += `<div style="font-size:0.7em; color:#f44; margin-bottom:5px; font-weight:bold;">[DESESPERO: 1-3 É GLITCH]</div>`;
+            }
+
+            ChatMessage.create({
+              speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+              content: `
+                        <div class="extincao-roll" style="border-left-color: ${borderSideColor}">
+                            <h3>${label}</h3>
+                            ${specialistHint}
+                            <div class="dice-pool">
+                                ${diceHTML}
+                            </div>
+                            ${outcomeHTML}
+                            ${pushButton}
+                        </div>`
+            });
+          }
+        }
       }
-      diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
-    }
-
-    // 4. Montar HTML
-    let outcomeHTML = "";
-    let borderSideColor = "#666";
-    let pushButton = "";
-
-    if (successCount > 0) {
-      borderSideColor = "#4eff8c";
-      if (this.actor.type === 'npc') borderSideColor = "#f44";
-
-      const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">CRÍTICO!</div>` : "";
-
-      let damageHtml = "";
-      if (damageInfo && damageInfo !== "0") {
-        damageHtml = `<div style="margin-top:5px; border-top:1px solid #333; padding-top:2px; font-weight:bold; color:${this.actor.type === 'npc' ? '#f44' : '#ccc'}">DANO: ${damageInfo}</div>`;
-      }
-
-      outcomeHTML = `
-                <div class="roll-result success" style="${this.actor.type === 'npc' ? 'color:#f44; border-color:#f44; background:#210;' : ''}">
-                    ${successCount} SUCESSO(S)
-                    ${critText}
-                </div>
-                ${damageHtml}
-            `;
-    } else {
-      if (onesCount > 0) {
-        borderSideColor = "#f44";
-        outcomeHTML = `
-                    <div class="roll-result failure" style="color:#f44; border-color:#f44;">GLITCH!</div>
-                    <div class="roll-summary glitch-text">Algo deu muito errado...</div>`;
-      } else {
-        outcomeHTML = `<div class="roll-result failure">FALHA</div>`;
-      }
-
-      // BOTÃO DE FORÇAR (Apenas Sobrevivente)
-      if (this.actor.type === 'sobrevivente') {
-        const rollData = {
-          actorId: this.actor.id,
-          diceCount: diceCount,
-          targetNumber: targetNumber,
-          label: label
-        };
-        const dataString = JSON.stringify(rollData).replace(/"/g, '&quot;');
-
-        pushButton = `
-                    <div style="margin-top: 10px; text-align: center;">
-                        <button class="force-roll-btn" data-roll="${dataString}">
-                            <i class="fas fa-bolt"></i> FORÇAR (+1 Estresse)
-                        </button>
-                    </div>
-                `;
-      }
-    }
-
-    let specialistHint = isSpecialist ? `<div style="font-size:0.7em; color:#4eff8c; margin-bottom:5px;">[ESPECIALISTA: 5+ É SUCESSO]</div>` : "";
-
-    ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-      content: `
-            <div class="extincao-roll" style="border-left-color: ${borderSideColor}">
-                <h3>${label}</h3>
-                ${specialistHint}
-                
-                <div class="dice-pool">
-                    ${diceHTML}
-                </div>
-
-                ${outcomeHTML}
-                ${pushButton}
-            </div>`
-    });
+    }).render(true);
   }
 }

@@ -1,0 +1,46 @@
+<div class="extincao-chat-card" data-item-id="{{item._id}}">
+    
+    <header class="card-header">
+        <img src="{{item.img}}" />
+        <h3>{{item.name}}</h3>
+    </header>
+
+    <div class="card-content">
+        
+        {{#if item.system.description}}
+            <div class="description">{{{item.system.description}}}</div>
+        {{/if}}
+
+        <div class="card-stats-grid">
+            
+            {{#if (eq item.type "arma")}}
+            <div class="stat-box damage">
+                <label>DANO</label>
+                <div class="value">{{item.system.dano}}</div>
+            </div>
+            <div class="stat-box usage">
+                <label>USO</label>
+                <div class="value">{{item.system.uso}}</div>
+            </div>
+            <div class="stat-box test">
+                <label>TESTE SUGERIDO</label>
+                <div class="value" style="font-size: 0.8em;">
+                    Destreza + Armas de Fogo
+                </div>
+            </div>
+            {{/if}}
+
+            {{#if item.system.quantity}}
+            <div class="stat-box quantity">
+                <label>QTD</label>
+                <div class="value">{{item.system.quantity}}</div>
+            </div>
+            {{/if}}
+
+        </div>
+    </div>
+    
+    <div class="card-footer">
+        EXTINÇÃO RPG SYSTEM
+    </div>
+</div>

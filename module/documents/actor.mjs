@@ -1,7 +1,7 @@
 /**
  * Estende a classe Actor padrão do Foundry para implementar a lógica do EXTINÇÃO.
  */
-export class BoilerplateActor extends Actor {
+export class ExtincaoActor extends Actor {
 
   /** @override */
   prepareData() {
