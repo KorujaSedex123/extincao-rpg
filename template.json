@@ -340,7 +340,8 @@
       "equipamento",
       "qualidade",
       "defeito",
-      "habitante"
+      "habitante",
+      "projeto"
     ],
     "templates": {
       "base": {
@@ -376,6 +377,14 @@
       "saude": 10,
       "maxSaude": 10,
       "infeccao": 0,
+      "notas": ""
+    },
+    "projeto": {
+      "templates": [
+        "base"
+      ],
+      "custo": "0",
+      "estado": "planejado",
       "notas": ""
     }
   }

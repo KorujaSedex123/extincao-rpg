@@ -119,6 +119,9 @@ export class ExtincaoActorSheet extends ActorSheet {
       else if (i.type === 'projeto') {
         projetos.push(i);
       }
+      else if (i.type === 'projeto') {
+        projetos.push(i);
+      }
 
       // 3. TUDO O RESTO VAI PARA DIVERSOS
       else {
