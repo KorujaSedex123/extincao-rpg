@@ -2025,3 +2025,63 @@
     color: #ff4444;
     background: #150505;
 }
+
+/* =========================================
+   CUSTOM PAUSE SCREEN (VERSÃO SVG)
+   ========================================= */
+
+/* 1. Customiza o Container Geral */
+#pause {
+    background: rgba(14, 14, 18, 0.95); /* Fundo bem escuro */
+    border: 1px solid #4da;             /* Borda Neon */
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(77, 221, 170, 0.15);
+    padding: 20px 40px;
+    bottom: 15%;
+    min-width: 250px;
+}
+
+/* 2. Esconde a engrenagem original */
+#pause > img {
+    display: none;
+}
+
+/* 3. Coloca o Ícone de Biohazard (Imagem SVG) */
+#pause:before {
+    content: "";
+    display: block;
+    width: 80px;   /* Tamanho do Ícone */
+    height: 80px;
+    margin: 0 auto 15px auto;
+    
+    /* Usa o ícone nativo do Foundry */
+    background-image: url("/icons/svg/biohazard.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* TRUQUE VISUAL: */
+    /* Inverte a cor (de preto para branco) e adiciona brilho Ciano */
+    filter: invert(1) drop-shadow(0 0 8px #4da);
+    
+    animation: pulseAlert 2s infinite;
+}
+
+/* 4. Estiliza o Texto "Game Paused" */
+#pause > figcaption {
+    color: #eee;
+    font-family: "Courier New", monospace;
+    letter-spacing: 4px;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(77, 221, 170, 0.5);
+    margin: 0;
+}
+
+/* 5. Animação de Pulso */
+@keyframes pulseAlert {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; filter: invert(1) drop-shadow(0 0 15px #4da); }
+    100% { transform: scale(1); opacity: 0.8; }
+}
