@@ -11,6 +11,9 @@ import { ExtincaoItem } from "./module/documents/item.mjs";
 import { preloadHandlebarsTemplates } from "./module/helpers/templates.mjs";
 import { ExtincaoActorSheet } from "./module/sheets/actor-sheet.mjs";
 import { ExtincaoItemSheet } from "./module/sheets/item-sheet.mjs";
+import { ExtincaoCombat } from "./module/combat.mjs";
+import { createExtincaoMacro, rollItemMacro } from "./module/helpers/macros.mjs";
+import { registerSettings } from "./module/settings.mjs";
 
 /* -------------------------------------------- */
 /* Inicialização do Sistema                     */
@@ -19,9 +22,18 @@ import { ExtincaoItemSheet } from "./module/sheets/item-sheet.mjs";
 Hooks.once('init', async function () {
     console.log(`EXTINÇÃO | Inicializando o Sistema...`);
 
+    registerSettings();
+
+    game.extincao = {
+        ExtincaoActor,
+        createExtincaoMacro,
+        rollItemMacro
+    };
+
     // 2. REGISTRA AS CLASSES NO CONFIG (Correção do erro item.roll)
     CONFIG.Actor.documentClass = ExtincaoActor;
     CONFIG.Item.documentClass = ExtincaoItem;
+    CONFIG.Combat.documentClass = ExtincaoCombat;
 
     // Definindo as constantes com os caminhos novos
     const Actors = foundry.documents.collections.Actors;
@@ -68,6 +80,75 @@ Hooks.once('init', async function () {
     // Carrega os templates HTML (Função definida no final deste arquivo)
     return preloadHandlebarsTemplates();
 });
+
+/* -------------------------------------------- */
+/* Mensagem de Boas Vindas (Hook Ready)         */
+/* -------------------------------------------- */
+Hooks.once("ready", async function () {
+
+    // 1. Verifica Configuração
+    const showWelcome = game.settings.get("extincao", "welcomeMessage");
+    if (!showWelcome) return;
+
+    // 2. PEGA A VERSÃO DINAMICAMENTE
+    const version = game.system.version;
+
+    // 3. CARREGA OS TEXTOS TRADUZIDOS (i18n)
+    const title = game.i18n.localize("EXTINCAO.Welcome.Title");
+    const intro = game.i18n.localize("EXTINCAO.Welcome.Intro");
+    const msg = game.i18n.localize("EXTINCAO.Welcome.Message");
+    const tipLabel = game.i18n.localize("EXTINCAO.Welcome.TipLabel");
+    const tip = game.i18n.localize("EXTINCAO.Welcome.Tip");
+    const btnLabel = game.i18n.localize("EXTINCAO.Welcome.Button");
+
+    // Monta o subtítulo com a versão (Use game.i18n.format se quiser injetar variáveis, mas concatenação simples serve aqui)
+    const subtitle = `v.${version} // ${game.i18n.localize("EXTINCAO.Welcome.Subtitle")}`;
+
+    // 4. Monta o HTML (Agora limpo de textos fixos)
+    const content = `
+    <div class="extincao-chat-card" style="background: #050505; border: 1px solid #333; border-left: 4px solid #4da; box-shadow: 0 0 10px rgba(77, 221, 170, 0.2);">
+        
+        <div style="background: linear-gradient(90deg, #111 0%, #000 100%); padding: 10px; display: flex; align-items: center; border-bottom: 1px solid #222;">
+            <img src="icons/svg/biohazard.svg" style="width: 40px; height: 40px; margin-right: 15px; filter: invert(1) drop-shadow(0 0 5px #4da);">
+            <div>
+                <h3 style="margin: 0; color: #4da; font-family: 'Courier New', monospace; letter-spacing: 2px; text-transform: uppercase;">
+                    ${title}
+                </h3>
+                <div style="font-size: 0.7em; color: #888;">${subtitle}</div>
+            </div>
+        </div>
+
+        <div style="padding: 15px; color: #ccc; font-family: 'Segoe UI', sans-serif; font-size: 0.95em; line-height: 1.5;">
+            <p style="margin-bottom: 10px;">
+                <strong style="color: #fff;">${intro}</strong>
+            </p>
+            <p>${msg}</p>
+            
+            <div style="margin-top: 15px; padding: 10px; background: #111; border-left: 3px solid #f44; font-size: 0.85em; color: #aaa;">
+                <i class="fas fa-info-circle" style="color: #f44;"></i> <strong>${tipLabel}</strong><br>
+                ${tip}
+            </div>
+        </div>
+
+        <div style="padding: 5px; background: #080808; text-align: center; border-top: 1px solid #222;">
+            <button onclick="game.settings.set('extincao', 'welcomeMessage', false)" 
+                style="background: transparent; border: none; color: #555; font-size: 0.8em; cursor: pointer; width: auto;">
+                <i class="fas fa-eye-slash"></i> ${btnLabel}
+            </button>
+        </div>
+    </div>
+    `;
+
+    ChatMessage.create({
+        speaker: { alias: "SISTEMA" },
+        content: content,
+        whisper: [game.user.id]
+    });
+});
+/* -------------------------------------------- */
+/* Hotbar Macros (Arrastar e Soltar)           */
+/* -------------------------------------------- */
+Hooks.on("hotbarDrop", (bar, data, slot) => createExtincaoMacro(data, slot));
 
 /* -------------------------------------------- */
 /* Automação de Nomes (Inimigo 1, 2...)         */
