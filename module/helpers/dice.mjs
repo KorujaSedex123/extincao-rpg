@@ -203,3 +203,87 @@ export async function taskRoll(actor, dataset, item = null) {
         }).render(true);
     });
 }
+
+/**
+ * Rola o Dado de Ruído (Noise Die) conforme as regras oficiais (Pág 14).
+ * 1-3: Seguro / 4-5: Atenção / 6: O Eco
+ */
+export async function rollNoise() {
+    // 1. Rola o Dado Preto
+    const roll = new Roll("1d6");
+    await roll.evaluate();
+
+    if (game.dice3d) {
+        // Força o dado a ser preto para combinar com a regra
+        game.dice3d.showForRoll(roll, game.user, true);
+    }
+
+    const result = roll.total;
+    let status = "";
+    let statusText = "";
+    let flavorText = "";
+    let icon = "";
+    let sound = null;
+
+    // 2. Verifica a Tabela (Pág 14 PDF)
+    if (result <= 3) {
+        // 1, 2, 3 -> SILÊNCIO
+        status = "safe";
+        statusText = "SILÊNCIO";
+        flavorText = "O som foi abafado. Ninguém ouviu.";
+        icon = "fa-volume-mute";
+    } 
+    else if (result <= 5) {
+        // 4, 5 -> ATENÇÃO (+1 Inimigo)
+        status = "warning";
+        statusText = "ATENÇÃO!";
+        flavorText = "Um zumbi próximo ouviu... <br><strong>(+1 INIMIGO NA CENA)</strong>";
+        icon = "fa-exclamation-triangle";
+        sound = "sounds/notify.wav"; // Som de alerta leve
+    } 
+    else {
+        // 6 -> O ECO (Horda/Onda de Ataque)
+        status = "danger";
+        statusText = "O E C O";
+        flavorText = "O som viajou longe. A Horda despertou!<br><strong>(AUMENTE O ALERTA)</strong>";
+        icon = "fa-biohazard";
+        sound = "sounds/combat.wav"; // Som de perigo grave (se tiver)
+    }
+
+    // 3. Monta o Card Visual
+    const barsHtml = `
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    `;
+
+    const content = `
+    <div class="noise-card ${status}">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:10px;">
+            <span style="font-size:0.8em; opacity:0.7;">MONITOR DE RUÍDO</span>
+            <i class="fas ${icon}" style="font-size:1.2em;"></i>
+        </div>
+        
+        <div class="sound-wave">
+            ${barsHtml}
+        </div>
+
+        <div class="noise-result">
+            ${statusText}
+        </div>
+        
+        <div style="font-size: 2.5em; font-weight:bold; margin: 5px 0; opacity: 0.9;">
+            [ ${result} ]
+        </div>
+        
+        <div style="font-size: 0.85em; margin-top: 10px; line-height: 1.4; padding: 5px; background: rgba(0,0,0,0.3); border-radius: 4px;">
+            ${flavorText}
+        </div>
+    </div>
+    `;
+
+    // 4. Envia ao Chat
+    ChatMessage.create({
+        user: game.user.id,
+        content: content,
+        sound: sound
+    });
+}

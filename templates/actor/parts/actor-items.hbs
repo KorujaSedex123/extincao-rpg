@@ -17,13 +17,20 @@
                 <div class="item-image item-open" style="cursor: pointer;">
                     <img src="{{item.img}}" width="24" height="24" />
                 </div>
-                
+
                 <h4 class="item-name item-open" style="cursor: pointer; color: #aaddff;">
                     {{item.name}}
                 </h4>
 
-                <div class="item-detail" style="flex: 0 0 60px; color: #4eff8c; font-weight:bold; text-align: center;">
-                    {{item.system.uso}}
+                <div class="item-detail item-uso" style="text-align: center;">
+                    {{#if (ne item.system.uso "0")}}
+                    <a class="roll-usage" data-item-id="{{item._id}}"
+                        title="Testar Munição (Rolar {{item.system.uso}})">
+                        <i class="fas fa-dice"></i> {{item.system.uso}}
+                    </a>
+                    {{else}}
+                    <span style="color: #555;">-</span>
+                    {{/if}}
                 </div>
 
                 <div class="item-detail" style="flex: 0 0 60px; color: #ff4444; font-weight:bold; text-align: center;">
@@ -55,7 +62,7 @@
                 <div class="item-image item-open" style="cursor: pointer;">
                     <img src="{{item.img}}" width="24" height="24" />
                 </div>
-                
+
                 <h4 class="item-name item-open" style="cursor: pointer;">
                     {{item.name}}
                 </h4>
@@ -95,7 +102,7 @@
                 <div class="item-image item-open" style="cursor: pointer;">
                     <img src="{{item.img}}" width="24" height="24" />
                 </div>
-                
+
                 <h4 class="item-name item-open" style="cursor: pointer; color: #bbccdd;">
                     {{item.name}}
                 </h4>
@@ -110,9 +117,10 @@
                 </div>
             </li>
             {{/each}}
-            
+
             {{#unless itens}}
-            <li class="item flexrow" style="padding: 5px; color: #444; font-size: 0.8em; justify-content: center; border: 1px dashed #222;">
+            <li class="item flexrow"
+                style="padding: 5px; color: #444; font-size: 0.8em; justify-content: center; border: 1px dashed #222;">
                 Nenhum item diverso.
             </li>
             {{/unless}}

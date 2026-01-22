@@ -3,15 +3,13 @@
         <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         <div class="header-details" style="flex:1;">
             <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="Nome da Arma" {{#if
-                    isLocked}}readonly{{/if}} />
+                <input name="name" type="text" value="{{item.name}}" placeholder="Nome da Arma" {{#if isLocked}}readonly{{/if}} />
             </h1>
         </div>
     </header>
 
     {{#if isLocked}}
-    <div
-        style="background:#330000; color:#ff4444; text-align:center; padding:5px; font-weight:bold; font-size:0.8em; margin-bottom:10px; border:1px solid #ff4444;">
+    <div style="background:#330000; color:#ff4444; text-align:center; padding:5px; font-weight:bold; font-size:0.8em; margin-bottom:10px; border:1px solid #ff4444;">
         <i class="fas fa-lock"></i> MODO VISUALIZAÇÃO (Refúgio Travado)
     </div>
     {{/if}}
@@ -19,28 +17,29 @@
     <div class="item-stats-grid">
         <div class="stat-box">
             <label>DANO</label>
-            <input type="number" name="system.dano" value="{{system.dano}}" data-dtype="Number" {{#if
-                isLocked}}readonly{{/if}} />
+            <input type="number" name="system.dano" value="{{system.dano}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}} />
         </div>
+        
         <div class="stat-box">
             <label>USO (Munição)</label>
-            <select name="system.uso"
-                style="background:#000; color:#4eff8c; width:100%; border:1px solid #444; text-align:center;" {{#if
-                isLocked}}disabled{{/if}}>
+            <select name="system.uso" style="background:#000; color:#4eff8c; width:100%; border:1px solid #444; text-align:center;" {{#if isLocked}}disabled{{/if}}>
                 {{#select system.uso}}
-                <option value="0">- (Infinito)</option>
+                <option value="-">- (Infinito / Melee)</option>
+                
                 <option value="d4">d4 (Crítico)</option>
                 <option value="d6">d6 (Baixo)</option>
                 <option value="d8">d8 (Padrão)</option>
                 <option value="d10">d10 (Cheio)</option>
                 <option value="d12">d12 (Muito)</option>
+                
+                <option value="0">0 (Vazio / Click)</option>
                 {{/select}}
             </select>
         </div>
+        
         <div class="stat-box">
             <label>QTD</label>
-            <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" {{#if
-                isLocked}}readonly{{/if}} />
+            <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}} />
         </div>
     </div>
 
@@ -52,8 +51,7 @@
     <section class="sheet-body">
         <div class="tab description" data-group="primary" data-tab="description">
             <div class="bio-editor">
-                {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not
-                isLocked)}}
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
             </div>
         </div>
         <div class="tab attributes" data-group="primary" data-tab="attributes">

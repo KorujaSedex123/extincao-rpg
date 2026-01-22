@@ -2121,3 +2121,102 @@
     box-shadow: 0 0 10px #4da;
     transform: scale(1.1);
 }
+
+/* =========================================
+   DADO DE RUÍDO V2 (OFFICIAL RULES)
+   ========================================= */
+
+.noise-card {
+    background: #080808;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+/* 1. SEGURO (1-3) - Verde/Ciano */
+.noise-card.safe {
+    border-color: #4da;
+    box-shadow: 0 0 10px rgba(77, 221, 170, 0.1);
+}
+.noise-card.safe .noise-result { color: #4da; }
+.noise-card.safe .bar { background: #4da; }
+
+/* 2. ATENÇÃO (4-5) - Amarelo/Laranja */
+.noise-card.warning {
+    border-color: #ffaa00;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.2);
+}
+.noise-card.warning .noise-result { color: #ffaa00; }
+.noise-card.warning .bar { 
+    background: #ffaa00;
+    box-shadow: 0 0 5px #ffaa00;
+    animation: soundPulse 0.5s infinite alternate; /* Pulsa rápido */
+}
+
+/* 3. O ECO (6) - Vermelho/Glitch */
+.noise-card.danger {
+    border-color: #ff0000;
+    background: #1a0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+    animation: shakeCard 0.4s infinite; /* Treme a carta toda */
+}
+.noise-card.danger .noise-result { color: #ff0000; text-shadow: 0 0 8px #f00; font-weight: 900; }
+.noise-card.danger .bar { 
+    background: #ff0000;
+    height: 100% !important; 
+    box-shadow: 0 0 10px #f00;
+}
+
+/* Barras de Som */
+.sound-wave {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 50px;
+    gap: 4px;
+    margin: 15px 0;
+}
+.bar {
+    width: 8px;
+    border-radius: 2px;
+    transition: height 0.1s;
+}
+
+/* Animação Safe (Onda Calma) */
+.safe .bar:nth-child(1) { height: 15px; animation: wave 1.2s infinite; }
+.safe .bar:nth-child(2) { height: 25px; animation: wave 1.0s infinite; }
+.safe .bar:nth-child(3) { height: 10px; animation: wave 1.4s infinite; }
+.safe .bar:nth-child(4) { height: 20px; animation: wave 1.1s infinite; }
+.safe .bar:nth-child(5) { height: 12px; animation: wave 1.3s infinite; }
+
+@keyframes wave { 0%, 100% { opacity: 0.5; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.3); } }
+@keyframes soundPulse { from { height: 20px; opacity: 0.6; } to { height: 40px; opacity: 1; } }
+@keyframes shakeCard { 
+    0% { transform: translate(1px, 1px); } 
+    25% { transform: translate(-2px, 0px); } 
+    50% { transform: translate(2px, -1px); } 
+    75% { transform: translate(-1px, 2px); } 
+    100% { transform: translate(1px, -1px); } 
+}
+
+.roll-usage {
+    cursor: pointer;
+    font-weight: bold;
+    color: #4da; /* Verde Neon */
+    padding: 2px 6px;
+    border: 1px solid rgba(77, 221, 170, 0.3);
+    border-radius: 4px;
+    transition: all 0.2s;
+    text-shadow: 0 0 5px rgba(77, 221, 170, 0.2);
+}
+
+.roll-usage:hover {
+    background: rgba(77, 221, 170, 0.2);
+    color: #fff;
+    box-shadow: 0 0 8px rgba(77, 221, 170, 0.4);
+}

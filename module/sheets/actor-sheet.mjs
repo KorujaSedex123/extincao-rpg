@@ -198,6 +198,8 @@ export class ExtincaoActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
+    html.find('.roll-usage').click(this._onRollUsage.bind(this));
+
     // -------------------------------------------------------------
     // 1. LISTENERS GERAIS (Trava, Abas, Inputs)
     // -------------------------------------------------------------
@@ -512,6 +514,7 @@ export class ExtincaoActorSheet extends ActorSheet {
   // --- MÉTODOS AUXILIARES ---
 
 
+
   async _onRoll(event) {
     event.preventDefault();
     const element = event.currentTarget;
@@ -523,6 +526,92 @@ export class ExtincaoActorSheet extends ActorSheet {
     }
 
     this._processRoll(dataset);
+  }
+
+ async _onRollUsage(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const itemId = element.dataset.itemId;
+    const item = this.actor.items.get(itemId);
+
+    if (!item) return;
+
+    // Definição da Escala de Degradação (Pág 74)
+    // Nota: O "-" (Infinito) não está aqui, então ele não rola.
+    const usageSteps = ["d12", "d10", "d8", "d6", "d4", "0"];
+    const currentUsage = item.system.uso; 
+
+    // Validação de Segurança
+    if (!usageSteps.includes(currentUsage)) {
+        return; // Se for infinito (-) ou inválido, não faz nada
+    }
+    
+    if (currentUsage === "0") {
+        return ui.notifications.warn("Click! A arma está vazia.");
+    }
+
+    // --- ROLAGEM ---
+    const roll = await new Roll("1" + currentUsage).evaluate();
+    if (game.dice3d) game.dice3d.showForRoll(roll, game.user, true);
+
+    const result = roll.total;
+    let newUsage = currentUsage;
+    let message = "";
+    let cssClass = "success"; 
+    let title = "MUNIÇÃO ESTÁVEL";
+
+    // Regra: 1 ou 2 diminui o dado
+    if (result <= 2) {
+        const currentIndex = usageSteps.indexOf(currentUsage);
+        
+        // Pega o próximo passo (Ex: d4 -> 0)
+        if (currentIndex < usageSteps.length - 1) {
+            newUsage = usageSteps[currentIndex + 1];
+        }
+
+        // Verifica se Zerou (Click da Morte)
+        if (newUsage === "0") {
+            title = "MUNIÇÃO ESGOTADA!";
+            message = "A arma fez um clique seco. <strong>Está vazia.</strong>";
+            cssClass = "failure"; 
+        } else {
+            title = "MUNIÇÃO REDUZIDA";
+            message = `A reserva diminuiu. <br>Caiu de <strong>${currentUsage}</strong> para <strong>${newUsage}</strong>.`;
+            cssClass = "warning";
+        }
+
+        // Salva a alteração
+        await item.update({ "system.uso": newUsage });
+    } 
+    else {
+        message = `Disciplina de tiro. <br>Mantém em <strong>${currentUsage}</strong>.`;
+    }
+
+    // (O resto do código do ChatMessage continua igual...)
+    // ...
+    let borderColor = "#4da"; 
+    if (cssClass === "warning") borderColor = "#ffaa00"; 
+    if (cssClass === "failure") borderColor = "#ff4444"; 
+
+    const content = `
+    <div class="extincao-chat-card" style="border-left-color: ${borderColor};">
+        <div style="display:flex; align-items:center; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">
+            <img src="${item.img}" width="30" height="30" style="margin-right:10px; border:1px solid #444;">
+            <h3 style="margin:0; color:${borderColor};">${title}</h3>
+        </div>
+        <div style="text-align:center; margin: 10px 0;">
+            <span style="font-size: 0.8em; color: #888;">Rolagem de Uso (${currentUsage})</span>
+            <div style="font-size: 2em; font-weight: bold; color: #eee;">[ ${result} ]</div>
+        </div>
+        <div style="font-size: 0.9em; color: #ccc; text-align: center;">${message}</div>
+    </div>
+    `;
+
+    ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        content: content
+    });
   }
 
   /**

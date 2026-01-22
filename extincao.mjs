@@ -14,6 +14,7 @@ import { ExtincaoItemSheet } from "./module/sheets/item-sheet.mjs";
 import { ExtincaoCombat } from "./module/combat.mjs";
 import { createExtincaoMacro, rollItemMacro } from "./module/helpers/macros.mjs";
 import { registerSettings } from "./module/settings.mjs";
+import { taskRoll, rollNoise } from "./module/helpers/dice.mjs"; 
 
 /* -------------------------------------------- */
 /* Inicialização do Sistema                     */
@@ -27,7 +28,8 @@ Hooks.once('init', async function () {
     game.extincao = {
         ExtincaoActor,
         createExtincaoMacro,
-        rollItemMacro
+        rollItemMacro,
+        rollNoise
     };
 
     // 2. REGISTRA AS CLASSES NO CONFIG (Correção do erro item.roll)
