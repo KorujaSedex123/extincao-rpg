@@ -227,7 +227,8 @@ export class ExtincaoActorSheet extends ActorSheet {
       const currentVal = this.actor.system.conditions?.[prop] || false;
       await this.actor.update({ [`system.conditions.${prop}`]: !currentVal });
     });
-
+    // Listener do Combustível (Veículo)
+    html.find('.roll-fuel').click(this._onRollFuel.bind(this));
     // -------------------------------------------------------------
     // 2. GESTÃO DE RECURSOS (+ e -)
     // -------------------------------------------------------------
@@ -528,7 +529,7 @@ export class ExtincaoActorSheet extends ActorSheet {
     this._processRoll(dataset);
   }
 
- async _onRollUsage(event) {
+  async _onRollUsage(event) {
     event.preventDefault();
     const element = event.currentTarget;
     const itemId = element.dataset.itemId;
@@ -539,15 +540,15 @@ export class ExtincaoActorSheet extends ActorSheet {
     // Definição da Escala de Degradação (Pág 74)
     // Nota: O "-" (Infinito) não está aqui, então ele não rola.
     const usageSteps = ["d12", "d10", "d8", "d6", "d4", "0"];
-    const currentUsage = item.system.uso; 
+    const currentUsage = item.system.uso;
 
     // Validação de Segurança
     if (!usageSteps.includes(currentUsage)) {
-        return; // Se for infinito (-) ou inválido, não faz nada
+      return; // Se for infinito (-) ou inválido, não faz nada
     }
-    
+
     if (currentUsage === "0") {
-        return ui.notifications.warn("Click! A arma está vazia.");
+      return ui.notifications.warn("Click! A arma está vazia.");
     }
 
     // --- ROLAGEM ---
@@ -557,41 +558,41 @@ export class ExtincaoActorSheet extends ActorSheet {
     const result = roll.total;
     let newUsage = currentUsage;
     let message = "";
-    let cssClass = "success"; 
+    let cssClass = "success";
     let title = "MUNIÇÃO ESTÁVEL";
 
     // Regra: 1 ou 2 diminui o dado
     if (result <= 2) {
-        const currentIndex = usageSteps.indexOf(currentUsage);
-        
-        // Pega o próximo passo (Ex: d4 -> 0)
-        if (currentIndex < usageSteps.length - 1) {
-            newUsage = usageSteps[currentIndex + 1];
-        }
+      const currentIndex = usageSteps.indexOf(currentUsage);
 
-        // Verifica se Zerou (Click da Morte)
-        if (newUsage === "0") {
-            title = "MUNIÇÃO ESGOTADA!";
-            message = "A arma fez um clique seco. <strong>Está vazia.</strong>";
-            cssClass = "failure"; 
-        } else {
-            title = "MUNIÇÃO REDUZIDA";
-            message = `A reserva diminuiu. <br>Caiu de <strong>${currentUsage}</strong> para <strong>${newUsage}</strong>.`;
-            cssClass = "warning";
-        }
+      // Pega o próximo passo (Ex: d4 -> 0)
+      if (currentIndex < usageSteps.length - 1) {
+        newUsage = usageSteps[currentIndex + 1];
+      }
 
-        // Salva a alteração
-        await item.update({ "system.uso": newUsage });
-    } 
+      // Verifica se Zerou (Click da Morte)
+      if (newUsage === "0") {
+        title = "MUNIÇÃO ESGOTADA!";
+        message = "A arma fez um clique seco. <strong>Está vazia.</strong>";
+        cssClass = "failure";
+      } else {
+        title = "MUNIÇÃO REDUZIDA";
+        message = `A reserva diminuiu. <br>Caiu de <strong>${currentUsage}</strong> para <strong>${newUsage}</strong>.`;
+        cssClass = "warning";
+      }
+
+      // Salva a alteração
+      await item.update({ "system.uso": newUsage });
+    }
     else {
-        message = `Disciplina de tiro. <br>Mantém em <strong>${currentUsage}</strong>.`;
+      message = `Disciplina de tiro. <br>Mantém em <strong>${currentUsage}</strong>.`;
     }
 
     // (O resto do código do ChatMessage continua igual...)
     // ...
-    let borderColor = "#4da"; 
-    if (cssClass === "warning") borderColor = "#ffaa00"; 
-    if (cssClass === "failure") borderColor = "#ff4444"; 
+    let borderColor = "#4da";
+    if (cssClass === "warning") borderColor = "#ffaa00";
+    if (cssClass === "failure") borderColor = "#ff4444";
 
     const content = `
     <div class="extincao-chat-card" style="border-left-color: ${borderColor};">
@@ -608,9 +609,9 @@ export class ExtincaoActorSheet extends ActorSheet {
     `;
 
     ChatMessage.create({
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        content: content
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content: content
     });
   }
 
@@ -712,5 +713,60 @@ export class ExtincaoActorSheet extends ActorSheet {
     } else {
       ui.notifications.info("Nenhuma perícia marcada para evolução.");
     }
+  }
+
+  /**
+   * Rola o Teste de Combustível (Pág 16)
+   * 1-2: Baixa o nível / 3-6: Mantém
+   */
+  async _onRollFuel(event) {
+    event.preventDefault();
+
+    // Mapa dos níveis de combustível
+    const fuelLevels = ["cheio", "meio", "reserva", "seco"];
+    const currentFuel = this.actor.system.resources.fuel || "cheio";
+
+    if (currentFuel === "seco") {
+      return ui.notifications.warn("O tanque já está seco!");
+    }
+
+    // Rola 1d6
+    const roll = await new Roll("1d6").evaluate();
+    if (game.dice3d) game.dice3d.showForRoll(roll, game.user, true);
+
+    const result = roll.total;
+    let newFuel = currentFuel;
+    let message = "";
+    let cssClass = "success";
+
+    // Regra Pág 16: 1 ou 2 consome combustível
+    if (result <= 2) {
+      const currentIndex = fuelLevels.indexOf(currentFuel);
+      if (currentIndex < fuelLevels.length - 1) {
+        newFuel = fuelLevels[currentIndex + 1];
+      }
+
+      message = `Consumo alto na viagem. <br>Nível caiu de <strong>${currentFuel.toUpperCase()}</strong> para <strong>${newFuel.toUpperCase()}</strong>.`;
+      cssClass = "failure";
+
+      // Atualiza o ator
+      await this.actor.update({ "system.resources.fuel": newFuel });
+    } else {
+      message = `Viagem econômica. <br>Nível mantém em <strong>${currentFuel.toUpperCase()}</strong>.`;
+    }
+
+    // Chat Card
+    const content = `
+    <div class="extincao-chat-card" style="border-left-color: #ffaa00;">
+        <h3><i class="fas fa-gas-pump"></i> TESTE DE COMBUSTÍVEL</h3>
+        <div style="text-align:center; font-size:2em; font-weight:bold; margin:10px 0;">[ ${result} ]</div>
+        <div style="text-align:center; color:#ccc;">${message}</div>
+    </div>`;
+
+    ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content: content
+    });
   }
 }

@@ -1,0 +1,68 @@
+<form class="{{cssClass}} vehicle-sheet" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" style="border-color: #ffaa00;"/>
+        <div class="header-details">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Veículo" />
+            </h1>
+            <div class="vehicle-type">
+                <i class="fas fa-car-side"></i> VEÍCULO / TRANSPORTE
+            </div>
+        </div>
+    </header>
+
+    <section class="stats-panel" style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        
+        <div class="stat-box" style="border-color: #ffaa00;">
+            <label style="color:#ffaa00;">INTEGRIDADE (PV)</label>
+            <div class="resource-row">
+                <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" />
+                <span>/</span>
+                <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" placeholder="Max" />
+            </div>
+        </div>
+
+        <div class="stat-box" style="border-color: #aaddff;">
+            <label style="color:#aaddff;">BLINDAGEM (RD)</label>
+            <input type="number" name="system.attributes.rd.value" value="{{system.attributes.rd.value}}" style="font-size: 1.5em; color: #aaddff;" />
+        </div>
+
+        <div class="stat-box">
+            <label>CAPACIDADE</label>
+            <input type="text" name="system.attributes.capacidade" value="{{system.attributes.capacidade}}" placeholder="Ex: 4 Pessoas" />
+        </div>
+    </section>
+
+    <div class="fuel-panel" style="margin: 15px 0; background: #111; border: 1px solid #444; padding: 10px; border-radius: 5px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <label style="font-weight: bold; color: #ffaa00;"><i class="fas fa-gas-pump"></i> TANQUE DE COMBUSTÍVEL</label>
+            <a class="roll-fuel" title="Rolar Teste de Tanque (Pág 16)" style="font-size: 0.8em; color: #aaa; background: #222; padding: 2px 8px; border-radius: 4px;">
+                <i class="fas fa-dice"></i> Rolar Consumo
+            </a>
+        </div>
+        
+        <select name="system.resources.fuel" style="width: 100%; background: #000; color: {{#if (eq system.resources.fuel 'seco')}}#f44{{else}}#ffaa00{{/if}}; text-align: center; font-weight: bold; padding: 5px;">
+            {{#select system.resources.fuel}}
+            <option value="cheio">█ █ █ CHEIO (Full)</option>
+            <option value="meio">█ █ ░ MEIO (Half)</option>
+            <option value="reserva">█ ░ ░ RESERVA (Low)</option>
+            <option value="seco">░ ░ ░ SECO (Empty)</option>
+            {{/select}}
+        </select>
+    </div>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="items">PORTA-MALAS</a>
+        <a class="item" data-tab="description">NOTAS</a>
+    </nav>
+
+    <section class="sheet-body">
+        <div class="tab items" data-group="primary" data-tab="items">
+            {{> "systems/extincao/templates/actor/parts/actor-items.hbs"}}
+        </div>
+
+        <div class="tab description" data-group="primary" data-tab="description">
+            {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable}}
+        </div>
+    </section>
+</form>

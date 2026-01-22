@@ -14,7 +14,7 @@ import { ExtincaoItemSheet } from "./module/sheets/item-sheet.mjs";
 import { ExtincaoCombat } from "./module/combat.mjs";
 import { createExtincaoMacro, rollItemMacro } from "./module/helpers/macros.mjs";
 import { registerSettings } from "./module/settings.mjs";
-import { taskRoll, rollNoise } from "./module/helpers/dice.mjs"; 
+import { taskRoll, rollNoise } from "./module/helpers/dice.mjs";
 
 /* -------------------------------------------- */
 /* Inicialização do Sistema                     */
@@ -47,11 +47,11 @@ Hooks.once('init', async function () {
     Actors.unregisterSheet("core", ActorSheet);
     Items.unregisterSheet("core", ItemSheet);
 
-    
+
 
     // Registra Ficha de Ator (Extinção)
     Actors.registerSheet("extincao", ExtincaoActorSheet, {
-        types: ["sobrevivente", "npc", "horda", "refugio"],
+        types: ["sobrevivente", "npc", "horda", "refugio", "veiculo"],
         makeDefault: true,
         label: "Ficha Extinção"
     });
@@ -275,6 +275,6 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         });
     });
 
-    
+
 });
 
