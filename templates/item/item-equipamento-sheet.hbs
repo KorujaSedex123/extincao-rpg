@@ -1,0 +1,63 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+        <div class="header-details" style="flex:1;">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Nome do Equipamento" {{#if isLocked}}readonly{{/if}} />
+            </h1>
+        </div>
+    </header>
+
+    {{#if isLocked}}
+    <div style="background:#330000; color:#ff4444; text-align:center; padding:5px; font-weight:bold; font-size:0.8em; margin-bottom:10px; border:1px solid #ff4444;">
+        <i class="fas fa-lock"></i> MODO VISUALIZAÇÃO (Refúgio Travado)
+    </div>
+    {{/if}}
+
+    <div class="item-stats-grid">
+        
+        <div class="stat-box">
+            <label>QTD</label>
+            <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}} />
+        </div>
+
+        <div class="stat-box">
+            <label>RD (Proteção)</label>
+            <input type="number" name="system.rd" value="{{system.rd}}" data-dtype="Number" placeholder="0" {{#if isLocked}}readonly{{/if}} />
+        </div>
+
+        <div class="stat-box">
+            <label>STATUS</label>
+            <div class="toggle-wrapper">
+                <label class="neon-toggle">
+                    <input type="checkbox" name="system.equipped" {{checked system.equipped}} {{#if isLocked}}disabled{{/if}}/>
+                    
+                    <span class="toggle-slider">
+                        <span class="status-on"><i class="fas fa-shirt"></i> EQUIPADO</span>
+                        <span class="status-off"><i class="fas fa-suitcase"></i> MOCHILA</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">DESCRIÇÃO</a>
+        <a class="item" data-tab="attributes">DETALHES</a>
+    </nav>
+
+    <section class="sheet-body">
+        <div class="tab description" data-group="primary" data-tab="description">
+            <div class="bio-editor">
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
+            </div>
+        </div>
+
+        <div class="tab attributes" data-group="primary" data-tab="attributes">
+            <div class="form-group">
+                <label>Tags / Tipo:</label>
+                <input type="text" name="system.tags" value="{{system.tags}}" placeholder="Ex: Vestuário, Recurso, Ferramenta" {{#if isLocked}}readonly{{/if}} />
+            </div>
+        </div>
+    </section>
+</form>

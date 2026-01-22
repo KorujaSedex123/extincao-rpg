@@ -47,6 +47,8 @@ Hooks.once('init', async function () {
     Actors.unregisterSheet("core", ActorSheet);
     Items.unregisterSheet("core", ItemSheet);
 
+    
+
     // Registra Ficha de Ator (Extinção)
     Actors.registerSheet("extincao", ExtincaoActorSheet, {
         types: ["sobrevivente", "npc", "horda", "refugio"],
@@ -82,6 +84,7 @@ Hooks.once('init', async function () {
     // Carrega os templates HTML (Função definida no final deste arquivo)
     return preloadHandlebarsTemplates();
 });
+
 
 /* -------------------------------------------- */
 /* Mensagem de Boas Vindas (Hook Ready)         */
@@ -271,4 +274,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
             </div>`
         });
     });
+
+    
 });
+

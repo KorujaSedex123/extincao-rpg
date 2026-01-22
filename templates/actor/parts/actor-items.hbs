@@ -3,8 +3,8 @@
     <div class="inventory-group">
         <div class="inventory-header flexrow">
             <h3 class="item-name">ARMAS</h3>
-            <div class="item-detail" style="flex: 0 0 60px;">USO</div>
-            <div class="item-detail" style="flex: 0 0 60px;">DANO</div>
+            <div class="item-detail" style="flex: 0 0 70px; text-align: center;">USO</div>
+            <div class="item-detail" style="flex: 0 0 50px; text-align: center;">DANO</div>
             <div class="item-controls">
                 <a class="item-control item-create" title="Adicionar Arma" data-type="arma">
                     <i class="fas fa-plus"></i> Add
@@ -18,22 +18,25 @@
                     <img src="{{item.img}}" width="24" height="24" />
                 </div>
 
-                <h4 class="item-name item-open" style="cursor: pointer; color: #aaddff;">
+                <h4 class="item-name item-open" style="cursor: pointer; color: #aaddff; font-weight: bold;">
                     {{item.name}}
                 </h4>
 
-                <div class="item-detail item-uso" style="text-align: center;">
-                    {{#if (ne item.system.uso "0")}}
-                    <a class="roll-usage" data-item-id="{{item._id}}"
-                        title="Testar Munição (Rolar {{item.system.uso}})">
-                        <i class="fas fa-dice"></i> {{item.system.uso}}
-                    </a>
+                <div class="item-detail item-uso" style="flex: 0 0 70px; text-align: center;">
+                    {{#if (eq item.system.uso "-")}}
+                        <span style="color: #4da; font-size: 1.2em;" title="Munição Infinita">∞</span>
+                    
+                    {{else if (eq item.system.uso "0")}}
+                        <span style="color: #f44; font-weight: bold;" title="Arma Vazia!">0</span>
+                    
                     {{else}}
-                    <span style="color: #555;">-</span>
+                        <a class="roll-usage" data-item-id="{{item._id}}" title="Testar Munição (Rolar {{item.system.uso}})">
+                            <i class="fas fa-dice"></i> {{item.system.uso}}
+                        </a>
                     {{/if}}
                 </div>
 
-                <div class="item-detail" style="flex: 0 0 60px; color: #ff4444; font-weight:bold; text-align: center;">
+                <div class="item-detail" style="flex: 0 0 50px; color: #ff4444; font-weight:bold; text-align: center;">
                     {{item.system.dano}}
                 </div>
 
@@ -49,7 +52,8 @@
     <div class="inventory-group">
         <div class="inventory-header flexrow">
             <h3 class="item-name">EQUIPAMENTOS</h3>
-            <div class="item-detail" style="flex: 0 0 60px;">QTD</div>
+            <div class="item-detail" style="flex: 0 0 60px; text-align: center;">RD</div>
+            <div class="item-detail" style="flex: 0 0 50px; text-align: center;">QTD</div>
             <div class="item-controls">
                 <a class="item-control item-create" title="Adicionar Equipamento" data-type="equipamento">
                     <i class="fas fa-plus"></i> Add
@@ -63,17 +67,28 @@
                     <img src="{{item.img}}" width="24" height="24" />
                 </div>
 
-                <h4 class="item-name item-open" style="cursor: pointer;">
+                <h4 class="item-name item-open" style="cursor: pointer; {{#if item.system.equipped}}color: #4da; text-shadow: 0 0 5px rgba(77,221,170,0.3);{{else}}color: #888;{{/if}}">
                     {{item.name}}
+                    {{#if item.system.equipped}}<i class="fas fa-shirt" style="font-size: 0.7em; margin-left: 5px;" title="Equipado"></i>{{/if}}
                 </h4>
 
-                {{#if item.system.isArmor}}
-                <span title="Valor de Armadura" style="color:#aaa; margin-right:10px; font-size: 0.9em;">
-                    <i class="fas fa-shield-alt"></i> {{item.system.armor}}
-                </span>
-                {{/if}}
+                <div class="item-detail item-rd" style="flex: 0 0 60px; text-align: center;">
+                    {{#if (gt item.system.rd 0)}}
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                            <span title="Valor de Proteção" style="color: #aaddff; font-weight: bold;">
+                                <i class="fas fa-shield-alt"></i> {{item.system.rd}}
+                            </span>
+                            
+                            <a class="degrade-armor" data-item-id="{{item._id}}" title="Danificar Armadura (-1 RD)">
+                                <i class="fas fa-hammer" style="font-size: 0.8em; color: #555;"></i>
+                            </a>
+                        </div>
+                    {{else}}
+                        <span style="color: #444;">-</span>
+                    {{/if}}
+                </div>
 
-                <div class="item-detail" style="flex: 0 0 60px; text-align: center;">
+                <div class="item-detail" style="flex: 0 0 50px; text-align: center;">
                     {{item.system.quantity}}
                 </div>
 
@@ -89,7 +104,7 @@
     <div class="inventory-group">
         <div class="inventory-header flexrow">
             <h3 class="item-name">DIVERSOS / SUCATA</h3>
-            <div class="item-detail" style="flex: 0 0 60px;">QTD</div>
+            <div class="item-detail" style="flex: 0 0 50px; text-align: center;">QTD</div>
             <div class="item-controls">
                 <a class="item-control item-create" title="Adicionar Item" data-type="item">
                     <i class="fas fa-plus"></i> Add
@@ -107,7 +122,7 @@
                     {{item.name}}
                 </h4>
 
-                <div class="item-detail" style="flex: 0 0 60px; text-align: center; color: #888;">
+                <div class="item-detail" style="flex: 0 0 50px; text-align: center; color: #888;">
                     {{item.system.quantity}}
                 </div>
 

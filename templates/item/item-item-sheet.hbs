@@ -1,9 +1,9 @@
 <form class="{{cssClass}}" autocomplete="off">
     <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         <div class="header-details" style="flex:1;">
             <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="Nome do Item" {{#if isLocked}}readonly{{/if}}/>
+                <input name="name" type="text" value="{{item.name}}" placeholder="Nome do Item" {{#if isLocked}}readonly{{/if}} />
             </h1>
         </div>
     </header>
@@ -14,29 +14,29 @@
     </div>
     {{/if}}
 
-    <div class="item-stats-grid">
+    <div class="item-stats-grid" style="grid-template-columns: 1fr 2fr;">
+        
         <div class="stat-box">
-            <label>QUANTIDADE</label>
-            <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/>
+            <label>QTD</label>
+            <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}} />
         </div>
+
         <div class="stat-box">
-            <label>PESO</label>
-            <input type="number" name="system.weight" value="{{system.weight}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/>
-        </div>
-        <div class="stat-box">
-            <label>VALOR</label>
-            <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" {{#if isLocked}}readonly{{/if}}/>
+            <label>CATEGORIA / TIPO</label>
+            <input type="text" name="system.tags" value="{{system.tags}}" placeholder="Ex: Sucata, Recurso, Chave" {{#if isLocked}}readonly{{/if}} 
+                   style="text-align: left; padding-left: 10px;"/>
         </div>
     </div>
 
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="description">DESCRIÇÃO</a>
-        <a class="item" data-tab="attributes">DETALHES</a>
     </nav>
 
     <section class="sheet-body">
         <div class="tab description" data-group="primary" data-tab="description">
-            {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
+            <div class="bio-editor">
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
+            </div>
         </div>
     </section>
 </form>
