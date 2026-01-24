@@ -33,6 +33,9 @@ export const preloadHandlebarsTemplates = async function() {
     "systems/extincao/templates/item/item-arma-sheet.hbs",
 
     // 5. Refúgio
-    "systems/extincao/templates/actor/actor-refugio-sheet.hbs"
+    "systems/extincao/templates/actor/actor-refugio-sheet.hbs",
+
+      // 6. Veiculo
+    "systems/extincao/templates/actor/actor-veiculo-sheet.hbs"
   ]);
 };

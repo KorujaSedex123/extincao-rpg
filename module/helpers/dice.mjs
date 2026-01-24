@@ -3,7 +3,7 @@
  * Responsável por gerenciar modais, regras de desespero e chat cards.
  */
 export async function taskRoll(actor, dataset, item = null) {
-    
+
     // 1. Definições Iniciais
     let baseDice = 0;
     let label = dataset.label || game.i18n.localize("EXTINCAO.Roll.Label");
@@ -17,11 +17,11 @@ export async function taskRoll(actor, dataset, item = null) {
     // A. Penalidade de Infecção (Vírus)
     // MUDANÇA: Adicionamos '?.' depois de details para não quebrar se o ator não tiver details
     const infectionStage = Number(actor.system.details?.infection) || 0;
-    
-    if (infectionStage === 2) { 
+
+    if (infectionStage === 2) {
         autoPenalty -= 1;
         penaltyReasons.push("Febre (-1)");
-    } else if (infectionStage >= 3) { 
+    } else if (infectionStage >= 3) {
         autoPenalty -= 2;
         penaltyReasons.push("Necrose (-2)");
     }
@@ -36,46 +36,46 @@ export async function taskRoll(actor, dataset, item = null) {
 
     // Mapa de Atributos para Perícias
     const SKILL_MAP = {
-      "briga": "for", "armas_brancas": "for", "atletismo": "for",
-      "armas_fogo": "des", "furtividade": "des", "pilotagem": "des", "ladinagem": "des", "esquiva": "des",
-      "vigor": "con",
-      "medicina": "int", "tecnologia": "int", "investigacao": "int", "sobrevivencia": "int", "ciencias": "int",
-      "percepcao": "per", "atencao": "per", "intuicao": "per",
-      "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
+        "briga": "for", "armas_brancas": "for", "atletismo": "for",
+        "armas_fogo": "des", "furtividade": "des", "pilotagem": "des", "ladinagem": "des", "esquiva": "des",
+        "vigor": "con",
+        "medicina": "int", "tecnologia": "int", "investigacao": "int", "sobrevivencia": "int", "ciencias": "int",
+        "percepcao": "per", "atencao": "per", "intuicao": "per",
+        "lideranca": "von", "adestramento": "von", "intimidacao": "von", "diplomacia": "von"
     };
 
     // A. Lógica de Perícias
     if (dataset.rollType === 'skill') {
-      const skillKey = dataset.key;
-      // MUDANÇA: Garante que system.skills existe antes de tentar acessar
-      const skill = actor.system.skills ? actor.system.skills[skillKey] : { value: 0 };
-      
-      const attrKey = SKILL_MAP[skillKey] || "int";
-      const attributeValue = actor.system.attributes?.[attrKey]?.value || 0;
-      
-      baseDice = attributeValue + (skill.value || 0);
-      
-      if (skill.value >= 4) isSpecialist = true;
-      
-      label = `${label} (${attributeValue.toString().toUpperCase()} + ${skill.value})`;
-    } 
+        const skillKey = dataset.key;
+        // MUDANÇA: Garante que system.skills existe antes de tentar acessar
+        const skill = actor.system.skills ? actor.system.skills[skillKey] : { value: 0 };
+
+        const attrKey = SKILL_MAP[skillKey] || "int";
+        const attributeValue = actor.system.attributes?.[attrKey]?.value || 0;
+
+        baseDice = attributeValue + (skill.value || 0);
+
+        if (skill.value >= 4) isSpecialist = true;
+
+        label = `${label} (${attributeValue.toString().toUpperCase()} + ${skill.value})`;
+    }
     // B. Lógica de Atributos
     else if (dataset.key) {
-      baseDice = actor.system.attributes?.[dataset.key]?.value || 0;
-    } 
+        baseDice = actor.system.attributes?.[dataset.key]?.value || 0;
+    }
     // C. Lógica de Itens
     else if (dataset.rollType === 'item' && item) {
-      baseDice = Number(item.system.bonus) || 1; 
-      const damage = item.system.dano || "0";
-      label = `${game.i18n.localize("EXTINCAO.Roll.Attack")}: ${item.name}`;
-      damageInfo = damage;
-    } 
+        baseDice = Number(item.system.bonus) || 1;
+        const damage = item.system.dano || "0";
+        label = `${game.i18n.localize("EXTINCAO.Roll.Attack")}: ${item.name}`;
+        damageInfo = damage;
+    }
     // D. Lógica de NPC
     else if (dataset.rollType === 'npc-attack') {
-      baseDice = actor.system.attributes?.attack?.value || 1;
-      damageInfo = actor.system.attributes?.damage?.value || "1";
+        baseDice = actor.system.attributes?.attack?.value || 1;
+        damageInfo = actor.system.attributes?.damage?.value || "1";
     } else if (dataset.rollType === 'npc-defense') {
-      baseDice = actor.system.attributes?.defense?.value || 1;
+        baseDice = actor.system.attributes?.defense?.value || 1;
     }
 
     // Monta o aviso de penalidade
@@ -124,15 +124,15 @@ export async function taskRoll(actor, dataset, item = null) {
                     callback: async (html) => {
                         const modifier = Number(html.find('[name="modifier"]').val()) || 0;
                         const forceDesperation = html.find('[name="forceDesperation"]').is(':checked');
-                        
+
                         let finalDiceCount = baseDice + modifier;
                         let isDesperate = false;
-                        let glitchThreshold = 1; 
+                        let glitchThreshold = 1;
 
                         if (finalDiceCount <= 0 || forceDesperation) {
                             if (finalDiceCount <= 0) finalDiceCount = 1;
                             isDesperate = true;
-                            glitchThreshold = 3; 
+                            glitchThreshold = 3;
                             label += ` <span style='color:#f44; font-weight:bold;'>${game.i18n.localize("EXTINCAO.Roll.DesperationTag")}</span>`;
                         }
 
@@ -152,8 +152,8 @@ export async function taskRoll(actor, dataset, item = null) {
                         for (let die of diceResults) {
                             const val = die.result;
                             let cssClass = "";
-                            if (val === 6) { successCount++; hasCrit = true; cssClass = "crit"; } 
-                            else if (val >= targetNumber) { successCount++; cssClass = "success"; } 
+                            if (val === 6) { successCount++; hasCrit = true; cssClass = "crit"; }
+                            else if (val >= targetNumber) { successCount++; cssClass = "success"; }
                             else if (val <= glitchThreshold) { onesCount++; cssClass = "glitch"; }
                             diceHTML += `<span class="mini-die ${cssClass}">${val}</span>`;
                         }
@@ -165,14 +165,14 @@ export async function taskRoll(actor, dataset, item = null) {
                         if (successCount > 0) {
                             borderSideColor = "#4eff8c";
                             if (actor.type === 'npc') borderSideColor = "#f44";
-                            
+
                             const critText = hasCrit ? `<div style="font-size:0.6em; color:#fff; letter-spacing:2px; border-top:1px dashed #444; margin-top:5px; padding-top:2px;">${game.i18n.localize("EXTINCAO.Roll.Critical")}</div>` : "";
-                            
+
                             let damageHtml = "";
                             if (damageInfo && damageInfo !== "0") {
-                                damageHtml = `<div style="margin-top:5px; border-top:1px solid #333; padding-top:2px; font-weight:bold; color:${actor.type==='npc'?'#f44':'#ccc'}">${game.i18n.localize("EXTINCAO.Roll.Damage")}: ${damageInfo}</div>`;
+                                damageHtml = `<div style="margin-top:5px; border-top:1px solid #333; padding-top:2px; font-weight:bold; color:${actor.type === 'npc' ? '#f44' : '#ccc'}">${game.i18n.localize("EXTINCAO.Roll.Damage")}: ${damageInfo}</div>`;
                             }
-                            outcomeHTML = `<div class="roll-result success" style="${actor.type==='npc'?'color:#f44; border-color:#f44; background:#210;':''}"> ${successCount} ${game.i18n.localize("EXTINCAO.Roll.Success")} ${critText} </div> ${damageHtml}`;
+                            outcomeHTML = `<div class="roll-result success" style="${actor.type === 'npc' ? 'color:#f44; border-color:#f44; background:#210;' : ''}"> ${successCount} ${game.i18n.localize("EXTINCAO.Roll.Success")} ${critText} </div> ${damageHtml}`;
                         } else {
                             if (onesCount > 0) {
                                 borderSideColor = "#f44";
@@ -193,7 +193,8 @@ export async function taskRoll(actor, dataset, item = null) {
 
                         ChatMessage.create({
                             speaker: ChatMessage.getSpeaker({ actor: actor }),
-                            content: `<div class="extincao-roll" style="border-left-color: ${borderSideColor}"><h3>${label}</h3>${specialistHint}<div class="dice-pool">${diceHTML}</div>${outcomeHTML}${pushButton}</div>`
+                            content: `<div class="extincao-roll" style="border-left-color: ${borderSideColor}"><h3>${label}</h3>${specialistHint}<div class="dice-pool">${diceHTML}</div>${outcomeHTML}${pushButton}</div>`,
+                            rolls: [roll],
                         });
                         resolve(roll);
                     }
@@ -232,7 +233,7 @@ export async function rollNoise() {
         statusText = "SILÊNCIO";
         flavorText = "O som foi abafado. Ninguém ouviu.";
         icon = "fa-volume-mute";
-    } 
+    }
     else if (result <= 5) {
         // 4, 5 -> ATENÇÃO (+1 Inimigo)
         status = "warning";
@@ -240,7 +241,7 @@ export async function rollNoise() {
         flavorText = "Um zumbi próximo ouviu... <br><strong>(+1 INIMIGO NA CENA)</strong>";
         icon = "fa-exclamation-triangle";
         sound = "sounds/notify.wav"; // Som de alerta leve
-    } 
+    }
     else {
         // 6 -> O ECO (Horda/Onda de Ataque)
         status = "danger";
@@ -284,6 +285,7 @@ export async function rollNoise() {
     ChatMessage.create({
         user: game.user.id,
         content: content,
-        sound: sound
+        sound: sound,
+        rolls: [roll]
     });
 }

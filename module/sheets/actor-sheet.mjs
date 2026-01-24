@@ -35,6 +35,9 @@ export class ExtincaoActorSheet extends ActorSheet {
     if (this.actor.type === 'refugio') {
       return "systems/extincao/templates/actor/actor-refugio-sheet.hbs";
     }
+    if (this.actor.type === 'veiculo') {
+      return "systems/extincao/templates/actor/actor-veiculo-sheet.hbs";
+    }
 
     return "systems/extincao/templates/actor/actor-sobrevivente-sheet.hbs";
   }
@@ -66,7 +69,7 @@ export class ExtincaoActorSheet extends ActorSheet {
     }
 
     // Prepara itens (Inventário)
-    if (actorData.type == 'sobrevivente' || actorData.type == 'character' || actorData.type == 'npc' || actorData.type == 'refugio') {
+    if (actorData.type == 'sobrevivente' || actorData.type == 'character' || actorData.type == 'npc' || actorData.type == 'refugio' || actorData.type == 'veiculo') {
       this._prepareItems(context);
     }
 
@@ -84,6 +87,8 @@ export class ExtincaoActorSheet extends ActorSheet {
 
     const editorClass = foundry.applications?.ux?.TextEditor ?? TextEditor;
     context.enrichedBiography = await editorClass.enrichHTML(this.actor.system.details?.biography || "", { async: true, relativeTo: this.actor });
+
+    context.isLocked = this.actor.getFlag("extincao", "sheetLocked") || false;
 
     return context;
   }
@@ -229,6 +234,12 @@ export class ExtincaoActorSheet extends ActorSheet {
     });
     // Listener do Combustível (Veículo)
     html.find('.roll-fuel').click(this._onRollFuel.bind(this));
+
+    // BOTÃO DE TRAVA (CADEADO)
+    html.find('.toggle-lock').click(this._onToggleLock.bind(this));
+
+    // BOTÕES DE AJUSTE RÁPIDO (+/-)
+    html.find('.adjust-resource').click(this._onAdjustResource.bind(this));
     // -------------------------------------------------------------
     // 2. GESTÃO DE RECURSOS (+ e -)
     // -------------------------------------------------------------
@@ -514,7 +525,45 @@ export class ExtincaoActorSheet extends ActorSheet {
   }
   // --- MÉTODOS AUXILIARES ---
 
+async _onToggleLock(event) {
+    event.preventDefault();
+    // Pega o estado atual e inverte
+    const isLocked = this.actor.getFlag("extincao", "sheetLocked");
+    await this.actor.setFlag("extincao", "sheetLocked", !isLocked);
+  }
 
+  /**
+   * Ajusta valores (+/-) de PV, Estresse, etc.
+   */
+  async _onAdjustResource(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const resource = btn.dataset.resource; // ex: 'pv'
+    const action = btn.dataset.action;     // 'plus' ou 'minus'
+
+    let attrPath = "";
+    
+    // Identifica qual atributo estamos mexendo
+    if (resource === 'pv') attrPath = "system.resources.pv.value";
+    else if (resource === 'estresse') attrPath = "system.resources.estresse.value";
+    else if (resource === 'pr') attrPath = "system.resources.pr.value";
+
+    if (!attrPath) return;
+
+    // Pega o valor atual
+    const currentValue = Number(getProperty(this.actor, attrPath)) || 0;
+    
+    // Calcula o novo valor
+    let newValue = currentValue;
+    if (action === 'plus') newValue += 1;
+    if (action === 'minus') newValue -= 1;
+
+    // Se for PV, não deixa ficar negativo (opcional, mas bom pra veiculo)
+    if (resource === 'pv' && newValue < 0) newValue = 0;
+
+    // Atualiza o ator
+    await this.actor.update({ [attrPath]: newValue });
+  }
 
   async _onRoll(event) {
     event.preventDefault();

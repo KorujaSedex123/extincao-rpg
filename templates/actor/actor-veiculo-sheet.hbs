@@ -1,59 +1,106 @@
 <form class="{{cssClass}} vehicle-sheet" autocomplete="off">
     <header class="sheet-header">
-        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" style="border-color: #ffaa00;"/>
-        <div class="header-details">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Veículo" />
-            </h1>
-            <div class="vehicle-type">
-                <i class="fas fa-car-side"></i> VEÍCULO / TRANSPORTE
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" 
+             style="border-color: #ffaa00; box-shadow: 0 0 10px rgba(255, 170, 0, 0.2);"/>
+
+        <div class="header-details" style="flex: 1; padding: 0 10px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <h1 class="charname" style="margin: 0; flex: 1;">
+                    <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Veículo" 
+                           style="color: #ffaa00; text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);"
+                           {{#if isLocked}}readonly{{/if}} />
+                </h1>
+
+                <a class="toggle-lock" title="Travar/Destravar Edição" style="margin-left: 10px; font-size: 1.2em; color: {{#if isLocked}}#ff4444{{else}}#666{{/if}};">
+                    <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+                </a>
             </div>
+            
+            <div class="char-subtitle" style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                <span style="background: #331a00; color: #ffaa00; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #ffaa00;">
+                    <i class="fas fa-truck-pickup"></i> VEÍCULO
+                </span>
+                
+                <div style="font-size: 0.8em; color: #888;">
+                    <i class="fas fa-users"></i> Cap: 
+                    <input type="text" name="system.attributes.capacidade" value="{{system.attributes.capacidade}}" 
+                           placeholder="Ex: 5" style="width: 40px; background: transparent; border: none; color: #ccc; border-bottom: 1px solid #444; text-align: center;"
+                           {{#if isLocked}}readonly{{/if}} />
+                </div>
+            </div>
+        </div>
+
+        <div class="header-stats" style="display: flex; flex-direction: column; gap: 5px; width: 140px;">
+            
+            <div class="stat-badge" style="background: #110b00; border: 1px solid #ffaa00; border-radius: 4px; padding: 2px;">
+                <label style="display: block; font-size: 0.7em; text-align: center; color: #ffaa00; font-weight: bold;">INTEGRIDADE</label>
+                
+                <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <a class="adjust-resource" data-resource="pv" data-action="minus" title="-1 Integridade">
+                        <i class="fas fa-minus-square" style="color: #ffaa00; opacity: 0.7;"></i>
+                    </a>
+
+                    <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" 
+                           style="width: 35px; text-align: center; background: transparent; border: none; color: #fff; font-size: 1.1em; font-weight: bold;" 
+                           {{#if isLocked}}readonly{{/if}} />
+                    
+                    <span style="color: #555;">/</span>
+                    
+                    <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" 
+                           style="width: 35px; text-align: center; background: transparent; border: none; color: #666; font-size: 0.9em;" placeholder="Max" 
+                           {{#if isLocked}}readonly{{/if}} />
+
+                    <a class="adjust-resource" data-resource="pv" data-action="plus" title="+1 Integridade">
+                        <i class="fas fa-plus-square" style="color: #ffaa00; opacity: 0.7;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="stat-badge" style="background: #001122; border: 1px solid #4da; border-radius: 4px; padding: 2px;">
+                <label style="display: block; font-size: 0.7em; text-align: center; color: #4da; font-weight: bold;">BLINDAGEM (RD)</label>
+                <div style="text-align: center;">
+                    <input type="number" name="system.attributes.rd.value" value="{{system.attributes.rd.value}}" 
+                           style="width: 100%; text-align: center; background: transparent; border: none; color: #fff; font-size: 1.2em; font-weight: bold;" placeholder="0" 
+                           {{#if isLocked}}readonly{{/if}} />
+                </div>
+            </div>
+
         </div>
     </header>
 
-    <section class="stats-panel" style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+    {{#if isLocked}}
+    <div style="background:#331a00; color:#ffaa00; text-align:center; padding:5px; font-weight:bold; font-size:0.8em; margin-top:5px; border:1px solid #ffaa00;">
+        <i class="fas fa-lock"></i> MODO VISUALIZAÇÃO (Veículo Travado)
+    </div>
+    {{/if}}
+
+    <div class="fuel-panel" style="margin: 10px 0; background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 8px; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
+        <div style="flex: 0 0 auto; color: #ffaa00; font-size: 1.5em; padding-left: 10px;">
+            <i class="fas fa-gas-pump"></i>
+        </div>
         
-        <div class="stat-box" style="border-color: #ffaa00;">
-            <label style="color:#ffaa00;">INTEGRIDADE (PV)</label>
-            <div class="resource-row">
-                <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" />
-                <span>/</span>
-                <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" placeholder="Max" />
-            </div>
+        <div style="flex: 1;">
+            <label style="font-size: 0.8em; color: #888; display: block; margin-bottom: 2px;">TANQUE DE COMBUSTÍVEL</label>
+            <select name="system.resources.fuel" style="width: 100%; background: #111; color: #eee; border: 1px solid #444;" {{#if isLocked}}disabled{{/if}}>
+                {{#select system.resources.fuel}}
+                <option value="cheio">CHEIO (100%)</option>
+                <option value="meio">MEIO TANQUE (50%)</option>
+                <option value="reserva">RESERVA (Crítico)</option>
+                <option value="seco">SECO (Vazio)</option>
+                {{/select}}
+            </select>
         </div>
 
-        <div class="stat-box" style="border-color: #aaddff;">
-            <label style="color:#aaddff;">BLINDAGEM (RD)</label>
-            <input type="number" name="system.attributes.rd.value" value="{{system.attributes.rd.value}}" style="font-size: 1.5em; color: #aaddff;" />
-        </div>
-
-        <div class="stat-box">
-            <label>CAPACIDADE</label>
-            <input type="text" name="system.attributes.capacidade" value="{{system.attributes.capacidade}}" placeholder="Ex: 4 Pessoas" />
-        </div>
-    </section>
-
-    <div class="fuel-panel" style="margin: 15px 0; background: #111; border: 1px solid #444; padding: 10px; border-radius: 5px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-            <label style="font-weight: bold; color: #ffaa00;"><i class="fas fa-gas-pump"></i> TANQUE DE COMBUSTÍVEL</label>
-            <a class="roll-fuel" title="Rolar Teste de Tanque (Pág 16)" style="font-size: 0.8em; color: #aaa; background: #222; padding: 2px 8px; border-radius: 4px;">
-                <i class="fas fa-dice"></i> Rolar Consumo
+        <div style="flex: 0 0 auto;">
+            <a class="roll-fuel" title="Rolar Teste de Consumo (1d6)" style="display: block; background: #222; color: #ccc; padding: 5px 10px; border-radius: 4px; border: 1px solid #444; font-size: 0.9em; cursor: pointer;">
+                <i class="fas fa-dice"></i> Rolar
             </a>
         </div>
-        
-        <select name="system.resources.fuel" style="width: 100%; background: #000; color: {{#if (eq system.resources.fuel 'seco')}}#f44{{else}}#ffaa00{{/if}}; text-align: center; font-weight: bold; padding: 5px;">
-            {{#select system.resources.fuel}}
-            <option value="cheio">█ █ █ CHEIO (Full)</option>
-            <option value="meio">█ █ ░ MEIO (Half)</option>
-            <option value="reserva">█ ░ ░ RESERVA (Low)</option>
-            <option value="seco">░ ░ ░ SECO (Empty)</option>
-            {{/select}}
-        </select>
     </div>
 
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="items">PORTA-MALAS</a>
-        <a class="item" data-tab="description">NOTAS</a>
+    <nav class="sheet-tabs tabs" data-group="primary" style="margin-top: 5px; border-bottom: 2px solid #333;">
+        <a class="item" data-tab="items" style="color: #ffaa00;">PORTA-MALAS</a>
+        <a class="item" data-tab="description">NOTAS / MANUAL</a>
     </nav>
 
     <section class="sheet-body">
@@ -62,7 +109,9 @@
         </div>
 
         <div class="tab description" data-group="primary" data-tab="description">
-            {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable}}
+            <div class="bio-editor">
+                {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
+            </div>
         </div>
     </section>
 </form>
