@@ -1,0 +1,143 @@
+/* ==========================================================================
+   CHAT-CARDS.CSS - ROLAGENS E MENSAGENS
+   ========================================================================== */
+
+/* Remove a borda padrão do Foundry */
+.chat-message {
+    background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important;
+}
+.chat-message .message-header {
+    background: #111; color: #888; padding: 5px; border-top: 2px solid #333; font-family: "Courier New", monospace; font-size: 0.7em;
+}
+.chat-message .message-content { background: transparent !important; padding: 0; }
+
+/* CONTAINER DA ROLAGEM */
+.extincao-roll {
+    background: #050505; border: 1px solid #333; border-left: 3px solid #666;
+    padding: 10px; border-radius: 0 4px 4px 0; font-family: "Courier New", monospace; color: #ccc;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5); margin-bottom: 5px;
+}
+.extincao-roll h3 {
+    margin: 0 0 10px 0; padding-bottom: 5px; border-bottom: 1px dashed #333;
+    color: #fff; font-size: 1.1em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
+}
+.extincao-roll p, .extincao-roll .message-content { font-size: 0.9em; color: #aaa; margin: 5px 0; line-height: 1.4; }
+
+/* RESULTADO (O Número) */
+.extincao-roll .roll-result {
+    font-size: 1.8em; font-weight: 900; text-align: center; padding: 10px; margin: 10px 0;
+    border-radius: 4px; background: #0e0e0e; border: 1px solid #333; color: #fff; text-shadow: 0 0 2px rgba(255,255,255,0.2);
+}
+.extincao-roll .roll-result.success {
+    color: #4eff8c; border-color: #4eff8c; background: rgba(78, 255, 140, 0.05);
+    box-shadow: inset 0 0 10px rgba(78, 255, 140, 0.1); text-shadow: 0 0 5px rgba(78, 255, 140, 0.5);
+}
+.extincao-roll .roll-result.failure { color: #888; border-color: #555; background: rgba(255, 255, 255, 0.02); }
+.extincao-roll .roll-result.glitch { color: #f00; border: 1px solid #f00; animation: pulse 1s infinite; }
+.extincao-roll .dice-tray { font-size: 0.75em; color: #555; text-align: center; margin-top: 5px; font-family: monospace; }
+
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+/* DADOS NO CHAT */
+.dice-pool { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 10px 0; }
+.mini-die {
+    display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px;
+    border-radius: 4px; font-weight: bold; font-size: 1.1em; border: 1px solid #333; background: #111;
+    color: #888; box-shadow: inset 0 0 5px #000;
+}
+.mini-die.crit { color: #fff; background: #004400; border-color: #4eff8c; text-shadow: 0 0 5px #4eff8c; box-shadow: 0 0 5px rgba(78, 255, 140, 0.5); }
+.mini-die.success { color: #4eff8c; border-color: #006600; }
+.mini-die.glitch { color: #f44; border-color: #500; }
+.roll-summary { text-align: center; font-size: 0.9em; padding: 5px; border-top: 1px dashed #333; margin-top: 5px; }
+.roll-summary.glitch-text { color: #f44; font-weight: bold; animation: pulse 1s infinite; }
+
+/* Botão de Forçar Rolagem */
+.force-roll-btn {
+    background: #300; color: #f44; border: 1px solid #f44; padding: 5px 10px;
+    font-family: "Courier New", monospace; font-weight: bold; cursor: pointer; width: 100%;
+    margin-top: 5px; text-transform: uppercase; transition: all 0.2s;
+}
+.force-roll-btn:hover { background: #f44; color: #000; box-shadow: 0 0 10px #f44; }
+.force-roll-btn:disabled { background: #111; color: #444; border-color: #333; cursor: not-allowed; box-shadow: none; }
+
+/* ITEM CARD (INFO) */
+.extincao-chat-card {
+    background: #0e0e12; border: 1px solid #333; border-left: 3px solid #4da; border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 10px; font-family: "Segoe UI", sans-serif; overflow: hidden;
+}
+.card-header {
+    background: linear-gradient(90deg, #15151b 0%, #08080a 100%); padding: 8px;
+    display: flex; align-items: center; border-bottom: 1px solid #222;
+}
+.card-header img { width: 32px; height: 32px; border-radius: 4px; border: 1px solid #444; margin-right: 10px; background: #000; }
+.card-header h3 { margin: 0; font-size: 1.1em; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+.card-content { padding: 10px; color: #ccc; font-size: 0.9em; }
+.card-stats-grid { display: flex; gap: 5px; margin-top: 10px; }
+.stat-box { background: #1a1a20; border: 1px solid #333; border-radius: 4px; padding: 4px 8px; flex: 1; text-align: center; }
+.stat-box label { display: block; font-size: 0.65em; color: #667; font-weight: bold; margin-bottom: 2px; }
+.stat-box .value { font-size: 1.1em; font-weight: bold; color: #eee; }
+.stat-box.damage .value { color: #f55; }
+.stat-box.usage .value { color: #4f8; }
+.card-footer { background: #050505; color: #333; font-size: 0.7em; text-align: right; padding: 2px 5px; letter-spacing: 2px; }
+
+/* ROLL USAGE BTN */
+.roll-usage {
+    cursor: pointer; font-weight: bold; color: #4da; padding: 2px 6px;
+    border: 1px solid rgba(77, 221, 170, 0.3); border-radius: 4px; transition: all 0.2s; text-shadow: 0 0 5px rgba(77, 221, 170, 0.2);
+}
+.roll-usage:hover { background: rgba(77, 221, 170, 0.2); color: #fff; box-shadow: 0 0 8px rgba(77, 221, 170, 0.4); }
+
+/* ESTILIZAÇÃO DA ROLAGEM DE DADOS (DICE POOL) */
+.chat-message .dice-roll { background: #08080a; border: 1px solid #333; border-radius: 4px; box-shadow: none; }
+.chat-message .dice-roll .dice-result { border-top: 1px solid #222; }
+.chat-message .dice-roll .dice-formula {
+    background: #111; color: #889; font-family: "Courier New", monospace; font-weight: bold; text-shadow: none; border-bottom: 1px solid #222;
+}
+.chat-message .dice-roll .dice-tooltip { background: #0e0e12; color: #eee; }
+.chat-message .dice-roll .dice-total {
+    background: #050505; color: #4da; font-size: 1.8em; font-weight: 900; text-shadow: 0 0 5px rgba(78, 255, 140, 0.3); border-top: 1px solid #222;
+}
+.chat-message .dice-roll .dice-total.success { color: #4eff8c; background: #051505; border-color: #153315; }
+.chat-message .dice-roll .dice-total.failure { color: #ff4444; background: #150505; }
+
+/* DADO DE RUÍDO */
+.noise-card {
+    background: #080808; border: 1px solid #333; border-radius: 6px; padding: 15px;
+    font-family: 'Courier New', monospace; text-align: center; position: relative; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.noise-card.safe { border-color: #4da; box-shadow: 0 0 10px rgba(77, 221, 170, 0.1); }
+.noise-card.safe .noise-result { color: #4da; }
+.noise-card.safe .bar { background: #4da; }
+.noise-card.warning { border-color: #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.2); }
+.noise-card.warning .noise-result { color: #ffaa00; }
+.noise-card.warning .bar { background: #ffaa00; box-shadow: 0 0 5px #ffaa00; animation: soundPulse 0.5s infinite alternate; }
+.noise-card.danger { border-color: #ff0000; background: #1a0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); animation: shakeCard 0.4s infinite; }
+.noise-card.danger .noise-result { color: #ff0000; text-shadow: 0 0 8px #f00; font-weight: 900; }
+.noise-card.danger .bar { background: #ff0000; height: 100% !important; box-shadow: 0 0 10px #f00; }
+
+.sound-wave { display: flex; justify-content: center; align-items: flex-end; height: 50px; gap: 4px; margin: 15px 0; }
+.bar { width: 8px; border-radius: 2px; transition: height 0.1s; }
+.safe .bar:nth-child(1) { height: 15px; animation: wave 1.2s infinite; }
+.safe .bar:nth-child(2) { height: 25px; animation: wave 1.0s infinite; }
+.safe .bar:nth-child(3) { height: 10px; animation: wave 1.4s infinite; }
+.safe .bar:nth-child(4) { height: 20px; animation: wave 1.1s infinite; }
+.safe .bar:nth-child(5) { height: 12px; animation: wave 1.3s infinite; }
+
+@keyframes wave { 0%, 100% { opacity: 0.5; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.3); } }
+@keyframes soundPulse { from { height: 20px; opacity: 0.6; } to { height: 40px; opacity: 1; } }
+@keyframes shakeCard { 
+    0% { transform: translate(1px, 1px); } 25% { transform: translate(-2px, 0px); } 50% { transform: translate(2px, -1px); } 
+    75% { transform: translate(-1px, 2px); } 100% { transform: translate(1px, -1px); } 
+}
+
+/* BOTÃO DE DANO AUTOMÁTICO */
+.apply-damage-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 8px;
+    background: #500; color: #fff; border: 1px solid #f44; border-radius: 4px;
+    font-family: "Courier New", monospace; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+}
+.apply-damage-btn:hover {
+    background: #f00; color: #000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.6); transform: scale(1.02);
+}
+.apply-damage-btn i { font-size: 1.2em; }

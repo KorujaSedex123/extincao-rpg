@@ -159,29 +159,31 @@
 
             <hr class="separator-line">
 
-            <div class="skills-section">
-                {{#each system.attributes as |attr key|}}
-                <div class="skill-group-col">
-                    <div class="skill-group-header">{{attr.label}}</div>
+            <div class="skills-section new-layout">
+                {{#each skillColumns as |group|}}
+                <div class="skill-group-col {{group.key}}">
+                    <div class="skill-group-header">{{group.label}}</div>
 
                     <div class="skills-list">
-                        {{#each ../system.skills as |skill sKey|}}
-                        {{#if (eq skill.attribute key)}}
+                        {{#each group.skills as |skillKey|}}
+                        {{#with (lookup ../../system.skills skillKey) as |skill|}}
                         <div class="skill-item">
 
                             <div class="skill-fail-check" style="margin-right: 5px; display:flex; align-items:center;">
-                                <input type="checkbox" name="system.skills.{{sKey}}.failure" {{checked skill.failure}}
-                                    title="Falhou em teste? Marque para evoluir."
+                                <input type="checkbox" name="system.skills.{{skillKey}}.failure" {{checked
+                                    skill.failure}} title="Falhou? Marque para ganhar XP."
                                     style="width:14px; height:14px; accent-color:#4da; cursor:pointer;" />
                             </div>
 
-                            <span class="skill-name {{#if ../../isLocked}}rollable{{/if}}" data-key="{{sKey}}"
-                                data-roll-type="skill" data-label="{{skill.label}}">{{skill.label}}</span>
+                            <span class="skill-name {{#if ../../../isLocked}}rollable hover-glow{{/if}}"
+                                data-key="{{skillKey}}" data-roll-type="skill" data-label="{{skill.label}}">
+                                {{skill.label}}
+                            </span>
 
-                            <input type="number" class="skill-input" name="system.skills.{{sKey}}.value"
-                                value="{{skill.value}}" {{#if ../../isLocked}}readonly{{/if}} />
+                            <input type="number" class="skill-input" name="system.skills.{{skillKey}}.value"
+                                value="{{skill.value}}" {{#if ../../../isLocked}}readonly{{/if}} />
                         </div>
-                        {{/if}}
+                        {{/with}}
                         {{/each}}
                     </div>
                 </div>

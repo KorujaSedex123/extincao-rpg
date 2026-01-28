@@ -1,0 +1,88 @@
+/* ==========================================================================
+   SHARED.CSS - ESTILOS GERAIS E COMPARTILHADOS
+   ========================================================================== */
+
+/* 1. GERAL (Janela e Fundo) */
+.extincao-sheet.window-app .window-content {
+    background: #0f0f0f;
+    color: #cccccc;
+    font-family: "Courier New", monospace;
+    letter-spacing: 0.5px;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.extincao-sheet img { border: none; max-width: 100%; }
+
+/* INPUTS GERAIS */
+.extincao-sheet input, .extincao-sheet select { 
+    background-color: #050505; 
+    color: #fff; 
+    border: 1px solid #444; 
+}
+
+/* Modo Travado (Locked) */
+.extincao-sheet.locked input, .extincao-sheet.locked select { 
+    background: transparent !important; 
+    border: none !important; 
+    pointer-events: none; 
+    appearance: none; 
+}
+
+/* CORREÇÃO DO DROPDOWN (MENU DE OPÇÕES) */
+.extincao-sheet select {
+    background-color: #000 !important;
+    color: #4eff8c !important;
+    border: 1px solid #444 !important;
+    cursor: pointer;
+}
+.extincao-sheet select option {
+    background-color: #111 !important;
+    color: #fff !important;
+    padding: 5px;
+}
+.extincao-sheet select option:checked,
+.extincao-sheet select option:hover {
+    background-color: #333 !important;
+    color: #4eff8c !important;
+}
+
+/* CONTROLES MINIMALISTAS (+ e -) */
+.stat-control, .stress-control {
+    color: #444;
+    cursor: pointer;
+    font-size: 0.7em;
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+.stat-control:hover, .stress-control:hover {
+    background: rgba(255, 255, 255, 0.1); color: #fff; border-color: #555;
+}
+
+.stat-control.minus:hover, .stress-control.minus:hover { color: #ff6666; border-color: #ff6666; }
+.stat-control.plus:hover, .stress-control.plus:hover { color: #66ff66; border-color: #66ff66; }
+
+.stat-control {
+    width: 16px; height: 16px;
+    font-size: 0.8em;
+    border: 1px solid #333;
+    background: #111;
+    color: #666;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+}
+.stat-control:hover { border-color: #777; color: #fff; }
+
+/* Botões Genéricos de Item */
+.item-control { color: #555; cursor: pointer; font-size: 0.9em; }
+.item-control:hover { color: #fff; }
+.item-create { color: #4eff8c; transition: color 0.2s; } 
+.item-create:hover { color: #fff; text-shadow: 0 0 5px #4eff8c; }
+.item-delete:hover { color: #f44; }

@@ -275,6 +275,94 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         });
     });
 
+    /* -------------------------------------------- */
+    /* Automação de Dano no Chat                   */
+    /* -------------------------------------------- */
+    Hooks.on("renderChatMessageHTML", (message, html, data) => {
+        const $html = $(html); // Garante jQuery
 
+        // Listener do botão de aplicar dano
+        $html.find(".apply-damage-btn").click(async (ev) => {
+            ev.preventDefault();
+            const btn = ev.currentTarget;
+
+            // Pega os dados do botão
+            const damage = Number(btn.dataset.damage);
+            const targetTokenId = btn.dataset.targetId;
+
+            // Busca o token na cena atual
+            const token = canvas.tokens.get(targetTokenId);
+            if (!token) return ui.notifications.warn("Alvo não encontrado na cena atual.");
+
+            const actor = token.actor;
+            if (!actor) return;
+
+            // Verifica RD (Redução de Dano)
+            // Assume que RD está em system.attributes.rd.value (padrão que definimos)
+            const rd = Number(actor.system.attributes?.rd?.value) || 0;
+
+            // Calcula Dano Final
+            const finalDamage = Math.max(0, damage - rd);
+
+            // Aplica na Vida
+            const currentPV = actor.system.resources.pv.value;
+            const newPV = Math.max(0, currentPV - finalDamage);
+
+            await actor.update({ "system.resources.pv.value": newPV });
+
+            // Feedback visual
+            ui.notifications.info(`${actor.name} sofreu ${finalDamage} de dano (RD ${rd}).`);
+
+            // Opcional: Tocar som de hit
+            // AudioHelper.play({src: "sounds/hit.wav", volume: 0.8, autoplay: true, loop: false}, true);
+        });
+    });
+
+    /* -------------------------------------------- */
+    /* HOOK: CHAT LISTENERS (Automação de Dano)    */
+    /* -------------------------------------------- */
+    Hooks.on("renderChatMessageHTML", (message, html, data) => {
+        const $html = $(html);
+
+        // Clique no botão "APLICAR DANO"
+        $html.find(".apply-damage-btn").click(async (ev) => {
+            ev.preventDefault();
+            const btn = ev.currentTarget;
+
+            // Pega dados do botão
+            const damage = Number(btn.dataset.damage);
+            const targetTokenId = btn.dataset.targetId;
+
+            // Acha o token na cena
+            const token = canvas.tokens.get(targetTokenId);
+            if (!token) return ui.notifications.warn("Alvo não encontrado na cena atual.");
+
+            const actor = token.actor;
+            if (!actor) return;
+
+            // 1. Verifica RD (Armadura)
+            const rd = Number(actor.system.attributes?.rd?.value) || 0;
+
+            // 2. Calcula Dano Real
+            const finalDamage = Math.max(0, damage - rd);
+
+            if (finalDamage === 0) {
+                ui.notifications.info(`${actor.name} absorveu todo o dano com sua armadura (RD ${rd}).`);
+                return;
+            }
+
+            // 3. Aplica na Vida (PV)
+            const currentPV = actor.system.resources.pv.value;
+            const newPV = Math.max(0, currentPV - finalDamage);
+
+            await actor.update({ "system.resources.pv.value": newPV });
+
+            // Feedback
+            ui.notifications.error(`${actor.name} sofreu ${finalDamage} de dano! (Vida: ${newPV})`);
+
+            // Efeito visual (Shake ou Sangue - opcional)
+            // token.object.shake(); // Se tiver módulos fx
+        });
+    });
 });
 

@@ -1,0 +1,117 @@
+/* ==========================================================================
+   ITEM-SHEET.CSS - FICHAS DE ITENS E EQUIPAMENTOS
+   ========================================================================== */
+
+/* Fundo Geral Item */
+.extincao-sheet.item .window-content {
+    background: #050505 !important; color: #ccc; padding: 0; border: 1px solid #333;
+}
+
+/* Header Slim */
+.extincao-sheet.item .item-header-slim {
+    display: flex; gap: 15px; padding: 10px; background: #0a0a0a; border-bottom: 1px solid #222; align-items: center;
+}
+.extincao-sheet.item .profile-img-slim {
+    width: 48px; height: 48px; border: 1px solid #333; border-radius: 4px; background: #000;
+}
+.extincao-sheet.item .charname-slim {
+    font-size: 1.4em; font-weight: bold; color: #fff; background: transparent; border: none;
+    border-bottom: 1px solid transparent; width: 100%; font-family: "Courier New", monospace; transition: border 0.2s;
+}
+.extincao-sheet.item .charname-slim:focus { border-bottom-color: #4eff8c; box-shadow: none; }
+.extincao-sheet.item .item-meta { display: flex; gap: 10px; margin-top: 5px; }
+.extincao-sheet.item .type-badge {
+    font-size: 0.6em; text-transform: uppercase; background: #222; color: #888; padding: 2px 6px; border-radius: 2px; letter-spacing: 1px;
+}
+.extincao-sheet.item .lock-badge {
+    font-size: 0.6em; text-transform: uppercase; color: #f44; padding: 2px 0; letter-spacing: 1px;
+}
+
+/* Abas Item */
+.extincao-sheet.item .tabs-slim { border-bottom: 1px solid #222; background: #080808; margin: 0; }
+.extincao-sheet.item .tabs-slim .item { font-size: 0.8em; color: #555; text-transform: uppercase; padding: 8px; }
+.extincao-sheet.item .tabs-slim .item.active {
+    color: #4eff8c; border-bottom: 2px solid #4eff8c; text-shadow: 0 0 5px rgba(78,255,140,0.3);
+}
+
+/* Grid Limpo */
+.extincao-sheet.item .clean-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; }
+.extincao-sheet.item .clean-field { display: flex; flex-direction: column; gap: 4px; }
+.extincao-sheet.item .clean-field.full { grid-column: span 2; }
+.extincao-sheet.item .clean-field label { font-size: 0.65em; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.extincao-sheet.item .clean-field input[type="text"],
+.extincao-sheet.item .clean-field input[type="number"],
+.extincao-sheet.item .clean-field select {
+    background: transparent; border: none; border-bottom: 1px solid #333;
+    color: #ddd; font-family: "Courier New", monospace; font-size: 1.1em; padding: 4px 0; border-radius: 0;
+}
+.extincao-sheet.item .clean-field input:focus, .extincao-sheet.item .clean-field select:focus {
+    border-bottom-color: #4eff8c; box-shadow: none;
+}
+.extincao-sheet.item .clean-field.checkbox {
+    flex-direction: row; align-items: center; justify-content: space-between; height: 100%; border-bottom: 1px solid #222;
+}
+.extincao-sheet.item .clean-field.checkbox input { width: 16px; height: 16px; margin: 0; }
+.extincao-sheet.item .clean-field.highlight input { color: #4eff8c; }
+.extincao-sheet.item .editor { height: 100%; background: #111; color: #ccc; padding: 10px; border: none; }
+
+/* TOGGLE EQUIPADO */
+.toggle-wrapper { display: flex; align-items: center; justify-content: center; width: 100%; height: 30px; }
+.neon-toggle { position: relative; display: block; width: 100%; height: 100%; cursor: pointer; }
+.neon-toggle input { display: none; }
+.toggle-slider {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #111; border: 1px solid #444; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Courier New', monospace; font-size: 0.8em; font-weight: bold; color: #666;
+    transition: all 0.3s ease;
+}
+.neon-toggle:hover .toggle-slider { border-color: #666; color: #888; }
+.neon-toggle input:checked + .toggle-slider {
+    background-color: rgba(77, 221, 170, 0.1); border-color: #4da; color: #4da;
+    box-shadow: 0 0 8px rgba(77, 221, 170, 0.2) inset; text-shadow: 0 0 5px rgba(77, 221, 170, 0.5);
+}
+.status-on { display: none; }
+.status-off { display: block; }
+.neon-toggle input:checked + .toggle-slider .status-on { display: block; animation: flickerText 0.2s ease-in-out; }
+.neon-toggle input:checked + .toggle-slider .status-off { display: none; }
+@keyframes flickerText { 0% { opacity: 0.5; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+
+/* ESTATÍSTICAS DO ITEM */
+.item-stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 5px; margin: 5px 0 10px 0; align-items: end;
+}
+.stat-box { margin: 0; display: flex; flex-direction: column; text-align: center; }
+.stat-box label { font-size: 0.7em; font-weight: bold; color: #888; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; }
+.stat-box input {
+    height: 28px; font-family: 'Courier New', monospace; font-weight: bold; text-align: center;
+    background: rgba(0, 0, 0, 0.3); border: 1px solid #333; color: #fff;
+}
+.stat-box input:focus { border-color: #4da; box-shadow: 0 0 5px rgba(77, 221, 170, 0.2); }
+.toggle-wrapper { height: 28px; width: 100%; }
+.neon-toggle .toggle-slider { font-size: 0.7em; border-radius: 2px; }
+
+/* FICHA DE ITEM: HABITANTE (DOSSIÊ) */
+.item-sheet-habitante { min-height: 400px; background: #0b0c10; color: #eee; }
+.item-sheet-habitante .sheet-header { background: #111; border-bottom: 2px solid #333; padding: 10px; align-items: center; }
+.item-sheet-habitante .profile-img { background: #000; border: 1px solid #444; border-radius: 4px; }
+.item-sheet-habitante .charname input { color: #fff; font-family: "Segoe UI", sans-serif; font-weight: bold; }
+.role-container {
+    margin-top: 5px; background: #1a1a20; padding: 5px; border-radius: 4px; border-left: 3px solid #4da;
+}
+.role-container label { font-size: 0.7em; color: #4da; font-weight: bold; display: block; margin-bottom: 2px; }
+.role-input { width: 100%; background: transparent; border: none; color: #ddd; font-size: 1em; }
+.role-input:focus { border-bottom: 1px solid #4da; }
+.status-row { display: flex; gap: 15px; padding: 15px 10px; background: #0e0e12; margin-bottom: 10px; }
+.status-group { flex: 1; background: #050505; border: 1px solid #333; border-radius: 4px; padding: 5px; text-align: center; }
+.status-group label { font-size: 0.8em; font-weight: bold; display: block; margin-bottom: 5px; color: #888; }
+.status-group.health label i { color: #d44; }
+.status-group.infection label i { color: #bfa12a; }
+.status-group .resource-inputs { display: flex; justify-content: center; align-items: center; gap: 5px; }
+.status-group input {
+    background: transparent; border: 1px solid #222; color: #eee; text-align: center; font-size: 1.2em; font-weight: bold; width: 60px; border-radius: 4px;
+}
+.bio-section { padding: 0 10px 10px 10px; height: 300px; display: flex; flex-direction: column; }
+.bio-label { font-size: 0.9em; font-weight: bold; color: #6688aa; margin-bottom: 5px; border-bottom: 1px dashed #333; padding-bottom: 2px; }
+.bio-editor { flex: 1; background: #151515; border: 1px solid #333; border-radius: 4px; padding: 5px; }
+.bio-editor .editor { height: 100%; }
