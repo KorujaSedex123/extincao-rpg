@@ -1,117 +1,183 @@
 <form class="{{cssClass}} vehicle-sheet" autocomplete="off">
-    <header class="sheet-header">
-        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" 
-             style="border-color: #ffaa00; box-shadow: 0 0 10px rgba(255, 170, 0, 0.2);"/>
 
-        <div class="header-details" style="flex: 1; padding: 0 10px;">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <h1 class="charname" style="margin: 0; flex: 1;">
-                    <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Veículo" 
-                           style="color: #ffaa00; text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);"
-                           {{#if isLocked}}readonly{{/if}} />
+    <header class="sheet-header">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+
+        <div class="header-details">
+            <div class="header-top-row">
+                <h1 class="charname">
+                    <input name="name" type="text" value="{{actor.name}}" placeholder="MODELO DO VEÍCULO" {{#if
+                        isLocked}}readonly{{/if}} />
                 </h1>
 
-                <a class="toggle-lock" title="Travar/Destravar Edição" style="margin-left: 10px; font-size: 1.2em; color: {{#if isLocked}}#ff4444{{else}}#666{{/if}};">
+                <a class="toggle-lock {{#if isLocked}}locked{{/if}}"
+                    title="{{#if isLocked}}Destravar{{else}}Travar Edição{{/if}}">
                     <i class="fas {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
                 </a>
             </div>
-            
-            <div class="char-subtitle" style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                <span style="background: #331a00; color: #ffaa00; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #ffaa00;">
-                    <i class="fas fa-truck-pickup"></i> VEÍCULO
+
+            <div class="vehicle-meta">
+                <span class="type-badge"><i class="fas fa-truck-pickup"></i> VEÍCULO</span>
+                <span class="capacity-badge">
+                    <i class="fas fa-users"></i> CAPACIDADE:
+                    <input type="text" name="system.attributes.capacidade" value="{{system.attributes.capacidade}}"
+                        placeholder="-" {{#if isLocked}}readonly{{/if}}>
                 </span>
-                
-                <div style="font-size: 0.8em; color: #888;">
-                    <i class="fas fa-users"></i> Cap: 
-                    <input type="text" name="system.attributes.capacidade" value="{{system.attributes.capacidade}}" 
-                           placeholder="Ex: 5" style="width: 40px; background: transparent; border: none; color: #ccc; border-bottom: 1px solid #444; text-align: center;"
-                           {{#if isLocked}}readonly{{/if}} />
-                </div>
             </div>
-        </div>
-
-        <div class="header-stats" style="display: flex; flex-direction: column; gap: 5px; width: 140px;">
-            
-            <div class="stat-badge" style="background: #110b00; border: 1px solid #ffaa00; border-radius: 4px; padding: 2px;">
-                <label style="display: block; font-size: 0.7em; text-align: center; color: #ffaa00; font-weight: bold;">INTEGRIDADE</label>
-                
-                <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
-                    <a class="adjust-resource" data-resource="pv" data-action="minus" title="-1 Integridade">
-                        <i class="fas fa-minus-square" style="color: #ffaa00; opacity: 0.7;"></i>
-                    </a>
-
-                    <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" 
-                           style="width: 35px; text-align: center; background: transparent; border: none; color: #fff; font-size: 1.1em; font-weight: bold;" 
-                           {{#if isLocked}}readonly{{/if}} />
-                    
-                    <span style="color: #555;">/</span>
-                    
-                    <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" 
-                           style="width: 35px; text-align: center; background: transparent; border: none; color: #666; font-size: 0.9em;" placeholder="Max" 
-                           {{#if isLocked}}readonly{{/if}} />
-
-                    <a class="adjust-resource" data-resource="pv" data-action="plus" title="+1 Integridade">
-                        <i class="fas fa-plus-square" style="color: #ffaa00; opacity: 0.7;"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div class="stat-badge" style="background: #001122; border: 1px solid #4da; border-radius: 4px; padding: 2px;">
-                <label style="display: block; font-size: 0.7em; text-align: center; color: #4da; font-weight: bold;">BLINDAGEM (RD)</label>
-                <div style="text-align: center;">
-                    <input type="number" name="system.attributes.rd.value" value="{{system.attributes.rd.value}}" 
-                           style="width: 100%; text-align: center; background: transparent; border: none; color: #fff; font-size: 1.2em; font-weight: bold;" placeholder="0" 
-                           {{#if isLocked}}readonly{{/if}} />
-                </div>
-            </div>
-
         </div>
     </header>
 
-    {{#if isLocked}}
-    <div style="background:#331a00; color:#ffaa00; text-align:center; padding:5px; font-weight:bold; font-size:0.8em; margin-top:5px; border:1px solid #ffaa00;">
-        <i class="fas fa-lock"></i> MODO VISUALIZAÇÃO (Veículo Travado)
-    </div>
-    {{/if}}
+    <section class="vehicle-dashboard">
 
-    <div class="fuel-panel" style="margin: 10px 0; background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 8px; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
-        <div style="flex: 0 0 auto; color: #ffaa00; font-size: 1.5em; padding-left: 10px;">
-            <i class="fas fa-gas-pump"></i>
-        </div>
-        
-        <div style="flex: 1;">
-            <label style="font-size: 0.8em; color: #888; display: block; margin-bottom: 2px;">TANQUE DE COMBUSTÍVEL</label>
-            <select name="system.resources.fuel" style="width: 100%; background: #111; color: #eee; border: 1px solid #444;" {{#if isLocked}}disabled{{/if}}>
-                {{#select system.resources.fuel}}
-                <option value="cheio">CHEIO (100%)</option>
-                <option value="meio">MEIO TANQUE (50%)</option>
-                <option value="reserva">RESERVA (Crítico)</option>
-                <option value="seco">SECO (Vazio)</option>
-                {{/select}}
-            </select>
+        <div class="dash-gauge hull">
+            <div class="gauge-label"><i class="fas fa-shield-alt"></i> INTEGRIDADE</div>
+            <div class="gauge-value">
+                <a class="adjust-resource" data-resource="pv" data-action="minus"><i class="fas fa-caret-left"></i></a>
+                <input type="number" name="system.resources.pv.value" value="{{system.resources.pv.value}}" {{#if
+                    isLocked}}readonly{{/if}}>
+                <span class="sep">/</span>
+                <input type="number" name="system.resources.pv.max" value="{{system.resources.pv.max}}" class="max-val"
+                    {{#if isLocked}}readonly{{/if}}>
+                <a class="adjust-resource" data-resource="pv" data-action="plus"><i class="fas fa-caret-right"></i></a>
+            </div>
         </div>
 
-        <div style="flex: 0 0 auto;">
-            <a class="roll-fuel" title="Rolar Teste de Consumo (1d6)" style="display: block; background: #222; color: #ccc; padding: 5px 10px; border-radius: 4px; border: 1px solid #444; font-size: 0.9em; cursor: pointer;">
-                <i class="fas fa-dice"></i> Rolar
-            </a>
+        <div class="dash-gauge fuel">
+            <div class="gauge-label"><i class="fas fa-gas-pump"></i> TANQUE</div>
+            <div class="gauge-control">
+                <select name="system.resources.fuel" {{#if isLocked}}disabled{{/if}}>
+                    {{#select system.resources.fuel}}
+                    <option value="cheio">CHEIO (100%)</option>
+                    <option value="meio">MEIO (50%)</option>
+                    <option value="reserva">RESERVA (!)</option>
+                    <option value="seco">VAZIO (0%)</option>
+                    {{/select}}
+                </select>
+                <a class="roll-fuel" title="Testar Consumo"><i class="fas fa-dice"></i></a>
+            </div>
         </div>
-    </div>
 
-    <nav class="sheet-tabs tabs" data-group="primary" style="margin-top: 5px; border-bottom: 2px solid #333;">
-        <a class="item" data-tab="items" style="color: #ffaa00;">PORTA-MALAS</a>
-        <a class="item" data-tab="description">NOTAS / MANUAL</a>
+        <div class="dash-gauge armor">
+            <div class="gauge-label"><i class="fas fa-layer-group"></i> BLINDAGEM (RD)</div>
+            <div class="gauge-single">
+                <input type="number" name="system.attributes.rd.value" value="{{system.attributes.rd.value}}" {{#if
+                    isLocked}}readonly{{/if}}>
+            </div>
+        </div>
+
+    </section>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="items">OCUPANTES & CARGA</a>
+        <a class="item" data-tab="description">MANUAL / NOTAS</a>
     </nav>
 
     <section class="sheet-body">
+
         <div class="tab items" data-group="primary" data-tab="items">
-            {{> "systems/extincao/templates/actor/parts/actor-items.hbs"}}
+
+            <div class="passenger-section">
+                <div class="section-header"><i class="fas fa-user-friends"></i> TRIPULAÇÃO</div>
+                <div class="passenger-grid">
+                    {{#each habitantes as |crew|}}
+                    <div class="passenger-card item {{#if crew.flags.extincao.isDriver}}driver-active{{/if}}"
+                        data-item-id="{{crew._id}}">
+
+                        <div class="pass-avatar-area">
+                            <img src="{{crew.img}}" class="pass-img">
+                            {{#if (gte crew.system.infeccao 2)}}
+                            <div class="bio-warning" title="Infectado"><i class="fas fa-biohazard"></i></div>
+                            {{/if}}
+                            <a class="driver-toggle {{#if crew.flags.extincao.isDriver}}active{{/if}}"
+                                title="Motorista">
+                                <i class="fas fa-steering-wheel"></i>
+                            </a>
+                        </div>
+
+                        <div class="pass-info">
+                            <div class="pass-name item-edit">{{crew.name}}</div>
+                            {{#if crew.flags.extincao.isDriver}}
+                            <div class="driver-badge">CONDUTOR</div>
+                            {{else}}
+                            <input type="text" class="pass-role inline-edit" data-field="system.funcao"
+                                value="{{crew.system.funcao}}" placeholder="Função">
+                            {{/if}}
+                        </div>
+
+                        <div class="pass-stats">
+                            <div class="stat-row" title="Vida">
+                                <i class="fas fa-heart" style="color:#f44;"></i>
+                                <span>{{crew.system.saude}}</span>
+                            </div>
+                            <div class="stat-row" title="Estresse">
+                                <i class="fas fa-brain" style="color:#4da;"></i>
+                                <span>{{crew.system.estresse}}</span>
+                            </div>
+                        </div>
+
+                        <a class="item-delete pass-kick"><i class="fas fa-sign-out-alt"></i></a>
+                    </div>
+                    {{else}}
+                    <div class="empty-vehicle">Arraste Sobreviventes para cá.</div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="cargo-section">
+                <div class="section-header"><i class="fas fa-boxes"></i> PORTA-MALAS</div>
+                {{> "systems/extincao/templates/actor/parts/actor-items.hbs"}}
+            </div>
         </div>
 
         <div class="tab description" data-group="primary" data-tab="description">
-            <div class="bio-editor">
-                {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not isLocked)}}
+
+            <div class="vehicle-manual-grid">
+
+                <div class="manual-column upgrades">
+                    
+                    <div class="section-header">
+                        <span><i class="fas fa-wrench"></i> MODIFICAÇÕES</span>
+                        
+                        {{#if owner}}
+                        <a class="item-create" data-type="projeto" title="Instalar Melhoria">
+                            <i class="fas fa-plus-square"></i> ADICIONAR
+                        </a>
+                        {{/if}}
+                    </div>
+
+                    <div class="upgrade-list">
+                        {{#each projetos as |mod|}}
+                        <div class="upgrade-card item" data-item-id="{{mod._id}}">
+                            <div class="mod-icon">
+                                <img src="{{mod.img}}">
+                            </div>
+                            <div class="mod-info">
+                                <div class="mod-name item-edit">{{mod.name}}</div>
+                                <div class="mod-desc">{{{mod.system.description}}}</div>
+                            </div>
+                            <div class="mod-controls">
+                                <a class="item-delete"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="empty-mods">
+                            Nenhuma modificação instalada.<br>
+                            <small>Clique em + ADICIONAR para instalar.</small>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                <div class="manual-column logs">
+                    <div class="section-header"><i class="fas fa-clipboard-list"></i> DIÁRIO DE BORDO</div>
+                    <div class="bio-editor">
+                        {{editor enrichedDescription target="system.description" button=true owner=owner editable=(not
+                        isLocked)}}
+                    </div>
+                </div>
+
             </div>
         </div>
+
     </section>
 </form>

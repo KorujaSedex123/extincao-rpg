@@ -586,3 +586,446 @@
 .vehicle-type { color: #888; font-size: 0.8em; margin-top: 5px; letter-spacing: 1px; }
 .vehicle-sheet input[name="system.resources.pv.value"],
 .vehicle-sheet input[name="system.attributes.rd.value"] { text-shadow: 0 0 5px rgba(255, 170, 0, 0.3); }
+
+/* =========================================
+   VEÍCULO: GRID DE PASSAGEIROS
+   ========================================= */
+
+.passenger-section {
+    margin-bottom: 15px;
+    background: #050505;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.passenger-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Cards responsivos */
+    gap: 8px;
+    padding: 5px;
+}
+
+.passenger-card {
+    display: flex;
+    align-items: center;
+    background: #0e0e12;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.passenger-card:hover {
+    border-color: #4da;
+    background: #15151b;
+}
+
+/* Avatar */
+.pass-avatar-area {
+    position: relative;
+    width: 40px; height: 40px;
+    margin-right: 8px;
+}
+.pass-img {
+    width: 100%; height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #555;
+}
+.bio-warning {
+    position: absolute; bottom: -2px; right: -2px;
+    color: #bfa12a; background: #000;
+    border-radius: 50%; width: 16px; height: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7em; border: 1px solid #bfa12a;
+}
+
+/* Info Central */
+.pass-info {
+    flex: 1;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+}
+.pass-name {
+    font-weight: bold; color: #eee; font-size: 0.9em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    cursor: pointer;
+}
+.pass-name:hover { color: #4da; text-decoration: underline; }
+
+.pass-role {
+    background: transparent; border: none;
+    color: #888; font-size: 0.75em;
+    padding: 0; margin: 0; width: 100%;
+    font-family: "Courier New", monospace;
+    font-style: italic;
+}
+.pass-role:focus { border-bottom: 1px solid #4da; color: #4da; }
+
+/* Status (Direita) */
+.pass-stats {
+    display: flex; flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    font-family: "Courier New", monospace;
+    font-size: 0.8em;
+    color: #ccc;
+    margin-right: 25px; /* Espaço pro botão de kick */
+}
+.stat-row { display: flex; align-items: center; gap: 4px; }
+
+/* Botão Expulsar */
+.pass-kick {
+    position: absolute;
+    right: 5px; top: 50%;
+    transform: translateY(-50%);
+    color: #444;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.pass-kick:hover { color: #f44; }
+
+/* Estado Vazio */
+.empty-vehicle {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    border: 2px dashed #222;
+    border-radius: 4px;
+}
+.empty-vehicle i { font-size: 2em; margin-bottom: 5px; }
+/* Botão de Motorista */
+.driver-toggle {
+    position: absolute;
+    top: -5px; left: -5px;
+    width: 20px; height: 20px;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #888;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7em;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.driver-toggle:hover { color: #fff; background: #555; }
+
+/* Estado Ativo (É o Motorista) */
+.driver-toggle.active {
+    background: #ffaa00;
+    color: #000;
+    border-color: #ffaa00;
+    box-shadow: 0 0 5px #ffaa00;
+}
+
+/* Efeito no Card Inteiro quando é motorista */
+.passenger-card.driver-active {
+    border-color: #ffaa00;
+    background: rgba(255, 170, 0, 0.05);
+}
+
+.driver-badge {
+    font-size: 0.7em;
+    font-weight: bold;
+    color: #ffaa00;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+/* =========================================
+   ESTILO DA FICHA DE VEÍCULO (DASHBOARD)
+   ========================================= */
+
+/* Header e Topo */
+.vehicle-sheet .sheet-header {
+    background: linear-gradient(180deg, #1a1505 0%, #0f0b00 100%);
+    border-bottom: 2px solid #ffaa00;
+    padding: 10px;
+    display: flex; gap: 15px; align-items: center;
+}
+
+.vehicle-sheet .profile-img {
+    border: 2px solid #ffaa00;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.2);
+    width: 70px; height: 70px;
+}
+
+.vehicle-sheet .charname input {
+    color: #ffaa00;
+    text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
+    font-family: "Black Ops One", "Courier New", monospace; /* Fonte mais "pesada" se tiver */
+}
+
+/* Badges de Tipo */
+.vehicle-meta {
+    display: flex; gap: 10px; margin-top: 5px;
+}
+.type-badge {
+    background: #331a00; color: #ffaa00; border: 1px solid #ffaa00;
+    padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold;
+}
+.capacity-badge {
+    color: #888; font-size: 0.8em; display: flex; align-items: center; gap: 5px;
+}
+.capacity-badge input {
+    width: 30px; background: transparent; border: none; 
+    border-bottom: 1px solid #444; color: #ccc; text-align: center;
+}
+
+/* --- DASHBOARD (OS MOSTRADORES) --- */
+.vehicle-dashboard {
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr 1fr; /* 3 Colunas */
+    gap: 10px;
+    padding: 10px;
+    background: #050505;
+    border-bottom: 1px solid #333;
+}
+
+.dash-gauge {
+    background: #0e0e12;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+.gauge-label {
+    font-size: 0.7em; font-weight: bold; color: #666; margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: 1px; width: 100%; text-align: center;
+    border-bottom: 1px dashed #222; padding-bottom: 3px;
+}
+
+/* Estilo Específico: Hull (Integridade) */
+.dash-gauge.hull { border-color: #ffaa00; background: rgba(255, 170, 0, 0.05); }
+.dash-gauge.hull .gauge-label { color: #ffaa00; }
+.dash-gauge.hull input { color: #ffaa00; font-size: 1.4em; font-weight: bold; }
+
+/* Estilo Específico: Fuel (Combustível) */
+.dash-gauge.fuel { border-color: #ffcc00; }
+.dash-gauge.fuel .gauge-label { color: #ffcc00; }
+
+/* Estilo Específico: Armor (Blindagem) */
+.dash-gauge.armor { border-color: #4da; background: rgba(77, 221, 170, 0.05); }
+.dash-gauge.armor .gauge-label { color: #4da; }
+.dash-gauge.armor input { color: #4da; font-size: 1.4em; }
+
+/* Controles dos Gauges */
+.gauge-value { display: flex; align-items: center; gap: 5px; }
+.gauge-value input {
+    background: transparent; border: none; text-align: center; width: 40px;
+}
+.adjust-resource {
+    cursor: pointer; color: #555; transition: color 0.2s;
+}
+.adjust-resource:hover { color: #fff; }
+
+.gauge-control { display: flex; width: 100%; gap: 5px; }
+.gauge-control select {
+    background: #000; color: #ccc; border: 1px solid #444; flex: 1; font-size: 0.9em;
+}
+.roll-fuel {
+    background: #222; border: 1px solid #444; color: #aaa;
+    border-radius: 4px; padding: 2px 8px; cursor: pointer; display: flex; align-items: center;
+}
+.roll-fuel:hover { background: #333; color: #fff; }
+
+/* Headers de Seção */
+.section-header {
+    background: #151515; color: #888;
+    padding: 5px 10px; font-size: 0.8em; font-weight: bold;
+    border-bottom: 2px solid #333; margin-bottom: 5px;
+    display: flex; align-items: center; gap: 8px;
+}
+
+/* Responsividade do Grid de Passageiros */
+.passenger-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px; padding: 5px;
+}
+/* =========================================
+   ABA MANUAL DO VEÍCULO
+   ========================================= */
+
+.vehicle-manual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Melhorias menor, Texto maior */
+    gap: 10px;
+    height: 100%;
+    min-height: 350px;
+}
+
+.manual-column {
+    background: #050505;
+    border: 1px solid #333;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Lista de Melhorias */
+.upgrade-list {
+    padding: 5px;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.upgrade-card {
+    display: flex;
+    align-items: center;
+    background: #111;
+    border: 1px solid #444;
+    border-left: 3px solid #ffaa00; /* Laranja Mecânico */
+    padding: 5px;
+    border-radius: 3px;
+    transition: all 0.2s;
+}
+
+.upgrade-card:hover {
+    background: #1a1a1a;
+    border-color: #666;
+}
+
+.mod-icon img {
+    width: 32px; height: 32px;
+    border: 1px solid #333;
+    background: #000;
+    margin-right: 8px;
+    border-radius: 4px;
+}
+
+.mod-info { flex: 1; overflow: hidden; }
+
+.mod-name {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #eee;
+    cursor: pointer;
+}
+.mod-name:hover { text-decoration: underline; color: #ffaa00; }
+
+.mod-desc {
+    font-size: 0.75em;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mod-controls a {
+    color: #444;
+    font-size: 0.8em;
+    padding: 5px;
+}
+.mod-controls a:hover { color: #f44; }
+
+.empty-mods {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+/* Ajuste do Editor na Coluna */
+.manual-column .bio-editor {
+    flex: 1;
+    background: #000;
+    border: none;
+    padding: 5px;
+}
+
+/* =========================================
+   CORREÇÕES FINAIS (EDITOR E MELHORIAS)
+   ========================================= */
+
+/* 1. CORRIGIR TEXTO DO DIÁRIO DE BORDO (EDITOR) */
+.bio-editor .editor-content {
+    color: #e0e0e0 !important; /* Texto quase branco */
+    font-family: "Courier New", monospace; /* Fonte Tática */
+    padding: 10px;
+}
+
+/* Garante que o fundo do editor seja escuro */
+.bio-editor .tox-edit-area__iframe, 
+.bio-editor .prosemirror {
+    background: #050505 !important;
+}
+
+/* 2. CORRIGIR O CABEÇALHO DAS MELHORIAS (BOTÃO +) */
+.manual-column .section-header {
+    display: flex;
+    justify-content: space-between; /* Empurra o botão + para a direita */
+    align-items: center;
+    padding: 5px 10px;
+    background: #151515;
+    color: #ffaa00; /* Cor Laranja para destacar o título */
+    font-weight: bold;
+    border-bottom: 2px solid #333;
+}
+
+/* O Botão de Adicionar (+) */
+.manual-column .item-create {
+    color: #4da; /* Verde Neon para o botão */
+    cursor: pointer;
+    font-size: 1em;
+    padding: 2px 6px;
+    border: 1px solid #4da;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.manual-column .item-create:hover {
+    background: #4da;
+    color: #000;
+    box-shadow: 0 0 5px #4da;
+}
+
+/* Estilo do Card de Melhoria (Projeto) */
+.upgrade-card {
+    background: #111;
+    border: 1px solid #444;
+    border-left: 3px solid #ffaa00;
+    padding: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.upgrade-card .mod-name {
+    font-weight: bold;
+    color: #eee;
+    cursor: pointer;
+}
+
+/* Força o botão de adicionar a aparecer */
+.manual-column .item-create {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #111;
+    color: #4da !important; /* Verde Neon Forçado */
+    border: 1px solid #4da;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.manual-column .item-create:hover {
+    background: #4da;
+    color: #000 !important;
+    box-shadow: 0 0 8px #4da;
+}

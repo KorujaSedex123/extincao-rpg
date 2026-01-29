@@ -154,29 +154,58 @@ export class ExtincaoActorSheet extends ActorSheet {
     context.habitantes = habitantes;
   }
 
+  /** @override */
   async _onDrop(event) {
     const data = TextEditor.getDragEventData(event);
     const actor = this.actor;
 
-    if (actor.type === 'refugio' && data.type === 'Actor') {
+    // --- LÓGICA DE PASSAGEIROS / HABITANTES (Veículo e Refúgio) ---
+    // Agora aceita drop em VEÍCULOS também!
+    if ((actor.type === 'refugio' || actor.type === 'veiculo') && data.type === 'Actor') {
+
       const sourceActor = await fromUuid(data.uuid);
       if (!sourceActor) return;
-      if (sourceActor.type === 'refugio') return ui.notifications.warn("Você não pode abrigar um Refúgio dentro de outro!");
 
+      // Segurança: Não colocar estruturas dentro de estruturas
+      if (sourceActor.type === 'refugio' || sourceActor.type === 'veiculo') {
+        return ui.notifications.warn("Este ator não pode ser um passageiro/habitante!");
+      }
+
+      // Define a "Função" padrão baseada no tipo de ficha
+      let funcaoPadrao = "Sobrevivente";
+      if (actor.type === 'veiculo') funcaoPadrao = "Passageiro";
+
+      // Prepara os dados do Item "Habitante" (que representa o passageiro)
       const habitanteData = {
         name: sourceActor.name,
-        type: 'habitante',
+        type: 'habitante', // Usamos o mesmo tipo de item 'habitante' para passageiros
         img: sourceActor.img,
         system: {
-          funcao: sourceActor.system.details?.archetype || sourceActor.system.details?.concept || "Sobrevivente",
+          funcao: sourceActor.system.details?.archetype || funcaoPadrao,
+
+          // Snapshot dos Status Atuais
           saude: sourceActor.system.resources?.pv?.value ?? 10,
           maxSaude: sourceActor.system.resources?.pv?.max ?? 10,
+
+          // Importante salvar Estresse para monitorar a sanidade do grupo no carro
+          estresse: sourceActor.system.resources?.estresse?.value ?? 0,
+
           infeccao: sourceActor.system.details?.infection ?? 0,
-          notas: `Registrado a partir de: ${sourceActor.name}`
+
+          // Salva o UUID para podermos abrir a ficha original depois!
+          originalActorId: sourceActor.uuid,
+
+          notas: `Embarcou em: ${new Date().toLocaleTimeString()}`
         }
       };
+
+      // Cria o item dentro do Veículo/Refúgio
       return await this.actor.createEmbeddedDocuments("Item", [habitanteData]);
     }
+
+    // ---------------------------------------------------------
+    // COMPORTAMENTO PADRÃO (Arrastar Armas, Itens, etc.)
+    // ---------------------------------------------------------
     return super._onDrop(event);
   }
 
@@ -273,6 +302,32 @@ export class ExtincaoActorSheet extends ActorSheet {
       } else {
         ui.notifications.warn("Você está focado (0 Estresse).");
       }
+    });
+
+    // TOGGLE MOTORISTA (Corrigido com Flags)
+    html.find('.driver-toggle').click(async (ev) => {
+      ev.preventDefault();
+      const btn = ev.currentTarget;
+      const li = btn.closest(".item");
+      const itemId = li.dataset.itemId;
+      const item = this.actor.items.get(itemId);
+
+      // Pega o estado atual da memória (Flag)
+      const isDriver = item.getFlag("extincao", "isDriver") || false;
+
+      // Se for ativar este motorista, desativa os outros primeiro
+      if (!isDriver) {
+        const outros = this.actor.items.filter(i => i.type === 'habitante' && i.id !== item.id);
+        for (let outro of outros) {
+          // Se tiver a flag, remove
+          if (outro.getFlag("extincao", "isDriver")) {
+            await outro.unsetFlag("extincao", "isDriver");
+          }
+        }
+      }
+
+      // Salva o novo estado
+      await item.setFlag("extincao", "isDriver", !isDriver);
     });
 
     html.find('.rollable').click(ev => {
