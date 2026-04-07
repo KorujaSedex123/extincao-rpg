@@ -26,10 +26,10 @@ O sistema é compatível com Foundry VTT v12 e v13. Siga os passos abaixo para i
 2. Clique no botão **Install System**.
 3. No campo inferior **Manifest URL**, cole o link oficial:
 
-{% hint style="info" %}
+
 **Link do Manifesto:**
 `https://raw.githubusercontent.com/KorujaSedex123/extincao-rpg/main/system.json`
-{% endhint %}
+
 
 4. Clique em **Install**.
 5. Crie um novo Mundo e selecione **EXTINÇÃO RPG** como sistema.
