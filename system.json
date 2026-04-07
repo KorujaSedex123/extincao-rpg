@@ -50,7 +50,7 @@
   "secondaryTokenAttribute": "resources.estresse",
   "url": "https://github.com/KorujaSedex123/extincao-rpg",
   "manifest": "https://raw.githubusercontent.com/KorujaSedex123/extincao-rpg/main/system.json",
-  "download": "https://github.com/KorujaSedex123/extincao-rpg/archive/refs/heads/main.zip",
+  "download": "https://github.com/KorujaSedex123/extincao-rpg/archive/refs/tags/v1.6.4.6.zip",
   "documentTypes": {
     "Actor": {
       "sobrevivente": {},
